@@ -1,0 +1,4456 @@
+
+/* ===== src/tokens.jsx ===== */
+// Sanad — design tokens
+// Five palettes, two card styles, two densities, two themes, two directions.
+// Tweakable at runtime via window.__sanadTweaks (set by App).
+
+const PALETTES = {
+  teal: {
+    name: 'تيل',
+    primary: '#0F766E',
+    primaryDeep: '#0B5A55',
+    primarySoft: '#CCFBF1',
+    primaryTint: '#F0FDFA',
+    accent: '#C9B79C',           // beige
+    accentSoft: '#F0E9D9',
+    success: '#047857',
+    warn: '#B45309',
+    danger: '#B91C1C',
+    info: '#1E3A8A',
+    // surfaces (light)
+    bg: '#F5F3EE',
+    bgMuted: '#EDE9DD',
+    surface: '#FFFFFF',
+    surface2: '#FBF9F4',
+    border: '#E5E0D2',
+    // ink
+    ink: '#0F1414',
+    inkMuted: '#5C625F',
+    inkSoft: '#8A908C',
+  },
+  emerald: {
+    name: 'زمرّدي',
+    primary: '#047857',
+    primaryDeep: '#03543F',
+    primarySoft: '#D1FADF',
+    primaryTint: '#ECFDF5',
+    accent: '#A8856A',
+    accentSoft: '#F0E5D8',
+    success: '#15803D',
+    warn: '#B45309',
+    danger: '#B91C1C',
+    info: '#1E3A8A',
+    bg: '#F4F2EC',
+    bgMuted: '#EBE7DA',
+    surface: '#FFFFFF',
+    surface2: '#FAF8F2',
+    border: '#E1DCCC',
+    ink: '#0E1612',
+    inkMuted: '#586059',
+    inkSoft: '#878D87',
+  },
+  beige: {
+    name: 'بيج دافئ',
+    primary: '#7A5A36',
+    primaryDeep: '#5A4128',
+    primarySoft: '#F0E5D2',
+    primaryTint: '#FBF6EC',
+    accent: '#0F766E',
+    accentSoft: '#CCFBF1',
+    success: '#15803D',
+    warn: '#B45309',
+    danger: '#B91C1C',
+    info: '#1E3A8A',
+    bg: '#FAF6EC',
+    bgMuted: '#F1EAD8',
+    surface: '#FFFFFF',
+    surface2: '#FDFAF2',
+    border: '#E8DDC4',
+    ink: '#1A140B',
+    inkMuted: '#665A47',
+    inkSoft: '#968A75',
+  },
+};
+
+const DARK_OVERRIDES = {
+  teal: {
+    bg: '#0A0F0F',
+    bgMuted: '#10171A',
+    surface: '#141C1D',
+    surface2: '#1A2425',
+    border: '#26312F',
+    ink: '#F1EFE8',
+    inkMuted: '#A6B0AC',
+    inkSoft: '#6F7773',
+    primarySoft: '#143F3B',
+    primaryTint: '#0E2B28',
+    accentSoft: '#2B271C',
+  },
+  emerald: {
+    bg: '#0A100D',
+    bgMuted: '#0F1714',
+    surface: '#141D18',
+    surface2: '#192520',
+    border: '#26332C',
+    ink: '#EEF1EC',
+    inkMuted: '#A4AEA8',
+    inkSoft: '#6E7672',
+    primarySoft: '#0F3F30',
+    primaryTint: '#0A2C22',
+    accentSoft: '#2A2418',
+  },
+  beige: {
+    bg: '#0F0C06',
+    bgMuted: '#15110A',
+    surface: '#1B1610',
+    surface2: '#221C13',
+    border: '#322A1C',
+    ink: '#F3EEDF',
+    inkMuted: '#B6AC95',
+    inkSoft: '#7F7766',
+    primarySoft: '#3F2F1A',
+    primaryTint: '#2B2012',
+    accentSoft: '#0E2624',
+  },
+};
+
+const RADII = {
+  rounded: { card: 28, button: 18, chip: 999, field: 16, sheet: 32, tile: 24 },
+  squared: { card: 14, button: 10, chip: 8, field: 8, sheet: 18, tile: 12 },
+};
+
+const DENSITIES = {
+  cozy:    { padCard: 20, padScreen: 20, gap: 14, listRow: 64, fieldH: 56, btnH: 56 },
+  compact: { padCard: 14, padScreen: 14, gap: 10, listRow: 52, fieldH: 48, btnH: 48 },
+};
+
+const FONTS = {
+  plex:  "'IBM Plex Sans Arabic', 'IBM Plex Sans', system-ui, sans-serif",
+  tajawal: "'Tajawal', 'IBM Plex Sans', system-ui, sans-serif",
+  noto:  "'Noto Sans Arabic', 'IBM Plex Sans', system-ui, sans-serif",
+  cairo: "'Cairo', 'IBM Plex Sans', system-ui, sans-serif",
+};
+
+// Service brands
+const SERVICES = {
+  fazaa: {
+    key: 'fazaa',
+    name: 'سند فزعة',
+    sub: 'مشاوير ومهام يومية',
+    en: 'Errands & transport',
+    color: '#0F766E',
+    soft: '#CCFBF1',
+    icon: 'errand',
+  },
+  jalees: {
+    key: 'jalees',
+    name: 'سند جليس',
+    sub: 'مرافقة اجتماعية ودعم نفسي',
+    en: 'Companionship',
+    color: '#7A5A36',
+    soft: '#F0E5D2',
+    icon: 'heart',
+  },
+  academic: {
+    key: 'academic',
+    name: 'سند أكاديمي',
+    sub: 'تدريب جامعي ميداني',
+    en: 'Academic training',
+    color: '#1E3A8A',
+    soft: '#DBE4FF',
+    icon: 'cap',
+  },
+  murafaqa: {
+    key: 'murafaqa',
+    name: 'سند مرافقة',
+    sub: 'مرافقة المواعيد الطبية والحكومية',
+    en: 'Appointment escort',
+    color: '#7A1E55',
+    soft: '#F4DCEB',
+    icon: 'shield',
+  },
+};
+
+function buildTheme(t) {
+  const base = PALETTES[t.palette] || PALETTES.teal;
+  const palette = t.dark ? { ...base, ...DARK_OVERRIDES[t.palette] } : base;
+  const radius = RADII[t.cardStyle] || RADII.rounded;
+  const density = DENSITIES[t.density] || DENSITIES.cozy;
+  const font = FONTS[t.font] || FONTS.plex;
+  return {
+    ...palette,
+    radius, density, font, dir: t.rtl ? 'rtl' : 'ltr', dark: !!t.dark,
+    services: SERVICES,
+  };
+}
+
+window.SanadTokens = { PALETTES, DARK_OVERRIDES, RADII, DENSITIES, FONTS, SERVICES, buildTheme };
+
+
+/* ===== src/icons.jsx ===== */
+// Sanad — custom thin-stroke icon set
+// 24x24 viewBox, currentColor strokes. Pass size + color via props.
+
+function Icon({ name, size = 22, color = 'currentColor', strokeWidth = 1.6, fill }) {
+  const p = { stroke: color, strokeWidth, strokeLinecap: 'round', strokeLinejoin: 'round', fill: 'none' };
+  const f = (extra = {}) => ({ ...p, fill: fill || 'none', ...extra });
+  const I = ICONS[name];
+  if (!I) return null;
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" style={{ display: 'block', flexShrink: 0 }}>
+      <I p={p} f={f} />
+    </svg>
+  );
+}
+
+const ICONS = {
+  errand: ({ p }) => (
+    <g {...p}>
+      <path d="M3 17h2l1.5-7h11L19 17h2"/>
+      <path d="M6.5 10V8a3 3 0 0 1 3-3h5a3 3 0 0 1 3 3v2"/>
+      <circle cx="7" cy="18" r="2"/>
+      <circle cx="17" cy="18" r="2"/>
+    </g>
+  ),
+  heart: ({ p }) => (
+    <g {...p}>
+      <path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/>
+    </g>
+  ),
+  cap: ({ p }) => (
+    <g {...p}>
+      <path d="M2 9l10-4 10 4-10 4-10-4z"/>
+      <path d="M6 11v4c0 1.5 2.7 3 6 3s6-1.5 6-3v-4"/>
+      <path d="M22 9v5"/>
+    </g>
+  ),
+  shield: ({ p }) => (
+    <g {...p}>
+      <path d="M12 3l8 3v5c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-3z"/>
+      <path d="M9 12l2 2 4-4"/>
+    </g>
+  ),
+  home: ({ p }) => (
+    <g {...p}>
+      <path d="M3 11l9-7 9 7"/>
+      <path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/>
+    </g>
+  ),
+  bell: ({ p }) => (
+    <g {...p}>
+      <path d="M6 8a6 6 0 1 1 12 0v3l2 4H4l2-4V8z"/>
+      <path d="M10 19a2 2 0 0 0 4 0"/>
+    </g>
+  ),
+  user: ({ p }) => (
+    <g {...p}>
+      <circle cx="12" cy="8" r="4"/>
+      <path d="M4 20c1.5-3.5 4.5-5 8-5s6.5 1.5 8 5"/>
+    </g>
+  ),
+  list: ({ p }) => (
+    <g {...p}>
+      <path d="M4 6h16M4 12h16M4 18h10"/>
+    </g>
+  ),
+  search: ({ p }) => (
+    <g {...p}>
+      <circle cx="11" cy="11" r="6"/>
+      <path d="M16 16l4 4"/>
+    </g>
+  ),
+  chat: ({ p }) => (
+    <g {...p}>
+      <path d="M4 5h16v11H9l-5 4V5z"/>
+      <circle cx="9" cy="10.5" r=".7" fill="currentColor"/>
+      <circle cx="13" cy="10.5" r=".7" fill="currentColor"/>
+      <circle cx="17" cy="10.5" r=".7" fill="currentColor"/>
+    </g>
+  ),
+  phone: ({ p }) => (
+    <g {...p}>
+      <path d="M5 4h3l2 5-2 1a10 10 0 0 0 6 6l1-2 5 2v3a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/>
+    </g>
+  ),
+  mic: ({ p }) => (
+    <g {...p}>
+      <rect x="9" y="3" width="6" height="11" rx="3"/>
+      <path d="M5 11a7 7 0 0 0 14 0"/>
+      <path d="M12 18v3"/>
+    </g>
+  ),
+  video: ({ p }) => (
+    <g {...p}>
+      <rect x="3" y="6" width="13" height="12" rx="2"/>
+      <path d="M16 10l5-3v10l-5-3z"/>
+    </g>
+  ),
+  pin: ({ p }) => (
+    <g {...p}>
+      <path d="M12 21s-7-7.5-7-12a7 7 0 0 1 14 0c0 4.5-7 12-7 12z"/>
+      <circle cx="12" cy="9" r="2.5"/>
+    </g>
+  ),
+  clock: ({ p }) => (
+    <g {...p}>
+      <circle cx="12" cy="12" r="9"/>
+      <path d="M12 7v5l3 2"/>
+    </g>
+  ),
+  calendar: ({ p }) => (
+    <g {...p}>
+      <rect x="3" y="5" width="18" height="16" rx="2"/>
+      <path d="M3 10h18M8 3v4M16 3v4"/>
+    </g>
+  ),
+  star: ({ p, f }) => (
+    <g {...f({ stroke: 'currentColor' })}>
+      <path d="M12 3l2.7 5.5 6.1.9-4.4 4.3 1 6-5.4-2.8-5.4 2.8 1-6L3.2 9.4l6.1-.9L12 3z"/>
+    </g>
+  ),
+  starFill: ({ p }) => (
+    <g fill="currentColor" stroke="none">
+      <path d="M12 3l2.7 5.5 6.1.9-4.4 4.3 1 6-5.4-2.8-5.4 2.8 1-6L3.2 9.4l6.1-.9L12 3z"/>
+    </g>
+  ),
+  check: ({ p }) => (
+    <g {...p}>
+      <path d="M5 12l4 4L19 7"/>
+    </g>
+  ),
+  checkCircle: ({ p }) => (
+    <g {...p}>
+      <circle cx="12" cy="12" r="9"/>
+      <path d="M8 12l3 3 5-6"/>
+    </g>
+  ),
+  close: ({ p }) => (
+    <g {...p}>
+      <path d="M6 6l12 12M18 6L6 18"/>
+    </g>
+  ),
+  plus: ({ p }) => (
+    <g {...p}>
+      <path d="M12 5v14M5 12h14"/>
+    </g>
+  ),
+  arrowR: ({ p }) => (
+    <g {...p}>
+      <path d="M5 12h14M13 6l6 6-6 6"/>
+    </g>
+  ),
+  arrowL: ({ p }) => (
+    <g {...p}>
+      <path d="M19 12H5M11 6l-6 6 6 6"/>
+    </g>
+  ),
+  chevR: ({ p }) => (
+    <g {...p}>
+      <path d="M9 6l6 6-6 6"/>
+    </g>
+  ),
+  chevL: ({ p }) => (
+    <g {...p}>
+      <path d="M15 6l-6 6 6 6"/>
+    </g>
+  ),
+  chevD: ({ p }) => (
+    <g {...p}>
+      <path d="M6 9l6 6 6-6"/>
+    </g>
+  ),
+  pharmacy: ({ p }) => (
+    <g {...p}>
+      <rect x="4" y="4" width="16" height="16" rx="3"/>
+      <path d="M12 8v8M8 12h8"/>
+    </g>
+  ),
+  cart: ({ p }) => (
+    <g {...p}>
+      <path d="M3 4h2l2 12h12"/>
+      <path d="M7 8h14l-2 6H8"/>
+      <circle cx="9" cy="20" r="1.5"/>
+      <circle cx="17" cy="20" r="1.5"/>
+    </g>
+  ),
+  doc: ({ p }) => (
+    <g {...p}>
+      <path d="M6 3h8l4 4v14H6z"/>
+      <path d="M14 3v4h4"/>
+      <path d="M9 12h6M9 16h4"/>
+    </g>
+  ),
+  hospital: ({ p }) => (
+    <g {...p}>
+      <path d="M4 21V8l8-5 8 5v13"/>
+      <path d="M12 11v6M9 14h6"/>
+    </g>
+  ),
+  gov: ({ p }) => (
+    <g {...p}>
+      <path d="M3 21h18M5 10v8M9 10v8M15 10v8M19 10v8"/>
+      <path d="M12 3l9 6H3z"/>
+    </g>
+  ),
+  book: ({ p }) => (
+    <g {...p}>
+      <path d="M4 4h7v16H6a2 2 0 0 1-2-2z"/>
+      <path d="M20 4h-7v16h5a2 2 0 0 0 2-2z"/>
+    </g>
+  ),
+  pill: ({ p }) => (
+    <g {...p}>
+      <rect x="3" y="9" width="18" height="6" rx="3" transform="rotate(-30 12 12)"/>
+      <path d="M9 6l6 12" />
+    </g>
+  ),
+  walk: ({ p }) => (
+    <g {...p}>
+      <circle cx="13" cy="4.5" r="1.6"/>
+      <path d="M9 13l3-5 4 2-2 4 3 6M9 22l-1-5 4-3"/>
+    </g>
+  ),
+  paperclip: ({ p }) => (
+    <g {...p}>
+      <path d="M20 12l-7 7a4 4 0 0 1-6-6l8-8a3 3 0 0 1 4 4l-8 8a2 2 0 0 1-3-3l7-7"/>
+    </g>
+  ),
+  send: ({ p }) => (
+    <g {...p}>
+      <path d="M21 3L3 11l7 2 2 7z"/>
+      <path d="M21 3L10 13"/>
+    </g>
+  ),
+  settings: ({ p }) => (
+    <g {...p}>
+      <circle cx="12" cy="12" r="3"/>
+      <path d="M19 12c0 .6 0 1.1-.1 1.6l2 1.6-2 3.4-2.5-1a7 7 0 0 1-2.7 1.6l-.4 2.6h-4l-.4-2.6a7 7 0 0 1-2.7-1.6l-2.5 1-2-3.4 2-1.6c-.1-.5-.1-1-.1-1.6s0-1.1.1-1.6l-2-1.6 2-3.4 2.5 1a7 7 0 0 1 2.7-1.6l.4-2.6h4l.4 2.6a7 7 0 0 1 2.7 1.6l2.5-1 2 3.4-2 1.6c.1.5.1 1 .1 1.6z"/>
+    </g>
+  ),
+  card: ({ p }) => (
+    <g {...p}>
+      <rect x="3" y="6" width="18" height="13" rx="2"/>
+      <path d="M3 10h18M7 15h4"/>
+    </g>
+  ),
+  shieldCheck: ({ p }) => (
+    <g {...p}>
+      <path d="M12 3l8 3v5c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-3z"/>
+      <path d="M9 12l2 2 4-4"/>
+    </g>
+  ),
+  alert: ({ p }) => (
+    <g {...p}>
+      <circle cx="12" cy="12" r="9"/>
+      <path d="M12 7v6M12 17h0"/>
+    </g>
+  ),
+  empty: ({ p }) => (
+    <g {...p}>
+      <rect x="4" y="6" width="16" height="13" rx="2"/>
+      <path d="M4 11h16M9 15h6"/>
+    </g>
+  ),
+  sparkle: ({ p }) => (
+    <g {...p}>
+      <path d="M12 4l1.5 5L18 10l-4.5 1L12 16l-1.5-5L6 10l4.5-1z"/>
+      <path d="M19 16l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z"/>
+    </g>
+  ),
+  graduation: ({ p }) => (
+    <g {...p}>
+      <path d="M2 9l10-4 10 4-10 4-10-4z"/>
+      <path d="M6 11v4c0 1.5 2.7 3 6 3s6-1.5 6-3v-4"/>
+    </g>
+  ),
+  trophy: ({ p }) => (
+    <g {...p}>
+      <path d="M8 4h8v6a4 4 0 0 1-8 0z"/>
+      <path d="M5 6H3v2a3 3 0 0 0 3 3M19 6h2v2a3 3 0 0 1-3 3"/>
+      <path d="M9 18h6M12 14v4M8 21h8"/>
+    </g>
+  ),
+  logout: ({ p }) => (
+    <g {...p}>
+      <path d="M9 4H5v16h4M19 12H10M16 8l4 4-4 4"/>
+    </g>
+  ),
+  globe: ({ p }) => (
+    <g {...p}>
+      <circle cx="12" cy="12" r="9"/>
+      <path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>
+    </g>
+  ),
+  moon: ({ p }) => (
+    <g {...p}>
+      <path d="M20 14a8 8 0 0 1-10-10 8 8 0 1 0 10 10z"/>
+    </g>
+  ),
+  receipt: ({ p }) => (
+    <g {...p}>
+      <path d="M5 3h14v18l-3-2-3 2-3-2-3 2-2-2z"/>
+      <path d="M8 8h8M8 12h8M8 16h5"/>
+    </g>
+  ),
+  filter: ({ p }) => (
+    <g {...p}>
+      <path d="M3 5h18l-7 9v6l-4-2v-4z"/>
+    </g>
+  ),
+  share: ({ p }) => (
+    <g {...p}>
+      <circle cx="6" cy="12" r="2.5"/>
+      <circle cx="18" cy="6" r="2.5"/>
+      <circle cx="18" cy="18" r="2.5"/>
+      <path d="M8 11l8-4M8 13l8 4"/>
+    </g>
+  ),
+};
+
+window.SanadIcon = Icon;
+window.SanadIcons = ICONS;
+
+
+/* ===== src/atoms.jsx ===== */
+// Sanad — atoms (Button, Card, Field, Tag, Avatar, Stars, NavBar, TabBar, ProgressDots, etc.)
+
+const { useState, useMemo } = React;
+
+// ── shared base style helpers ─────────────────────────────────
+function useTheme() {
+  return window.__sanadTheme || window.SanadTokens.buildTheme({
+    palette: 'teal', cardStyle: 'rounded', density: 'cozy', dark: false, font: 'plex', rtl: true,
+  });
+}
+
+function Button({ children, variant = 'primary', size = 'md', icon, iconRight, full, onClick, style = {}, theme: t }) {
+  t = t || useTheme();
+  const heights = { sm: 40, md: t.density.btnH, lg: 60 };
+  const fonts = { sm: 14, md: 16, lg: 17 };
+  const variants = {
+    primary:   { bg: t.primary, fg: '#fff', border: 'transparent' },
+    secondary: { bg: t.surface, fg: t.primary, border: t.primary },
+    ghost:     { bg: 'transparent', fg: t.ink, border: 'transparent' },
+    soft:      { bg: t.primarySoft, fg: t.primaryDeep || t.primary, border: 'transparent' },
+    danger:    { bg: t.danger, fg: '#fff', border: 'transparent' },
+    surface:   { bg: t.surface2, fg: t.ink, border: t.border },
+    dark:      { bg: t.ink, fg: t.surface, border: 'transparent' },
+  };
+  const v = variants[variant];
+  return (
+    <button onClick={onClick} style={{
+      height: heights[size],
+      padding: size === 'lg' ? '0 26px' : '0 18px',
+      borderRadius: t.radius.button,
+      background: v.bg,
+      color: v.fg,
+      border: `1.5px solid ${v.border}`,
+      fontFamily: t.font,
+      fontWeight: 600,
+      fontSize: fonts[size],
+      letterSpacing: '-0.01em',
+      display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+      gap: 8,
+      cursor: 'pointer',
+      width: full ? '100%' : undefined,
+      transition: 'transform 0.1s ease',
+      ...style,
+    }}>
+      {icon && <SanadIcon name={icon} size={20} />}
+      <span>{children}</span>
+      {iconRight && <SanadIcon name={iconRight} size={18} />}
+    </button>
+  );
+}
+
+function Card({ children, style = {}, padding, elevated, theme: t }) {
+  t = t || useTheme();
+  return (
+    <div style={{
+      background: t.surface,
+      borderRadius: t.radius.card,
+      border: `1px solid ${t.border}`,
+      padding: padding ?? t.density.padCard,
+      boxShadow: elevated
+        ? '0 1px 0 rgba(0,0,0,0.02), 0 8px 28px rgba(15,20,20,0.06)'
+        : '0 1px 0 rgba(0,0,0,0.02)',
+      ...style,
+    }}>{children}</div>
+  );
+}
+
+function SectionTitle({ children, action, theme: t, style }) {
+  t = t || useTheme();
+  return (
+    <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', margin: '6px 4px 10px', ...style }}>
+      <div style={{ fontWeight: 600, fontSize: 16, color: t.ink, letterSpacing: '-0.01em' }}>{children}</div>
+      {action && <div style={{ fontSize: 13, color: t.primary, fontWeight: 500 }}>{action}</div>}
+    </div>
+  );
+}
+
+function Tag({ children, color, soft, icon, theme: t, style }) {
+  t = t || useTheme();
+  const c = color || t.primary;
+  const bg = soft || t.primarySoft;
+  return (
+    <span style={{
+      display: 'inline-flex', alignItems: 'center', gap: 6,
+      padding: '6px 12px', borderRadius: t.radius.chip,
+      background: bg, color: c,
+      fontSize: 12.5, fontWeight: 500,
+      ...style,
+    }}>
+      {icon && <SanadIcon name={icon} size={14} />}
+      {children}
+    </span>
+  );
+}
+
+function Field({ label, value, placeholder, icon, hint, error, type = 'text', readOnly, theme: t, style }) {
+  t = t || useTheme();
+  return (
+    <label style={{ display: 'block', ...style }}>
+      {label && <div style={{ fontSize: 13, color: t.inkMuted, marginBottom: 8, fontWeight: 500 }}>{label}</div>}
+      <div style={{
+        display: 'flex', alignItems: 'center', gap: 10,
+        height: t.density.fieldH,
+        padding: '0 14px',
+        background: t.surface,
+        border: `1.5px solid ${error ? t.danger : t.border}`,
+        borderRadius: t.radius.field,
+      }}>
+        {icon && <SanadIcon name={icon} size={18} color={t.inkSoft} />}
+        <input type={type} defaultValue={value} placeholder={placeholder} readOnly={readOnly}
+          style={{
+            flex: 1, border: 'none', outline: 'none', background: 'transparent',
+            fontFamily: t.font, fontSize: 15, color: t.ink,
+            textAlign: t.dir === 'rtl' ? 'right' : 'left',
+          }} />
+      </div>
+      {(hint || error) && <div style={{ fontSize: 12, color: error ? t.danger : t.inkSoft, marginTop: 6 }}>{error || hint}</div>}
+    </label>
+  );
+}
+
+function Avatar({ name, size = 40, color, theme: t, style }) {
+  t = t || useTheme();
+  const c = color || t.primary;
+  const initials = (name || '؟').split(' ').slice(0, 2).map(s => s[0]).join('');
+  return (
+    <div style={{
+      width: size, height: size, borderRadius: size / 2,
+      background: c + '22', color: c,
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      fontWeight: 600, fontSize: size * 0.4, flexShrink: 0,
+      ...style,
+    }}>{initials}</div>
+  );
+}
+
+function Stars({ value = 0, size = 16, total = 5, color = '#E0A823', theme: t }) {
+  t = t || useTheme();
+  return (
+    <span style={{ display: 'inline-flex', gap: 2, color }}>
+      {Array.from({ length: total }).map((_, i) => (
+        <SanadIcon key={i} name={i < value ? 'starFill' : 'star'} size={size} color={i < value ? color : t.inkSoft} />
+      ))}
+    </span>
+  );
+}
+
+// Service icon tile (large gradient-soft icon container)
+function ServiceTile({ service, size = 56, theme: t, style }) {
+  t = t || useTheme();
+  return (
+    <div style={{
+      width: size, height: size, borderRadius: t.radius.tile,
+      background: service.soft, color: service.color,
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      flexShrink: 0,
+      ...style,
+    }}>
+      <SanadIcon name={service.icon} size={size * 0.5} strokeWidth={1.7} />
+    </div>
+  );
+}
+
+// Top app bar — internal phone navbar
+function TopBar({ title, back = true, action, dark, theme: t, style }) {
+  t = t || useTheme();
+  return (
+    <div style={{
+      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+      padding: '8px 16px 6px', height: 52, ...style,
+    }}>
+      <div style={{ width: 40, height: 40, borderRadius: 12, background: t.surface, border: `1px solid ${t.border}`,
+        display: back ? 'flex' : 'none', alignItems: 'center', justifyContent: 'center' }}>
+        <SanadIcon name={t.dir === 'rtl' ? 'chevR' : 'chevL'} size={18} color={t.ink} />
+      </div>
+      <div style={{ fontWeight: 600, fontSize: 16, color: t.ink }}>{title}</div>
+      <div style={{ width: 40, height: 40, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        {action}
+      </div>
+    </div>
+  );
+}
+
+// Bottom tab bar
+function TabBar({ active = 'home', theme: t }) {
+  t = t || useTheme();
+  const items = [
+    { k: 'home', l: 'الرئيسية', i: 'home' },
+    { k: 'orders', l: 'طلباتي', i: 'list' },
+    { k: 'chat', l: 'المحادثات', i: 'chat' },
+    { k: 'profile', l: 'حسابي', i: 'user' },
+  ];
+  return (
+    <div style={{
+      position: 'absolute', bottom: 0, insetInlineStart: 0, insetInlineEnd: 0,
+      paddingBottom: 22, paddingTop: 10,
+      background: t.surface, borderTop: `1px solid ${t.border}`,
+      display: 'flex', justifyContent: 'space-around',
+      borderTopLeftRadius: 24, borderTopRightRadius: 24,
+      zIndex: 5,
+    }}>
+      {items.map(it => {
+        const on = it.k === active;
+        return (
+          <div key={it.k} style={{
+            display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
+            color: on ? t.primary : t.inkSoft, padding: '4px 12px',
+          }}>
+            <SanadIcon name={it.i} size={22} strokeWidth={on ? 2 : 1.6} />
+            <span style={{ fontSize: 11, fontWeight: on ? 600 : 500 }}>{it.l}</span>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+// Progress dots/segments for onboarding
+function ProgressDots({ count = 3, active = 0, theme: t }) {
+  t = t || useTheme();
+  return (
+    <div style={{ display: 'flex', gap: 6, justifyContent: 'center' }}>
+      {Array.from({ length: count }).map((_, i) => (
+        <div key={i} style={{
+          height: 6, borderRadius: 3,
+          width: i === active ? 24 : 6,
+          background: i === active ? t.primary : t.border,
+          transition: 'all 0.2s',
+        }} />
+      ))}
+    </div>
+  );
+}
+
+// Step bar (1 of 4)
+function StepBar({ steps, active = 0, theme: t }) {
+  t = t || useTheme();
+  return (
+    <div style={{ display: 'flex', gap: 6, padding: '6px 0' }}>
+      {Array.from({ length: steps }).map((_, i) => (
+        <div key={i} style={{
+          flex: 1, height: 4, borderRadius: 2,
+          background: i <= active ? t.primary : t.border,
+        }} />
+      ))}
+    </div>
+  );
+}
+
+// Logo (uses attached blue gradient png)
+function Logo({ size = 64, withMark = true, style }) {
+  return (
+    <div style={{ display: 'inline-flex', alignItems: 'center', gap: 10, ...style }}>
+      <img src="assets/sanad-logo.png" alt="سنــد" style={{ height: size, width: 'auto', display: 'block' }} />
+    </div>
+  );
+}
+
+// Map placeholder — stylized streets
+function MapPlaceholder({ height = 200, theme: t, route = true, style }) {
+  t = t || useTheme();
+  const stroke = t.dark ? '#243030' : '#D8E3DC';
+  const water = t.dark ? '#0F1A1A' : '#E5EFE9';
+  return (
+    <div style={{ position: 'relative', height, borderRadius: t.radius.tile, overflow: 'hidden',
+      background: t.dark ? '#101716' : '#EEF3EE', border: `1px solid ${t.border}`, ...style }}>
+      <svg width="100%" height="100%" viewBox="0 0 400 240" preserveAspectRatio="none" style={{ display: 'block' }}>
+        <rect width="400" height="240" fill={t.dark ? '#101716' : '#EEF3EE'}/>
+        <path d="M0 60 H 400" stroke={stroke} strokeWidth="20" opacity="0.9"/>
+        <path d="M0 150 H 400" stroke={stroke} strokeWidth="14" opacity="0.7"/>
+        <path d="M0 200 H 400" stroke={stroke} strokeWidth="10" opacity="0.6"/>
+        <path d="M120 0 V 240" stroke={stroke} strokeWidth="16" opacity="0.8"/>
+        <path d="M260 0 V 240" stroke={stroke} strokeWidth="12" opacity="0.7"/>
+        <path d="M340 0 V 240" stroke={stroke} strokeWidth="8" opacity="0.6"/>
+        <path d="M0 240 L 80 200 L 130 220 L 200 180 L 260 210 L 400 170 L 400 240 Z" fill={water} opacity="0.6"/>
+        {route && (
+          <g>
+            <path d="M40 200 Q 120 140, 200 130 T 360 60" stroke={t.primary} strokeWidth="4" fill="none" strokeDasharray="0" strokeLinecap="round"/>
+            <circle cx="40" cy="200" r="7" fill={t.primary}/>
+            <circle cx="40" cy="200" r="3" fill="#fff"/>
+            <circle cx="360" cy="60" r="9" fill={t.accent}/>
+            <circle cx="360" cy="60" r="3.5" fill="#fff"/>
+          </g>
+        )}
+      </svg>
+    </div>
+  );
+}
+
+// Profile placeholder — striped beige square with mono label
+function PhotoSlot({ height = 140, label = 'profile photo', theme: t, style, rounded }) {
+  t = t || useTheme();
+  return (
+    <div style={{
+      height,
+      borderRadius: rounded ?? t.radius.tile,
+      backgroundImage: `repeating-linear-gradient(45deg, ${t.bgMuted} 0 8px, ${t.surface2} 8px 16px)`,
+      border: `1px dashed ${t.border}`,
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      color: t.inkSoft, fontSize: 11, letterSpacing: '0.05em',
+      fontFamily: 'IBM Plex Mono, ui-monospace, monospace',
+      ...style,
+    }}>{label}</div>
+  );
+}
+
+// Divider
+function Divider({ theme: t, style }) {
+  t = t || useTheme();
+  return <div style={{ height: 1, background: t.border, margin: '8px 0', ...style }} />;
+}
+
+// Toggle
+function Toggle({ on, theme: t }) {
+  t = t || useTheme();
+  return (
+    <div style={{
+      width: 44, height: 26, borderRadius: 999,
+      background: on ? t.primary : t.bgMuted,
+      position: 'relative', flexShrink: 0,
+    }}>
+      <div style={{
+        position: 'absolute', top: 3, [on ? (t.dir === 'rtl' ? 'left' : 'right') : (t.dir === 'rtl' ? 'right' : 'left')]: 3,
+        width: 20, height: 20, borderRadius: 999, background: '#fff',
+        boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
+      }} />
+    </div>
+  );
+}
+
+// Phone-screen wrapper with consistent padding & RTL direction
+function Screen({ children, bg, theme: t, style }) {
+  t = t || useTheme();
+  return (
+    <div dir={t.dir} style={{
+      width: '100%', height: '100%', overflow: 'hidden',
+      background: bg ?? t.bg,
+      color: t.ink,
+      fontFamily: t.font,
+      display: 'flex', flexDirection: 'column',
+      ...style,
+    }}>{children}</div>
+  );
+}
+
+// Status bar (custom, since we sometimes overlay our own)
+function StatusBar({ dark, time = '٩:٤١', theme: t }) {
+  t = t || useTheme();
+  const c = dark ? '#fff' : t.ink;
+  return (
+    <div style={{
+      height: 44, padding: '0 22px',
+      display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between',
+      paddingBottom: 8, fontSize: 14, fontWeight: 600, color: c,
+    }}>
+      <div className="latin">{time}</div>
+      <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+        <svg width="16" height="10" viewBox="0 0 19 12"><rect x="0" y="7.5" width="3.2" height="4.5" rx="0.7" fill={c}/><rect x="4.8" y="5" width="3.2" height="7" rx="0.7" fill={c}/><rect x="9.6" y="2.5" width="3.2" height="9.5" rx="0.7" fill={c}/><rect x="14.4" y="0" width="3.2" height="12" rx="0.7" fill={c}/></svg>
+        <svg width="14" height="10" viewBox="0 0 17 12"><path d="M8.5 3.2C10.8 3.2 12.9 4.1 14.4 5.6L15.5 4.5C13.7 2.7 11.2 1.5 8.5 1.5C5.8 1.5 3.3 2.7 1.5 4.5L2.6 5.6C4.1 4.1 6.2 3.2 8.5 3.2Z" fill={c}/><path d="M8.5 6.8C9.9 6.8 11.1 7.3 12 8.2L13.1 7.1C11.8 5.9 10.2 5.1 8.5 5.1C6.8 5.1 5.2 5.9 3.9 7.1L5 8.2C5.9 7.3 7.1 6.8 8.5 6.8Z" fill={c}/><circle cx="8.5" cy="10.5" r="1.5" fill={c}/></svg>
+        <svg width="22" height="10" viewBox="0 0 27 13"><rect x="0.5" y="0.5" width="23" height="12" rx="3.5" stroke={c} strokeOpacity="0.4" fill="none"/><rect x="2" y="2" width="20" height="9" rx="2" fill={c}/></svg>
+      </div>
+    </div>
+  );
+}
+
+Object.assign(window, {
+  SanadAtoms: { useTheme },
+  Button, Card, SectionTitle, Tag, Field, Avatar, Stars, ServiceTile,
+  TopBar, TabBar, ProgressDots, StepBar, Logo, MapPlaceholder, PhotoSlot,
+  Divider, Toggle, Screen, StatusBar, useTheme,
+});
+
+
+/* ===== src/phone.jsx ===== */
+// Phone — wraps a screen in a phone-shaped frame.
+// Two flavors: Bezel (full iPhone with status/home indicator) and Plain (just the rounded screen rect, used inside iOS frame elsewhere).
+
+const PHONE_W = 390;
+const PHONE_H = 844;
+
+function PhoneBezel({ children, theme: t, label, dark, scale = 1, style }) {
+  t = t || useTheme();
+  return (
+    <div style={{
+      width: PHONE_W * scale,
+      height: PHONE_H * scale,
+      ...style,
+    }}>
+      <div style={{
+        width: PHONE_W, height: PHONE_H,
+        transform: `scale(${scale})`, transformOrigin: 'top right',
+        borderRadius: 52, overflow: 'hidden', position: 'relative',
+        background: t.bg,
+        boxShadow: dark
+          ? '0 30px 60px rgba(0,0,0,0.45), inset 0 0 0 8px #0a0a0a, 0 0 0 1.5px #1a1a1a'
+          : '0 30px 60px rgba(15,20,20,0.18), inset 0 0 0 8px #0e1414, 0 0 0 1.5px #1c2222',
+      }}>
+        {/* Dynamic island */}
+        <div style={{
+          position: 'absolute', top: 12, left: '50%', transform: 'translateX(-50%)',
+          width: 120, height: 34, borderRadius: 22, background: '#000', zIndex: 50,
+        }} />
+        {/* Screen content */}
+        <div style={{ position: 'absolute', inset: 8, borderRadius: 44, overflow: 'hidden', background: t.bg }}>
+          {children}
+        </div>
+        {/* Home indicator */}
+        <div style={{
+          position: 'absolute', bottom: 14, left: '50%', transform: 'translateX(-50%)',
+          width: 134, height: 5, borderRadius: 999, background: t.dark ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.25)', zIndex: 60,
+        }} />
+      </div>
+    </div>
+  );
+}
+
+window.PhoneBezel = PhoneBezel;
+window.PHONE_W = PHONE_W;
+window.PHONE_H = PHONE_H;
+
+
+/* ===== src/screens-onboarding.jsx ===== */
+// Sanad — onboarding, auth, splash screens
+// Exposes individual screen components used by both prototype and canvas.
+
+// ── Splash ──────────────────────────────────────────────────
+function ScrSplash({ theme: t }) {
+  t = t || useTheme();
+  return (
+    <Screen theme={t} bg={t.surface} style={{ alignItems: 'center', justifyContent: 'center' }}>
+      <StatusBar theme={t} />
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 28 }}>
+        <Logo size={120} />
+        <div style={{ textAlign: 'center', maxWidth: 280 }}>
+          <div style={{ fontSize: 17, fontWeight: 600, color: t.ink, marginBottom: 6 }}>سنــد</div>
+          <div style={{ fontSize: 14, color: t.inkMuted, lineHeight: 1.6 }}>رفقة تسندك في كل خطوة</div>
+        </div>
+      </div>
+      <div style={{ padding: '28px 24px 40px', textAlign: 'center' }}>
+        <div className="mono" style={{ fontSize: 11, color: t.inkSoft, letterSpacing: '0.1em' }}>الإصدار ٢٫٠٫٠</div>
+      </div>
+    </Screen>
+  );
+}
+
+// ── Onboarding ──────────────────────────────────────────────
+function OnboardSlide({ theme: t, idx = 0, total = 3, illustration, title, body, variant = 'illustration' }) {
+  t = t || useTheme();
+  return (
+    <Screen theme={t}>
+      <StatusBar theme={t} />
+      <div style={{ display: 'flex', justifyContent: 'flex-start', padding: '6px 20px' }}>
+        <div style={{ fontSize: 13, color: t.inkSoft, fontWeight: 500 }}>تخطّي</div>
+      </div>
+      <div style={{ flex: 1, padding: '0 24px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+        <div style={{ marginTop: 8 }}>{illustration}</div>
+        <div>
+          <div style={{ fontSize: 26, fontWeight: 700, color: t.ink, lineHeight: 1.3, marginBottom: 12, letterSpacing: '-0.02em' }}>{title}</div>
+          <div style={{ fontSize: 15, color: t.inkMuted, lineHeight: 1.7 }}>{body}</div>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 18, paddingBottom: 8 }}>
+          <ProgressDots count={total} active={idx} theme={t} />
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Button variant="ghost" theme={t}>السابق</Button>
+            <Button variant="primary" iconRight={t.dir === 'rtl' ? 'arrowL' : 'arrowR'} theme={t}>{idx === total - 1 ? 'ابدأ الآن' : 'التالي'}</Button>
+          </div>
+        </div>
+      </div>
+    </Screen>
+  );
+}
+
+function OnboardIllustration1({ theme: t }) {
+  t = t || useTheme();
+  return (
+    <div style={{ height: 320, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      {/* big rounded card with service tiles arranged */}
+      <div style={{ position: 'absolute', inset: '20px 0', borderRadius: 32,
+        background: `linear-gradient(180deg, ${t.primaryTint} 0%, ${t.surface2} 100%)`,
+        border: `1px solid ${t.border}`,
+      }} />
+      <div style={{ position: 'relative', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, padding: 20 }}>
+        {Object.values(window.SanadTokens.SERVICES).map(s => (
+          <div key={s.key} style={{
+            background: t.surface, borderRadius: 22, padding: 16,
+            border: `1px solid ${t.border}`, display: 'flex', flexDirection: 'column', gap: 10,
+            boxShadow: '0 4px 14px rgba(15,20,20,0.04)',
+            transform: ['fazaa', 'academic'].includes(s.key) ? 'translateY(-12px)' : 'translateY(8px)',
+          }}>
+            <ServiceTile service={s} size={42} theme={t} />
+            <div style={{ fontSize: 13, fontWeight: 600 }}>{s.name}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function OnboardIllustration2({ theme: t }) {
+  t = t || useTheme();
+  return (
+    <div style={{ height: 320, position: 'relative' }}>
+      <MapPlaceholder height={250} theme={t} />
+      <div style={{
+        position: 'absolute', bottom: 30, insetInlineStart: 16, insetInlineEnd: 16,
+        background: t.surface, borderRadius: 22, padding: 14,
+        border: `1px solid ${t.border}`,
+        boxShadow: '0 8px 24px rgba(15,20,20,0.08)',
+        display: 'flex', alignItems: 'center', gap: 12,
+      }}>
+        <Avatar name="أحمد م" size={44} theme={t} />
+        <div style={{ flex: 1 }}>
+          <div style={{ fontSize: 14, fontWeight: 600 }}>أحمد محمد</div>
+          <div style={{ fontSize: 12, color: t.inkMuted }}>وصل إلى الصيدلية الآن</div>
+        </div>
+        <div style={{ width: 36, height: 36, borderRadius: 18, background: t.primarySoft, color: t.primary,
+          display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <SanadIcon name="phone" size={18} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function OnboardIllustration3({ theme: t }) {
+  t = t || useTheme();
+  return (
+    <div style={{ height: 320, padding: 12, display: 'flex', flexDirection: 'column', gap: 12 }}>
+      {[
+        { name: 'سند فزعة', state: 'في الطريق', tag: 'جارٍ', color: t.primary },
+        { name: 'سند جليس', state: 'انتهت بنجاح', tag: 'مكتمل', color: t.success },
+        { name: 'سند مرافقة', state: 'غدًا ١٠:٠٠ ص', tag: 'مجدول', color: t.accent },
+      ].map((it, i) => (
+        <div key={i} style={{ background: t.surface, border: `1px solid ${t.border}`, borderRadius: 22,
+          padding: 14, display: 'flex', alignItems: 'center', gap: 12 }}>
+          <div style={{ width: 8, height: 40, borderRadius: 4, background: it.color }} />
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 14, fontWeight: 600 }}>{it.name}</div>
+            <div style={{ fontSize: 12, color: t.inkMuted }}>{it.state}</div>
+          </div>
+          <Tag color={it.color} soft={it.color + '22'} theme={t}>{it.tag}</Tag>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function ScrOnboard1({ theme: t }) {
+  t = t || useTheme();
+  return <OnboardSlide theme={t} idx={0}
+    illustration={<OnboardIllustration1 theme={t} />}
+    title="أربع خدمات سند، تحت يدك"
+    body="فزعة، جليس، أكاديمي، ومرافقة — اطلب ما تحتاج، نحن نسندك في الباقي." />;
+}
+function ScrOnboard2({ theme: t }) {
+  t = t || useTheme();
+  return <OnboardSlide theme={t} idx={1}
+    illustration={<OnboardIllustration2 theme={t} />}
+    title="مندوب مؤهل، تتبّع لحظي"
+    body="نختار لك مقدّمي خدمة موثوقين، وتتابع تقدّم الطلب لحظة بلحظة." />;
+}
+function ScrOnboard3({ theme: t }) {
+  t = t || useTheme();
+  return <OnboardSlide theme={t} idx={2}
+    illustration={<OnboardIllustration3 theme={t} />}
+    title="كل طلباتك في مكان واحد"
+    body="تابع طلباتك الجارية، المجدولة، والمكتملة، وقيّم كل تجربة." />;
+}
+
+// ── Auth: phone ─────────────────────────────────────────────
+function ScrAuthPhone({ theme: t }) {
+  t = t || useTheme();
+  return (
+    <Screen theme={t}>
+      <StatusBar theme={t} />
+      <div style={{ flex: 1, padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 24 }}>
+        <Logo size={56} />
+        <div>
+          <div style={{ fontSize: 26, fontWeight: 700, lineHeight: 1.3, letterSpacing: '-0.02em' }}>أهلًا بك في سند</div>
+          <div style={{ fontSize: 14, color: t.inkMuted, marginTop: 8, lineHeight: 1.7 }}>أدخل رقم جوالك للمتابعة. سنرسل رمز التحقق لمرة واحدة.</div>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+          <Field theme={t} label="رقم الجوال" value="5X XXX XXXX" placeholder="5X XXX XXXX" icon="phone" hint="نستخدم الرقم لإرسال رمز التحقق فقط." />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '0 4px' }}>
+            <div style={{ width: 18, height: 18, borderRadius: 4, border: `1.5px solid ${t.primary}`, background: t.primary,
+              display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <SanadIcon name="check" size={12} color="#fff" strokeWidth={2.5} />
+            </div>
+            <div style={{ fontSize: 12.5, color: t.inkMuted, lineHeight: 1.6 }}>أوافق على <span style={{ color: t.primary, fontWeight: 600 }}>الشروط والأحكام</span> و<span style={{ color: t.primary, fontWeight: 600 }}>سياسة الخصوصية</span></div>
+          </div>
+        </div>
+        <Button full theme={t} variant="primary" size="lg">إرسال رمز التحقق</Button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div style={{ flex: 1, height: 1, background: t.border }} />
+          <div style={{ fontSize: 12, color: t.inkSoft }}>أو</div>
+          <div style={{ flex: 1, height: 1, background: t.border }} />
+        </div>
+        <Button full theme={t} variant="surface" size="lg" icon="user">المتابعة كزائر</Button>
+        <div style={{ flex: 1 }} />
+        <div style={{ textAlign: 'center', fontSize: 13, color: t.inkMuted }}>
+          مقدّم خدمة؟ <span style={{ color: t.primary, fontWeight: 600 }}>سجّل من هنا</span>
+        </div>
+      </div>
+    </Screen>
+  );
+}
+
+// ── Auth: OTP ───────────────────────────────────────────────
+function ScrAuthOTP({ theme: t }) {
+  t = t || useTheme();
+  const code = ['٤', '٢', '٧', '_'];
+  return (
+    <Screen theme={t}>
+      <StatusBar theme={t} />
+      <TopBar theme={t} title="رمز التحقق" />
+      <div style={{ flex: 1, padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 24 }}>
+        <div>
+          <div style={{ fontSize: 24, fontWeight: 700, lineHeight: 1.3, letterSpacing: '-0.02em' }}>أدخل الرمز المرسل</div>
+          <div style={{ fontSize: 14, color: t.inkMuted, marginTop: 8, lineHeight: 1.7 }}>أرسلنا رمزًا مكوّنًا من ٤ خانات إلى<br /><span className="latin" style={{ color: t.ink, fontWeight: 600, direction: 'ltr', display: 'inline-block' }}>+966 5X XXX XXXX</span></div>
+        </div>
+        <div dir="ltr" style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
+          {code.map((d, i) => (
+            <div key={i} style={{
+              width: 64, height: 76, borderRadius: t.radius.field,
+              background: t.surface, border: `1.5px solid ${d === '_' ? t.primary : t.border}`,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 30, fontWeight: 700, color: t.ink,
+              boxShadow: d === '_' ? `0 0 0 4px ${t.primarySoft}` : 'none',
+            }}>{d === '_' ? '' : d}</div>
+          ))}
+        </div>
+        <div style={{ textAlign: 'center', fontSize: 13.5, color: t.inkMuted }}>
+          لم يصلك الرمز؟ <span style={{ color: t.primary, fontWeight: 600 }}>إعادة الإرسال خلال ٠٠:٢٨</span>
+        </div>
+        <Button full theme={t} variant="primary" size="lg">تأكيد ومتابعة</Button>
+      </div>
+    </Screen>
+  );
+}
+
+// ── Auth: profile setup ────────────────────────────────────
+function ScrProfileSetup({ theme: t }) {
+  t = t || useTheme();
+  return (
+    <Screen theme={t}>
+      <StatusBar theme={t} />
+      <TopBar theme={t} title="إكمال الملف" />
+      <div style={{ padding: '0 24px 8px' }}>
+        <StepBar theme={t} steps={3} active={1} />
+        <div style={{ fontSize: 12, color: t.inkSoft, marginTop: 8 }}>الخطوة ٢ من ٣</div>
+      </div>
+      <div style={{ flex: 1, padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 18, overflowY: 'auto' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}>
+          <div style={{ position: 'relative' }}>
+            <div style={{ width: 96, height: 96, borderRadius: 48, background: t.primarySoft, color: t.primary,
+              display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <SanadIcon name="user" size={40} />
+            </div>
+            <div style={{ position: 'absolute', bottom: -2, insetInlineEnd: -2, width: 32, height: 32, borderRadius: 16,
+              background: t.primary, color: '#fff',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', border: `2px solid ${t.bg}` }}>
+              <SanadIcon name="plus" size={18} color="#fff" />
+            </div>
+          </div>
+          <div style={{ fontSize: 13, color: t.inkSoft }}>أضف صورة (اختياري)</div>
+        </div>
+        <Field theme={t} label="الاسم الكامل" placeholder="مثال: عبدالله الفهد" icon="user" />
+        <Field theme={t} label="البريد الإلكتروني (اختياري)" placeholder="example@email.com" />
+        <div>
+          <div style={{ fontSize: 13, color: t.inkMuted, marginBottom: 8, fontWeight: 500 }}>المدينة</div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+            {['الرياض', 'جدة', 'الدمام', 'مكة', 'المدينة', 'أبها'].map((c, i) => (
+              <Tag key={c} theme={t} color={i === 0 ? '#fff' : t.ink} soft={i === 0 ? t.primary : t.surface}
+                style={{ border: `1px solid ${i === 0 ? t.primary : t.border}`, padding: '8px 14px', fontSize: 13 }}>{c}</Tag>
+            ))}
+          </div>
+        </div>
+        <Button full theme={t} variant="primary" size="lg">متابعة</Button>
+      </div>
+    </Screen>
+  );
+}
+
+Object.assign(window, {
+  ScrSplash, ScrOnboard1, ScrOnboard2, ScrOnboard3,
+  ScrAuthPhone, ScrAuthOTP, ScrProfileSetup,
+});
+
+
+/* ===== src/screens-home.jsx ===== */
+// Sanad — home dashboard (3 variations) + service selection list
+
+// ─── Home variant A: hero greeting + grid ───────────────────
+function ScrHomeA({ theme: t }) {
+  t = t || useTheme();
+  const services = Object.values(window.SanadTokens.SERVICES);
+  return (
+    <Screen theme={t}>
+      <StatusBar theme={t} />
+      <div style={{ flex: 1, overflowY: 'auto', paddingBottom: 100 }}>
+        {/* greeting */}
+        <div style={{ padding: '8px 20px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <Avatar name="عبدالله ف" size={44} theme={t} />
+            <div>
+              <div style={{ fontSize: 13, color: t.inkMuted }}>مساء الخير،</div>
+              <div style={{ fontSize: 16, fontWeight: 600 }}>عبدالله الفهد</div>
+            </div>
+          </div>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <div style={{ width: 40, height: 40, borderRadius: 12, background: t.surface, border: `1px solid ${t.border}`,
+              display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+              <SanadIcon name="bell" size={18} color={t.ink} />
+              <div style={{ position: 'absolute', top: 8, insetInlineEnd: 8, width: 8, height: 8, borderRadius: 4, background: t.danger, border: `1.5px solid ${t.surface}` }} />
+            </div>
+          </div>
+        </div>
+
+        {/* hero card — current request */}
+        <div style={{ padding: '0 16px 20px' }}>
+          <div style={{
+            background: `linear-gradient(135deg, ${t.primaryDeep || t.primary} 0%, ${t.primary} 100%)`,
+            color: '#fff', borderRadius: t.radius.card, padding: 18,
+            boxShadow: '0 12px 28px rgba(15,118,110,0.22)',
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+              <Tag theme={t} color="#fff" soft="rgba(255,255,255,0.18)" style={{ backdropFilter: 'blur(4px)' }}>طلب جارٍ</Tag>
+              <div style={{ fontSize: 11, opacity: 0.85 }} className="mono">#SF-2841</div>
+            </div>
+            <div style={{ fontSize: 20, fontWeight: 700, marginBottom: 4 }}>صيدلية الدواء — حي الياسمين</div>
+            <div style={{ fontSize: 13, opacity: 0.9, marginBottom: 14 }}>المندوب أحمد في الطريق — يصل خلال ١٢ دقيقة</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 12px', background: 'rgba(255,255,255,0.12)', borderRadius: 14 }}>
+              <Avatar name="أحمد م" size={36} color="#fff" style={{ background: 'rgba(255,255,255,0.22)' }} theme={t} />
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: 13, fontWeight: 600 }}>أحمد العتيبي</div>
+                <div style={{ fontSize: 11, opacity: 0.85 }}>تويوتا كامري · أ ب ج ١٢٣٤</div>
+              </div>
+              <div style={{ width: 34, height: 34, borderRadius: 17, background: 'rgba(255,255,255,0.18)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <SanadIcon name="phone" size={16} color="#fff" />
+              </div>
+              <div style={{ width: 34, height: 34, borderRadius: 17, background: 'rgba(255,255,255,0.18)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <SanadIcon name="chat" size={16} color="#fff" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* services grid */}
+        <div style={{ padding: '0 16px' }}>
+          <SectionTitle theme={t} action="عرض الكل">خدمات سند</SectionTitle>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+            {services.map(s => (
+              <Card key={s.key} theme={t} padding={16} style={{ display: 'flex', flexDirection: 'column', gap: 12, minHeight: 140 }}>
+                <ServiceTile service={s} size={48} theme={t} />
+                <div style={{ marginTop: 'auto' }}>
+                  <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 4 }}>{s.name}</div>
+                  <div style={{ fontSize: 11.5, color: t.inkMuted, lineHeight: 1.5 }}>{s.sub}</div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </div>
+
+        {/* quick actions strip */}
+        <div style={{ padding: '20px 16px 0' }}>
+          <SectionTitle theme={t}>اختصارات</SectionTitle>
+          <div style={{ display: 'flex', gap: 10, overflowX: 'auto' }}>
+            {[
+              { l: 'صيدلية', i: 'pharmacy', c: t.primary },
+              { l: 'سوبرماركت', i: 'cart', c: t.accent },
+              { l: 'موعد طبي', i: 'hospital', c: '#7A1E55' },
+              { l: 'وثائق', i: 'doc', c: '#1E3A8A' },
+            ].map(q => (
+              <div key={q.l} style={{ background: t.surface, border: `1px solid ${t.border}`, borderRadius: 16,
+                padding: 12, display: 'flex', alignItems: 'center', gap: 10, minWidth: 130 }}>
+                <div style={{ width: 36, height: 36, borderRadius: 10, background: q.c + '18', color: q.c,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <SanadIcon name={q.i} size={18} />
+                </div>
+                <div style={{ fontSize: 13, fontWeight: 500 }}>{q.l}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      <TabBar active="home" theme={t} />
+    </Screen>
+  );
+}
+
+// ─── Home variant B: minimal list-led ───────────────────────
+function ScrHomeB({ theme: t }) {
+  t = t || useTheme();
+  const services = Object.values(window.SanadTokens.SERVICES);
+  return (
+    <Screen theme={t}>
+      <StatusBar theme={t} />
+      <div style={{ flex: 1, overflowY: 'auto', paddingBottom: 100, padding: '8px 20px 100px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+          <Logo size={36} />
+          <div style={{ width: 40, height: 40, borderRadius: 20, background: t.surface, border: `1px solid ${t.border}`,
+            display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+            <SanadIcon name="bell" size={18} />
+          </div>
+        </div>
+
+        <div style={{ marginBottom: 20 }}>
+          <div style={{ fontSize: 14, color: t.inkMuted, marginBottom: 4 }}>أهلًا، عبدالله</div>
+          <div style={{ fontSize: 28, fontWeight: 700, lineHeight: 1.25, letterSpacing: '-0.02em' }}>كيف نقدر نسندك<br />اليوم؟</div>
+        </div>
+
+        <Field theme={t} placeholder="ابحث عن خدمة، مكان، أو طلب…" icon="search" style={{ marginBottom: 20 }} />
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 24 }}>
+          {services.map(s => (
+            <div key={s.key} style={{ background: t.surface, border: `1px solid ${t.border}`, borderRadius: t.radius.card,
+              padding: 16, display: 'flex', alignItems: 'center', gap: 14 }}>
+              <ServiceTile service={s} size={52} theme={t} />
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: 15.5, fontWeight: 600, marginBottom: 2 }}>{s.name}</div>
+                <div style={{ fontSize: 12.5, color: t.inkMuted, lineHeight: 1.5 }}>{s.sub}</div>
+              </div>
+              <SanadIcon name={t.dir === 'rtl' ? 'chevL' : 'chevR'} size={18} color={t.inkSoft} />
+            </div>
+          ))}
+        </div>
+
+        <SectionTitle theme={t} action="الكل">أحدث طلباتك</SectionTitle>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          {[
+            { s: 'سند فزعة', d: 'صيدلية الدواء', tag: 'جارٍ', c: t.primary, time: 'الآن' },
+            { s: 'سند جليس', d: 'جلسة قراءة — أم سعد', tag: 'مكتمل', c: t.success, time: 'أمس' },
+          ].map((it, i) => (
+            <div key={i} style={{ background: t.surface2, borderRadius: 16, padding: 14, display: 'flex', alignItems: 'center', gap: 12 }}>
+              <div style={{ width: 8, height: 36, borderRadius: 4, background: it.c }} />
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: 13.5, fontWeight: 600 }}>{it.d}</div>
+                <div style={{ fontSize: 11.5, color: t.inkMuted }}>{it.s} · {it.time}</div>
+              </div>
+              <Tag theme={t} color={it.c} soft={it.c + '1F'}>{it.tag}</Tag>
+            </div>
+          ))}
+        </div>
+      </div>
+      <TabBar active="home" theme={t} />
+    </Screen>
+  );
+}
+
+// ─── Home variant C: dense dashboard ───────────────────────
+function ScrHomeC({ theme: t }) {
+  t = t || useTheme();
+  const services = Object.values(window.SanadTokens.SERVICES);
+  return (
+    <Screen theme={t} bg={t.bgMuted}>
+      <StatusBar theme={t} />
+      <div style={{ flex: 1, overflowY: 'auto', paddingBottom: 100 }}>
+        <div style={{ padding: '8px 20px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div>
+            <div style={{ fontSize: 12, color: t.inkSoft }} className="mono">RIYADH · ٢٦°</div>
+            <div style={{ fontSize: 18, fontWeight: 700, marginTop: 2 }}>مرحبًا بعودتك</div>
+          </div>
+          <Avatar name="ع ف" size={42} theme={t} />
+        </div>
+
+        {/* stats row */}
+        <div style={{ padding: '0 16px 16px', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
+          {[
+            { l: 'طلبات هذا الشهر', v: '٧', c: t.primary },
+            { l: 'جلسات', v: '٣', c: t.accent },
+            { l: 'تقييمك', v: '٤٫٩', c: '#E0A823' },
+          ].map((s, i) => (
+            <div key={i} style={{ background: t.surface, borderRadius: 18, padding: 12, border: `1px solid ${t.border}` }}>
+              <div style={{ fontSize: 22, fontWeight: 700, color: s.c, letterSpacing: '-0.02em' }}>{s.v}</div>
+              <div style={{ fontSize: 10.5, color: t.inkMuted, marginTop: 2 }}>{s.l}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* horizontal services strip */}
+        <div style={{ padding: '0 16px 16px' }}>
+          <SectionTitle theme={t}>اختر الخدمة</SectionTitle>
+          <div style={{ display: 'flex', gap: 10, overflowX: 'auto', paddingBottom: 4 }}>
+            {services.map(s => (
+              <div key={s.key} style={{
+                minWidth: 150, background: t.surface, border: `1px solid ${t.border}`, borderRadius: 22,
+                padding: 14, display: 'flex', flexDirection: 'column', gap: 10,
+              }}>
+                <ServiceTile service={s} size={44} theme={t} />
+                <div style={{ fontSize: 13.5, fontWeight: 600 }}>{s.name}</div>
+                <div style={{ fontSize: 11, color: t.inkMuted, lineHeight: 1.5, height: 30 }}>{s.sub}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* upcoming */}
+        <div style={{ padding: '0 16px' }}>
+          <SectionTitle theme={t} action="التقويم">القادم اليوم وغدًا</SectionTitle>
+          <Card theme={t} padding={0} style={{ overflow: 'hidden' }}>
+            {[
+              { t1: 'موعد مستشفى الملك فيصل', t2: 'سند مرافقة · ٩:٣٠ ص', tag: 'اليوم', c: '#7A1E55' },
+              { t1: 'جلسة قراءة — والدة', t2: 'سند جليس · ٤:٠٠ م', tag: 'اليوم', c: t.accent },
+              { t1: 'برنامج محاسبة — تدريب', t2: 'سند أكاديمي · ٨:٣٠ ص', tag: 'الأحد', c: '#1E3A8A' },
+            ].map((row, i, a) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 16px',
+                borderBottom: i < a.length - 1 ? `1px solid ${t.border}` : 'none' }}>
+                <div style={{ width: 40, height: 40, borderRadius: 20, background: row.c + '1A', color: row.c,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <SanadIcon name="calendar" size={18} />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: 13.5, fontWeight: 600 }}>{row.t1}</div>
+                  <div style={{ fontSize: 11.5, color: t.inkMuted }}>{row.t2}</div>
+                </div>
+                <Tag theme={t} color={row.c} soft={row.c + '14'} style={{ fontSize: 11 }}>{row.tag}</Tag>
+              </div>
+            ))}
+          </Card>
+        </div>
+      </div>
+      <TabBar active="home" theme={t} />
+    </Screen>
+  );
+}
+
+window.ScrHomeA = ScrHomeA;
+window.ScrHomeB = ScrHomeB;
+window.ScrHomeC = ScrHomeC;
+
+
+/* ===== src/screens-services.jsx ===== */
+// Sanad — service selection / details screens
+
+function ScrServicesAll({ theme: t }) {
+  t = t || useTheme();
+  const services = Object.values(window.SanadTokens.SERVICES);
+  return (
+    <Screen theme={t}>
+      <StatusBar theme={t} />
+      <TopBar theme={t} title="جميع الخدمات" />
+      <div style={{ flex: 1, overflowY: 'auto', padding: '8px 20px 100px' }}>
+        <Field theme={t} placeholder="ابحث عن خدمة…" icon="search" style={{ marginBottom: 16 }} />
+        <div style={{ display: 'flex', gap: 8, marginBottom: 18, flexWrap: 'wrap' }}>
+          {['الكل', 'مشاوير', 'مرافقة', 'مرافقة طبية', 'تدريب'].map((c, i) => (
+            <Tag key={c} theme={t}
+              color={i === 0 ? '#fff' : t.ink}
+              soft={i === 0 ? t.primary : t.surface}
+              style={{ border: `1px solid ${i === 0 ? t.primary : t.border}`, padding: '8px 14px', fontSize: 13 }}>{c}</Tag>
+          ))}
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          {services.map(s => (
+            <Card key={s.key} theme={t} padding={16}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 14 }}>
+                <ServiceTile service={s} size={56} theme={t} />
+                <div style={{ flex: 1 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
+                    <div style={{ fontSize: 15.5, fontWeight: 600 }}>{s.name}</div>
+                    <Tag theme={t} color={t.success} soft={t.success + '18'} style={{ fontSize: 10.5 }}>متاح الآن</Tag>
+                  </div>
+                  <div style={{ fontSize: 12.5, color: t.inkMuted, lineHeight: 1.6 }}>{s.sub}</div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginTop: 10, fontSize: 11.5, color: t.inkSoft }}>
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                      <SanadIcon name="starFill" size={12} color="#E0A823" /> ٤٫٨
+                    </span>
+                    <span>·</span>
+                    <span>يبدأ من ٣٥ ر.س</span>
+                  </div>
+                </div>
+              </div>
+            </Card>
+          ))}
+        </div>
+      </div>
+    </Screen>
+  );
+}
+
+// Generic service detail header
+function ServiceDetail({ theme: t, service, hero, features, audiences, pricing }) {
+  t = t || useTheme();
+  return (
+    <Screen theme={t}>
+      <StatusBar theme={t} />
+      <TopBar theme={t} title={service.name} />
+      <div style={{ flex: 1, overflowY: 'auto', paddingBottom: 110 }}>
+        {/* Hero */}
+        <div style={{ padding: '4px 20px 18px' }}>
+          <div style={{
+            background: `linear-gradient(160deg, ${service.soft} 0%, ${t.surface} 90%)`,
+            borderRadius: t.radius.card, padding: 22, position: 'relative', overflow: 'hidden',
+            border: `1px solid ${t.border}`,
+          }}>
+            <ServiceTile service={service} size={64} theme={t} style={{ marginBottom: 14 }} />
+            <div style={{ fontSize: 22, fontWeight: 700, marginBottom: 6, letterSpacing: '-0.02em' }}>{service.name}</div>
+            <div style={{ fontSize: 13.5, color: t.inkMuted, lineHeight: 1.7 }}>{hero}</div>
+            <div style={{ display: 'flex', gap: 14, marginTop: 14, fontSize: 12, color: t.inkMuted }}>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                <SanadIcon name="starFill" size={14} color="#E0A823" />
+                <span style={{ color: t.ink, fontWeight: 600 }}>٤٫٨</span> (١٫٢ ألف)
+              </div>
+              <div>·</div>
+              <div>متاح الآن</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Features */}
+        <div style={{ padding: '0 20px 14px' }}>
+          <SectionTitle theme={t}>تفاصيل الخدمة</SectionTitle>
+          <Card theme={t} padding={0} style={{ overflow: 'hidden' }}>
+            {features.map((f, i) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 12, padding: 14,
+                borderBottom: i < features.length - 1 ? `1px solid ${t.border}` : 'none' }}>
+                <div style={{ width: 30, height: 30, borderRadius: 9, background: service.soft, color: service.color,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>
+                  <SanadIcon name="check" size={16} strokeWidth={2.2} />
+                </div>
+                <div style={{ flex: 1, fontSize: 13.5, lineHeight: 1.6 }}>{f}</div>
+              </div>
+            ))}
+          </Card>
+        </div>
+
+        {/* Audiences */}
+        <div style={{ padding: '0 20px 14px' }}>
+          <SectionTitle theme={t}>الفئات المستفيدة</SectionTitle>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+            {audiences.map(a => (
+              <Tag key={a} theme={t} color={service.color} soft={service.soft} style={{ padding: '8px 14px', fontSize: 12.5 }}>{a}</Tag>
+            ))}
+          </div>
+        </div>
+
+        {/* Pricing */}
+        <div style={{ padding: '0 20px 14px' }}>
+          <SectionTitle theme={t}>التكلفة التقديرية</SectionTitle>
+          <Card theme={t} padding={16}>
+            {pricing.map((p, i) => (
+              <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 0',
+                borderBottom: i < pricing.length - 1 ? `1px solid ${t.border}` : 'none' }}>
+                <div style={{ fontSize: 13.5, color: t.ink }}>{p.l}</div>
+                <div style={{ fontSize: 13.5, fontWeight: 600, color: t.ink }} className="latin">{p.v}</div>
+              </div>
+            ))}
+          </Card>
+        </div>
+      </div>
+
+      {/* CTA */}
+      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0,
+        padding: '14px 20px 26px', background: t.surface, borderTop: `1px solid ${t.border}` }}>
+        <Button full theme={t} variant="primary" size="lg" iconRight={t.dir === 'rtl' ? 'arrowL' : 'arrowR'}
+          style={{ background: service.color }}>
+          طلب الخدمة الآن
+        </Button>
+      </div>
+    </Screen>
+  );
+}
+
+function ScrServiceFazaa({ theme: t }) {
+  t = t || useTheme();
+  return <ServiceDetail theme={t} service={window.SanadTokens.SERVICES.fazaa}
+    hero="مشاوير ومهام يومية ينفّذها مندوب موثوق نيابةً عنك: صيدلية، سوبر ماركت، وثائق رسمية، وتوصيل المستندات."
+    features={[
+      'اختر نوع المشوار وحدد مواقع الانطلاق والوجهة.',
+      'وثّق الطلب بالصور والإيصال بعد تنفيذ المشوار.',
+      'تتبّع لحظي لحالة الطلب على الخريطة.',
+      'قيّم المندوب بعد إتمام المشوار.',
+    ]}
+    audiences={['كبار السن', 'الأسر', 'ذوو الإعاقة', 'الموظفون']}
+    pricing={[
+      { l: 'مشوار قصير (داخل الحي)', v: '٣٥ ر.س' },
+      { l: 'مشوار متوسط', v: '٦٠ ر.س' },
+      { l: 'وثائق رسمية', v: 'حسب الجهة' },
+    ]} />;
+}
+
+function ScrServiceJalees({ theme: t }) {
+  t = t || useTheme();
+  return <ServiceDetail theme={t} service={window.SanadTokens.SERVICES.jalees}
+    hero="مرافقة اجتماعية ودعم نفسي: قراءة، حوار، تذكير بالأدوية، ودعم خلال الجلسات الترفيهية والعلاجية."
+    features={[
+      'اختر نوع التفاعل: قراءة، حوار، ألعاب ذهنية، أو مساعدة في الحركة.',
+      'حدّد مدة الجلسة ومكانها — في المنزل أو افتراضيًا.',
+      'تواصل مباشر بالصوت أو الرسائل خلال الجلسة.',
+      'ملاحظات مدوّنة من مقدّم الخدمة بعد كل جلسة.',
+    ]}
+    audiences={['كبار السن', 'الأسر', 'ذوو الإعاقة', 'الأطفال', 'مرضى']}
+    pricing={[
+      { l: 'جلسة ساعة', v: '٦٠ ر.س' },
+      { l: 'جلسة نصف يوم', v: '١٥٠ ر.س' },
+      { l: 'باقة أسبوعية', v: '٣٨٠ ر.س' },
+    ]} />;
+}
+
+function ScrServiceAcademic({ theme: t }) {
+  t = t || useTheme();
+  return <ServiceDetail theme={t} service={window.SanadTokens.SERVICES.academic}
+    hero="برامج تدريب ميداني لطلاب الجامعات تحت إشراف أكاديمي مباشر، تساعدك على ربط الدراسة بسوق العمل."
+    features={[
+      'استعراض البرامج التدريبية المتاحة حسب التخصص.',
+      'معرفة تفاصيل البرنامج، المدة، والمتطلبات.',
+      'التقديم عبر التطبيق ومتابعة حالة الطلب.',
+      'الحصول على شهادة معتمدة بعد إتمام التدريب.',
+    ]}
+    audiences={['طلاب الجامعات', 'الخريجون الجدد', 'الباحثون عن تدريب']}
+    pricing={[
+      { l: 'برنامج تدريب صيفي', v: 'مجاني' },
+      { l: 'برنامج متخصص', v: '٢٥٠ ر.س' },
+      { l: 'إصدار الشهادة', v: 'مشمول' },
+    ]} />;
+}
+
+function ScrServiceMurafaqa({ theme: t }) {
+  t = t || useTheme();
+  return <ServiceDetail theme={t} service={window.SanadTokens.SERVICES.murafaqa}
+    hero="مرافقة المواعيد الطبية والحكومية والاجتماعية، مع دعم خلال التنقل والانتظار وإنجاز الإجراءات."
+    features={[
+      'حجز الموعد وتحديد عدد المرافقين.',
+      'مرافق مدرّب ومتفاهم مع احتياج المستفيد.',
+      'تتبّع الرحلة وتحديثات لحظية للوصول.',
+      'تلخيص الزيارة وتقييم الخدمة بعد الانتهاء.',
+    ]}
+    audiences={['كبار السن', 'مرضى', 'ذوو الإعاقة', 'الأسر']}
+    pricing={[
+      { l: 'مرافقة طبية (٣ ساعات)', v: '٧٠ ر.س' },
+      { l: 'مرافقة حكومية', v: '٩٠ ر.س' },
+      { l: 'حالة طارئة', v: '+٣٠٪' },
+    ]} />;
+}
+
+window.ScrServicesAll = ScrServicesAll;
+window.ScrServiceFazaa = ScrServiceFazaa;
+window.ScrServiceJalees = ScrServiceJalees;
+window.ScrServiceAcademic = ScrServiceAcademic;
+window.ScrServiceMurafaqa = ScrServiceMurafaqa;
+
+
+/* ===== src/screens-request.jsx ===== */
+// Sanad — request creation flow (one screen per service)
+
+function ScrRequestFazaa({ theme: t }) {
+  t = t || useTheme();
+  const s = window.SanadTokens.SERVICES.fazaa;
+  return (
+    <Screen theme={t}>
+      <StatusBar theme={t} />
+      <TopBar theme={t} title="طلب سند فزعة" />
+      <div style={{ padding: '0 20px 6px' }}>
+        <StepBar theme={t} steps={4} active={1} />
+        <div style={{ fontSize: 12, color: t.inkSoft, marginTop: 8 }}>الخطوة ٢ من ٤ — تفاصيل المشوار</div>
+      </div>
+      <div style={{ flex: 1, overflowY: 'auto', padding: '14px 20px 110px' }}>
+        <div style={{ fontSize: 13, color: t.inkMuted, fontWeight: 500, marginBottom: 8 }}>نوع المشوار</div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 18 }}>
+          {[
+            { l: 'صيدلية', i: 'pharmacy', sel: true },
+            { l: 'سوبرماركت', i: 'cart' },
+            { l: 'وثائق رسمية', i: 'doc' },
+            { l: 'أخرى', i: 'errand' },
+          ].map(o => (
+            <div key={o.l} style={{
+              background: o.sel ? s.soft : t.surface, color: o.sel ? s.color : t.ink,
+              border: `1.5px solid ${o.sel ? s.color : t.border}`, borderRadius: 18, padding: 14,
+              display: 'flex', alignItems: 'center', gap: 10,
+            }}>
+              <SanadIcon name={o.i} size={20} color={o.sel ? s.color : t.inkMuted} />
+              <div style={{ fontSize: 13.5, fontWeight: o.sel ? 600 : 500 }}>{o.l}</div>
+            </div>
+          ))}
+        </div>
+
+        <Field theme={t} label="الموقع الانطلاق" placeholder="حي الياسمين، الرياض" icon="pin" style={{ marginBottom: 12 }} />
+        <Field theme={t} label="الوجهة" placeholder="صيدلية الدواء — طريق الملك فهد" icon="pin" style={{ marginBottom: 12 }} />
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 18 }}>
+          <Field theme={t} label="وقت التنفيذ" value="أقرب وقت متاح" icon="clock" readOnly />
+          <Field theme={t} label="عدد الأكياس" value="٢" icon="cart" readOnly />
+        </div>
+
+        <div style={{ fontSize: 13, color: t.inkMuted, fontWeight: 500, marginBottom: 8 }}>صور أو مستندات (اختياري)</div>
+        <div style={{ display: 'flex', gap: 10, marginBottom: 16 }}>
+          <PhotoSlot theme={t} height={84} label="إيصال الصيدلية" rounded={t.radius.tile} style={{ flex: 1 }} />
+          <div style={{ width: 84, height: 84, borderRadius: t.radius.tile, border: `1.5px dashed ${t.border}`,
+            display: 'flex', alignItems: 'center', justifyContent: 'center', color: t.inkSoft }}>
+            <SanadIcon name="plus" size={22} />
+          </div>
+        </div>
+
+        <Field theme={t} label="ملاحظات إضافية" placeholder="مثال: أحتاج إيصال ضريبي" />
+      </div>
+
+      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0,
+        padding: '14px 20px 26px', background: t.surface, borderTop: `1px solid ${t.border}`,
+        display: 'flex', alignItems: 'center', gap: 12 }}>
+        <div style={{ flex: 1 }}>
+          <div style={{ fontSize: 11, color: t.inkSoft }}>التكلفة التقديرية</div>
+          <div style={{ fontSize: 18, fontWeight: 700 }} className="latin">٣٥ <span style={{ fontSize: 12, fontWeight: 500, color: t.inkMuted }}>ر.س</span></div>
+        </div>
+        <Button theme={t} variant="primary" size="lg" iconRight={t.dir === 'rtl' ? 'arrowL' : 'arrowR'}
+          style={{ background: s.color, flex: 1.2 }}>تأكيد الطلب</Button>
+      </div>
+    </Screen>
+  );
+}
+
+function ScrRequestJalees({ theme: t }) {
+  t = t || useTheme();
+  const s = window.SanadTokens.SERVICES.jalees;
+  return (
+    <Screen theme={t}>
+      <StatusBar theme={t} />
+      <TopBar theme={t} title="جدولة جلسة جليس" />
+      <div style={{ padding: '0 20px 6px' }}>
+        <StepBar theme={t} steps={3} active={1} />
+        <div style={{ fontSize: 12, color: t.inkSoft, marginTop: 8 }}>الخطوة ٢ من ٣</div>
+      </div>
+      <div style={{ flex: 1, overflowY: 'auto', padding: '14px 20px 110px' }}>
+        <div style={{ fontSize: 13, color: t.inkMuted, fontWeight: 500, marginBottom: 8 }}>نوع التفاعل</div>
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 18 }}>
+          {[
+            { l: 'تفاعل اجتماعي', sel: true },
+            { l: 'قراءة', sel: false },
+            { l: 'ألعاب ذهنية', sel: false },
+            { l: 'دعم نفسي', sel: false },
+          ].map(o => (
+            <Tag key={o.l} theme={t} color={o.sel ? '#fff' : t.ink} soft={o.sel ? s.color : t.surface}
+              style={{ border: `1px solid ${o.sel ? s.color : t.border}`, padding: '10px 16px', fontSize: 13, fontWeight: o.sel ? 600 : 500 }}>{o.l}</Tag>
+          ))}
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 14 }}>
+          <Field theme={t} label="التاريخ" value="١٥ مايو ٢٠٢٦" icon="calendar" readOnly />
+          <Field theme={t} label="الساعة" value="٤:٠٠ م" icon="clock" readOnly />
+        </div>
+
+        {/* duration slider */}
+        <div style={{ marginBottom: 18 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
+            <div style={{ fontSize: 13, color: t.inkMuted, fontWeight: 500 }}>مدة الجلسة</div>
+            <div style={{ fontSize: 13, fontWeight: 600 }} className="latin">١ ساعة</div>
+          </div>
+          <div style={{ height: 6, background: t.bgMuted, borderRadius: 3, position: 'relative' }}>
+            <div style={{ position: 'absolute', insetInlineStart: 0, top: 0, height: 6, width: '40%', background: s.color, borderRadius: 3 }} />
+            <div style={{ position: 'absolute', insetInlineStart: 'calc(40% - 10px)', top: -7, width: 20, height: 20, borderRadius: 10, background: '#fff', border: `2px solid ${s.color}`, boxShadow: '0 2px 6px rgba(0,0,0,0.12)' }} />
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 6, fontSize: 11, color: t.inkSoft }}>
+            <span>٣٠ د</span><span>١ س</span><span>٢ س</span><span>٣ س</span>
+          </div>
+        </div>
+
+        <div style={{ fontSize: 13, color: t.inkMuted, fontWeight: 500, marginBottom: 8 }}>المكان</div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 18 }}>
+          {[
+            { l: 'في المنزل', i: 'home', sel: true },
+            { l: 'افتراضي', i: 'video', sel: false },
+          ].map(o => (
+            <div key={o.l} style={{
+              background: o.sel ? s.soft : t.surface, color: o.sel ? s.color : t.ink,
+              border: `1.5px solid ${o.sel ? s.color : t.border}`, borderRadius: 18, padding: 14,
+              display: 'flex', alignItems: 'center', gap: 10,
+            }}>
+              <SanadIcon name={o.i} size={20} color={o.sel ? s.color : t.inkMuted} />
+              <div style={{ fontSize: 13.5, fontWeight: o.sel ? 600 : 500 }}>{o.l}</div>
+            </div>
+          ))}
+        </div>
+
+        <div style={{ fontSize: 13, color: t.inkMuted, fontWeight: 500, marginBottom: 8 }}>اختر مقدّم الخدمة</div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          {[
+            { n: 'سعاد محمد', s: 'مرافِقة معتمدة', y: '٧ سنوات خبرة', r: '٤٫٩', sel: true },
+            { n: 'هديل العتيبي', s: 'أخصائية اجتماعية', y: '٤ سنوات', r: '٤٫٧', sel: false },
+          ].map(p => (
+            <div key={p.n} style={{
+              border: `1.5px solid ${p.sel ? s.color : t.border}`, borderRadius: 18, padding: 14,
+              display: 'flex', alignItems: 'center', gap: 12, background: p.sel ? s.soft + '40' : t.surface,
+            }}>
+              <Avatar name={p.n} size={44} color={s.color} theme={t} />
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: 13.5, fontWeight: 600 }}>{p.n}</div>
+                <div style={{ fontSize: 11.5, color: t.inkMuted }}>{p.s} · {p.y}</div>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                <SanadIcon name="starFill" size={14} color="#E0A823" />
+                <span className="latin" style={{ fontSize: 12.5, fontWeight: 600 }}>{p.r}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0,
+        padding: '14px 20px 26px', background: t.surface, borderTop: `1px solid ${t.border}`,
+        display: 'flex', alignItems: 'center', gap: 12 }}>
+        <div style={{ flex: 1 }}>
+          <div style={{ fontSize: 11, color: t.inkSoft }}>التكلفة التقديرية</div>
+          <div style={{ fontSize: 18, fontWeight: 700 }} className="latin">٦٠ <span style={{ fontSize: 12, fontWeight: 500, color: t.inkMuted }}>ر.س</span></div>
+        </div>
+        <Button theme={t} variant="primary" size="lg" style={{ background: s.color, flex: 1.2 }}>تأكيد الجدولة</Button>
+      </div>
+    </Screen>
+  );
+}
+
+function ScrRequestAcademic({ theme: t }) {
+  t = t || useTheme();
+  const s = window.SanadTokens.SERVICES.academic;
+  return (
+    <Screen theme={t}>
+      <StatusBar theme={t} />
+      <TopBar theme={t} title="تقديم على البرنامج" />
+      <div style={{ flex: 1, overflowY: 'auto', padding: '14px 20px 110px' }}>
+        <Card theme={t} padding={16} style={{ marginBottom: 16 }}>
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+            <ServiceTile service={s} size={48} theme={t} />
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: 15, fontWeight: 600 }}>برنامج محاسبة تطبيقي</div>
+              <div style={{ fontSize: 12, color: t.inkMuted }}>جامعة الملك سعود · ١٢٠ ساعة</div>
+              <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
+                <Tag theme={t} color={s.color} soft={s.soft} style={{ fontSize: 10.5 }}>٠١/٠٦ — ٣١/٠٨</Tag>
+                <Tag theme={t} color={t.ink} soft={t.surface2} style={{ fontSize: 10.5, border: `1px solid ${t.border}` }}>صيفي</Tag>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        <SectionTitle theme={t}>المتطلبات</SectionTitle>
+        <Card theme={t} padding={0} style={{ overflow: 'hidden', marginBottom: 16 }}>
+          {[
+            'مستوى دراسي لا يقل عن ٣',
+            'موافقة الجامعة',
+            'إجادة استخدام الحاسب',
+          ].map((r, i, a) => (
+            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: 14,
+              borderBottom: i < a.length - 1 ? `1px solid ${t.border}` : 'none' }}>
+              <SanadIcon name="checkCircle" size={18} color={s.color} />
+              <div style={{ fontSize: 13.5 }}>{r}</div>
+            </div>
+          ))}
+        </Card>
+
+        <SectionTitle theme={t}>بياناتك للتقديم</SectionTitle>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 16 }}>
+          <Field theme={t} label="الجامعة" value="جامعة الملك سعود" readOnly />
+          <Field theme={t} label="التخصص" value="محاسبة" readOnly />
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+            <Field theme={t} label="المعدل" value="٤٫٢ / ٥" readOnly />
+            <Field theme={t} label="المستوى" value="السابع" readOnly />
+          </div>
+          <div style={{ background: t.surface, border: `1.5px dashed ${t.border}`, borderRadius: t.radius.field, padding: 14,
+            display: 'flex', alignItems: 'center', gap: 12 }}>
+            <div style={{ width: 38, height: 38, borderRadius: 10, background: s.soft, color: s.color,
+              display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <SanadIcon name="paperclip" size={18} />
+            </div>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: 13.5, fontWeight: 500 }}>إرفاق السجل الأكاديمي</div>
+              <div style={{ fontSize: 11.5, color: t.inkSoft }}>PDF أو صورة — حتى ٥ م.ب</div>
+            </div>
+            <Button theme={t} variant="surface" size="sm">رفع</Button>
+          </div>
+        </div>
+      </div>
+
+      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0,
+        padding: '14px 20px 26px', background: t.surface, borderTop: `1px solid ${t.border}` }}>
+        <Button full theme={t} variant="primary" size="lg" style={{ background: s.color }}>تقديم الطلب</Button>
+      </div>
+    </Screen>
+  );
+}
+
+function ScrRequestMurafaqa({ theme: t }) {
+  t = t || useTheme();
+  const s = window.SanadTokens.SERVICES.murafaqa;
+  return (
+    <Screen theme={t}>
+      <StatusBar theme={t} />
+      <TopBar theme={t} title="حجز مرافقة" />
+      <div style={{ flex: 1, overflowY: 'auto', padding: '14px 20px 110px' }}>
+        <div style={{ fontSize: 13, color: t.inkMuted, fontWeight: 500, marginBottom: 8 }}>نوع المرافقة</div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10, marginBottom: 18 }}>
+          {[
+            { l: 'طبية', i: 'hospital', sel: true },
+            { l: 'حكومية', i: 'gov', sel: false },
+            { l: 'اجتماعية', i: 'walk', sel: false },
+          ].map(o => (
+            <div key={o.l} style={{
+              background: o.sel ? s.soft : t.surface, color: o.sel ? s.color : t.ink,
+              border: `1.5px solid ${o.sel ? s.color : t.border}`, borderRadius: 18, padding: '14px 8px',
+              display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
+            }}>
+              <SanadIcon name={o.i} size={22} color={o.sel ? s.color : t.inkMuted} />
+              <div style={{ fontSize: 12.5, fontWeight: o.sel ? 600 : 500 }}>{o.l}</div>
+            </div>
+          ))}
+        </div>
+
+        <Field theme={t} label="الموقع" value="مستشفى الملك فيصل التخصصي" icon="hospital" readOnly style={{ marginBottom: 12 }} />
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 12 }}>
+          <Field theme={t} label="التاريخ" value="١٢ مايو ٢٠٢٦" icon="calendar" readOnly />
+          <Field theme={t} label="الوقت" value="٩:٣٠ ص" icon="clock" readOnly />
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 14 }}>
+          <Field theme={t} label="عدد المرافقين" value="١" readOnly />
+          <Field theme={t} label="مدّة متوقّعة" value="٣ ساعات" icon="clock" readOnly />
+        </div>
+
+        <Card theme={t} padding={14} style={{ marginBottom: 14, background: s.soft, borderColor: s.color + '40' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <Avatar name="محمد ع" size={44} color={s.color} theme={t} />
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: 14, fontWeight: 600 }}>محمد عبدالله</div>
+              <div style={{ fontSize: 11.5, color: t.inkMuted }}>مرافق طبي معتمد · رقم السيارة ١٢٣٤</div>
+            </div>
+            <SanadIcon name="checkCircle" size={20} color={s.color} />
+          </div>
+        </Card>
+
+        <Field theme={t} label="ملاحظات للمرافق" placeholder="مثال: المريضة على كرسي متحرك" />
+      </div>
+
+      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0,
+        padding: '14px 20px 26px', background: t.surface, borderTop: `1px solid ${t.border}`,
+        display: 'flex', alignItems: 'center', gap: 12 }}>
+        <div style={{ flex: 1 }}>
+          <div style={{ fontSize: 11, color: t.inkSoft }}>التكلفة التقديرية</div>
+          <div style={{ fontSize: 18, fontWeight: 700 }} className="latin">٧٠ <span style={{ fontSize: 12, fontWeight: 500, color: t.inkMuted }}>ر.س</span></div>
+        </div>
+        <Button theme={t} variant="primary" size="lg" style={{ background: s.color, flex: 1.2 }}>تأكيد الحجز</Button>
+      </div>
+    </Screen>
+  );
+}
+
+window.ScrRequestFazaa = ScrRequestFazaa;
+window.ScrRequestJalees = ScrRequestJalees;
+window.ScrRequestAcademic = ScrRequestAcademic;
+window.ScrRequestMurafaqa = ScrRequestMurafaqa;
+
+
+/* ===== src/screens-tracking.jsx ===== */
+// Sanad — tracking, notifications, chat, voice call
+
+function ScrTrackingFazaa({ theme: t }) {
+  t = t || useTheme();
+  const s = window.SanadTokens.SERVICES.fazaa;
+  return (
+    <Screen theme={t} bg={t.surface}>
+      <StatusBar theme={t} />
+      <TopBar theme={t} title="متابعة الطلب" />
+      <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
+        <MapPlaceholder theme={t} height="100%" style={{ borderRadius: 0, height: '100%' }} />
+        {/* Status pill on map */}
+        <div style={{ position: 'absolute', top: 16, left: 16, right: 16,
+          background: t.surface, borderRadius: 999, padding: '10px 16px',
+          boxShadow: '0 6px 20px rgba(15,20,20,0.12)',
+          display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div style={{ width: 10, height: 10, borderRadius: 5, background: t.success }} />
+          <div style={{ flex: 1, fontSize: 13, fontWeight: 500 }}>المندوب في الطريق إليك</div>
+          <div style={{ fontSize: 13, fontWeight: 700, color: s.color }} className="latin">١٢ د</div>
+        </div>
+
+        {/* Bottom sheet */}
+        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0,
+          background: t.surface, borderTopLeftRadius: t.radius.sheet, borderTopRightRadius: t.radius.sheet,
+          padding: '16px 20px 26px', boxShadow: '0 -8px 24px rgba(15,20,20,0.08)' }}>
+          <div style={{ width: 48, height: 4, borderRadius: 2, background: t.bgMuted, margin: '0 auto 14px' }} />
+
+          {/* timeline */}
+          <div style={{ position: 'relative', marginBottom: 16 }}>
+            <div style={{ position: 'absolute', insetInlineStart: 11, top: 8, bottom: 8, width: 2, background: t.bgMuted }} />
+            {[
+              { l: 'تم استلام الطلب', t: '١٠:٣٠ ص', done: true },
+              { l: 'في طريق الصيدلية', t: '١٠:٣٤ ص', done: true },
+              { l: 'تم الاستلام', t: '١٠:٤٢ ص', done: true, active: true },
+              { l: 'في الطريق إليك', t: 'الآن', done: false },
+              { l: 'تم التسليم', t: '—', done: false },
+            ].map((st, i) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '6px 0', position: 'relative' }}>
+                <div style={{ width: 24, height: 24, borderRadius: 12, background: st.done ? s.color : t.surface,
+                  border: `2px solid ${st.done ? s.color : t.border}`,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, zIndex: 1 }}>
+                  {st.done && <SanadIcon name="check" size={12} color="#fff" strokeWidth={2.5} />}
+                </div>
+                <div style={{ flex: 1, fontSize: 13.5, fontWeight: st.active ? 600 : 500, color: st.done ? t.ink : t.inkSoft }}>{st.l}</div>
+                <div className="latin" style={{ fontSize: 11.5, color: t.inkSoft }}>{st.t}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* driver */}
+          <div style={{ background: t.surface2, border: `1px solid ${t.border}`, borderRadius: 18, padding: 12,
+            display: 'flex', alignItems: 'center', gap: 12 }}>
+            <Avatar name="أحمد م" size={44} color={s.color} theme={t} />
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: 14, fontWeight: 600 }}>أحمد العتيبي</div>
+              <div style={{ fontSize: 11.5, color: t.inkMuted }}>تويوتا كامري · أ ب ج ١٢٣٤</div>
+            </div>
+            <div style={{ width: 40, height: 40, borderRadius: 14, background: s.color, color: '#fff',
+              display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <SanadIcon name="phone" size={18} color="#fff" />
+            </div>
+            <div style={{ width: 40, height: 40, borderRadius: 14, background: t.surface, border: `1.5px solid ${t.border}`,
+              display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <SanadIcon name="chat" size={18} color={t.ink} />
+            </div>
+          </div>
+        </div>
+      </div>
+    </Screen>
+  );
+}
+
+function ScrTrackingMurafaqa({ theme: t }) {
+  t = t || useTheme();
+  const s = window.SanadTokens.SERVICES.murafaqa;
+  return (
+    <Screen theme={t}>
+      <StatusBar theme={t} />
+      <TopBar theme={t} title="متابعة الرحلة" />
+      <div style={{ flex: 1, overflowY: 'auto', padding: '4px 20px 30px' }}>
+        <Card theme={t} padding={16} style={{ marginBottom: 14, background: s.soft, borderColor: s.color + '40' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <div style={{ width: 48, height: 48, borderRadius: 24, background: '#fff', color: s.color,
+              display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <SanadIcon name="walk" size={22} />
+            </div>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: 14, fontWeight: 600 }}>المرافِق في طريقه إليك</div>
+              <div style={{ fontSize: 12, color: t.inkMuted }}>الوصول المتوقع ٩:٢٥ ص</div>
+            </div>
+            <div style={{ fontSize: 18, fontWeight: 700, color: s.color }} className="latin">٨ د</div>
+          </div>
+        </Card>
+
+        <MapPlaceholder theme={t} height={260} style={{ marginBottom: 14 }} />
+
+        <Card theme={t} padding={16} style={{ marginBottom: 14 }}>
+          <div style={{ fontSize: 13, color: t.inkMuted, fontWeight: 500, marginBottom: 12 }}>تفاصيل الموعد</div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <span style={{ fontSize: 13, color: t.inkMuted }}>المستشفى</span>
+              <span style={{ fontSize: 13, fontWeight: 600 }}>الملك فيصل التخصصي</span>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <span style={{ fontSize: 13, color: t.inkMuted }}>القسم</span>
+              <span style={{ fontSize: 13, fontWeight: 600 }}>الباطنية — د. أحمد</span>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <span style={{ fontSize: 13, color: t.inkMuted }}>الموعد</span>
+              <span style={{ fontSize: 13, fontWeight: 600 }} className="latin">٩:٣٠ ص — ١٢ مايو</span>
+            </div>
+          </div>
+        </Card>
+
+        <Card theme={t} padding={14}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <Avatar name="محمد ع" size={44} color={s.color} theme={t} />
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: 14, fontWeight: 600 }}>محمد عبدالله</div>
+              <div style={{ fontSize: 11.5, color: t.inkMuted }}>مرافق طبي معتمد</div>
+            </div>
+            <Stars value={5} theme={t} />
+          </div>
+          <Divider theme={t} />
+          <div style={{ display: 'flex', gap: 8 }}>
+            <Button theme={t} variant="surface" size="sm" icon="chat" full>محادثة</Button>
+            <Button theme={t} variant="primary" size="sm" icon="phone" full style={{ background: s.color }}>اتصال</Button>
+          </div>
+        </Card>
+      </div>
+    </Screen>
+  );
+}
+
+function ScrChat({ theme: t }) {
+  t = t || useTheme();
+  const messages = [
+    { from: 'them', text: 'السلام عليكم، أنا أحمد. وصلت للصيدلية الآن.', time: '١٠:٤٢' },
+    { from: 'them', text: 'هل تحتاج شيء إضافي؟', time: '١٠:٤٢' },
+    { from: 'me', text: 'وعليكم السلام. لا، يكفي ما هو في الوصفة. شكرًا.', time: '١٠:٤٤' },
+    { from: 'them', text: 'تمام. سأرسل لك صورة الإيصال قبل التحرّك.', time: '١٠:٤٥' },
+    { from: 'them', img: true, time: '١٠:٤٦' },
+    { from: 'me', text: 'استلمت — في انتظارك.', time: '١٠:٤٧' },
+  ];
+  return (
+    <Screen theme={t}>
+      <StatusBar theme={t} />
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '8px 16px 12px',
+        background: t.surface, borderBottom: `1px solid ${t.border}` }}>
+        <div style={{ width: 36, height: 36, borderRadius: 12, background: t.surface2, border: `1px solid ${t.border}`,
+          display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <SanadIcon name={t.dir === 'rtl' ? 'chevR' : 'chevL'} size={16} />
+        </div>
+        <Avatar name="أحمد م" size={40} theme={t} />
+        <div style={{ flex: 1 }}>
+          <div style={{ fontSize: 14, fontWeight: 600 }}>أحمد العتيبي</div>
+          <div style={{ fontSize: 11, color: t.success, display: 'flex', alignItems: 'center', gap: 4 }}>
+            <span style={{ width: 6, height: 6, borderRadius: 3, background: t.success }} /> متصل الآن
+          </div>
+        </div>
+        <div style={{ width: 38, height: 38, borderRadius: 12, background: t.primarySoft, color: t.primary,
+          display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <SanadIcon name="phone" size={17} />
+        </div>
+      </div>
+
+      <div style={{ flex: 1, overflowY: 'auto', padding: '16px 16px 8px', display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <div style={{ textAlign: 'center', fontSize: 11, color: t.inkSoft, marginBottom: 8 }}>اليوم</div>
+        {messages.map((m, i) => (
+          <div key={i} style={{ display: 'flex', justifyContent: m.from === 'me' ? 'flex-end' : 'flex-start' }}>
+            {m.img ? (
+              <div style={{ width: 180, height: 110, borderRadius: 16,
+                backgroundImage: `repeating-linear-gradient(45deg, ${t.bgMuted} 0 8px, ${t.surface2} 8px 16px)`,
+                border: `1px solid ${t.border}`,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                color: t.inkSoft, fontSize: 11, fontFamily: 'IBM Plex Mono, monospace' }}>
+                receipt.jpg
+              </div>
+            ) : (
+              <div style={{
+                maxWidth: '78%',
+                background: m.from === 'me' ? t.primary : t.surface,
+                color: m.from === 'me' ? '#fff' : t.ink,
+                border: m.from === 'me' ? 'none' : `1px solid ${t.border}`,
+                padding: '10px 14px', borderRadius: 18,
+                borderBottomRightRadius: m.from === 'me' && t.dir === 'rtl' ? 4 : 18,
+                borderBottomLeftRadius: m.from === 'me' && t.dir === 'ltr' ? 4 : (m.from === 'them' && t.dir === 'rtl' ? 4 : 18),
+                fontSize: 13.5, lineHeight: 1.55,
+              }}>
+                {m.text}
+                <div style={{ fontSize: 10, opacity: 0.7, marginTop: 2 }} className="latin">{m.time}</div>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+
+      <div style={{ padding: '10px 12px 22px', display: 'flex', alignItems: 'center', gap: 8,
+        background: t.surface, borderTop: `1px solid ${t.border}` }}>
+        <div style={{ width: 40, height: 40, borderRadius: 20, background: t.surface2, border: `1px solid ${t.border}`,
+          display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <SanadIcon name="paperclip" size={18} />
+        </div>
+        <div style={{ flex: 1, height: 44, borderRadius: 22, background: t.surface2, border: `1px solid ${t.border}`,
+          display: 'flex', alignItems: 'center', padding: '0 14px', gap: 8 }}>
+          <SanadIcon name="mic" size={16} color={t.inkSoft} />
+          <span style={{ fontSize: 13, color: t.inkSoft }}>اكتب رسالة…</span>
+        </div>
+        <div style={{ width: 44, height: 44, borderRadius: 22, background: t.primary,
+          display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <SanadIcon name="send" size={18} color="#fff" />
+        </div>
+      </div>
+    </Screen>
+  );
+}
+
+function ScrCall({ theme: t }) {
+  t = t || useTheme();
+  return (
+    <Screen theme={t} bg={t.dark ? '#0A1414' : '#0F1F1D'}>
+      <StatusBar theme={t} dark />
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between',
+        padding: '60px 24px 50px', position: 'relative' }}>
+        {/* bg gradient */}
+        <div style={{ position: 'absolute', inset: 0,
+          background: `radial-gradient(circle at 50% 20%, ${t.primary}40 0%, transparent 60%)` }} />
+        <div style={{ position: 'relative', textAlign: 'center', color: '#fff' }}>
+          <div style={{ fontSize: 13, opacity: 0.7, marginBottom: 6 }}>سند فزعة · مكالمة جارية</div>
+          <div style={{ fontSize: 24, fontWeight: 700, marginBottom: 10 }}>أحمد العتيبي</div>
+          <div className="latin" style={{ fontSize: 14, opacity: 0.8 }}>٠٠:٠٢:١٤</div>
+        </div>
+
+        <div style={{ position: 'relative' }}>
+          <div style={{ width: 160, height: 160, borderRadius: 80,
+            background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.18)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Avatar name="أحمد م" size={120} color="#fff" style={{ background: 'rgba(255,255,255,0.2)', fontSize: 40 }} theme={t} />
+          </div>
+          <div style={{ position: 'absolute', inset: -20, borderRadius: 100, border: '2px solid rgba(255,255,255,0.15)' }} />
+          <div style={{ position: 'absolute', inset: -40, borderRadius: 120, border: '1px solid rgba(255,255,255,0.08)' }} />
+        </div>
+
+        <div style={{ position: 'relative', display: 'flex', gap: 24, justifyContent: 'center', alignItems: 'center', width: '100%' }}>
+          {[
+            { i: 'mic', l: 'كتم', danger: false },
+            { i: 'video', l: 'كاميرا', danger: false },
+            { i: 'close', l: 'إنهاء', danger: true, big: true },
+            { i: 'chat', l: 'محادثة', danger: false },
+            { i: 'user', l: 'إضافة', danger: false },
+          ].map((b, i) => (
+            <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
+              <div style={{
+                width: b.big ? 68 : 52, height: b.big ? 68 : 52,
+                borderRadius: '50%',
+                background: b.danger ? t.danger : 'rgba(255,255,255,0.14)',
+                border: '1px solid rgba(255,255,255,0.18)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                color: '#fff',
+              }}>
+                <SanadIcon name={b.i} size={b.big ? 24 : 20} color="#fff" />
+              </div>
+              <div style={{ fontSize: 11, color: '#fff', opacity: 0.7 }}>{b.l}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </Screen>
+  );
+}
+
+function ScrNotifications({ theme: t }) {
+  t = t || useTheme();
+  const groups = [
+    { title: 'اليوم', items: [
+      { i: 'pin', c: t.primary, t: 'وصل المندوب إلى وجهتك', d: 'سند فزعة · طلب #SF-2841', time: 'قبل ٥ د', unread: true },
+      { i: 'check', c: t.success, t: 'تم استلام طلبك', d: 'سند فزعة · حي الياسمين', time: 'قبل ١٢ د', unread: true },
+      { i: 'chat', c: t.accent, t: 'رسالة جديدة من أحمد', d: 'تمام. سأرسل لك صورة الإيصال…', time: 'قبل ١٤ د' },
+    ]},
+    { title: 'هذا الأسبوع', items: [
+      { i: 'starFill', c: '#E0A823', t: 'لا تنسَ تقييم الجلسة', d: 'سند جليس · مع سعاد محمد', time: 'أمس' },
+      { i: 'graduation', c: '#1E3A8A', t: 'تم قبول طلب التدريب', d: 'برنامج محاسبة تطبيقي', time: 'أول أمس' },
+      { i: 'calendar', c: '#7A1E55', t: 'تذكير بالموعد الطبي غدًا', d: 'الملك فيصل التخصصي · ٩:٣٠ ص', time: 'الجمعة' },
+    ]},
+  ];
+  return (
+    <Screen theme={t}>
+      <StatusBar theme={t} />
+      <TopBar theme={t} title="الإشعارات" action={<div style={{ fontSize: 12, color: t.primary, fontWeight: 600 }}>قراءة الكل</div>} />
+      <div style={{ flex: 1, overflowY: 'auto', padding: '4px 20px 30px' }}>
+        {groups.map(g => (
+          <div key={g.title} style={{ marginBottom: 20 }}>
+            <div style={{ fontSize: 12, color: t.inkSoft, fontWeight: 500, marginBottom: 10, paddingInlineStart: 4 }}>{g.title}</div>
+            <Card theme={t} padding={0} style={{ overflow: 'hidden' }}>
+              {g.items.map((n, i, a) => (
+                <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 12, padding: 14, position: 'relative',
+                  borderBottom: i < a.length - 1 ? `1px solid ${t.border}` : 'none' }}>
+                  <div style={{ width: 38, height: 38, borderRadius: 11, background: n.c + '18', color: n.c,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <SanadIcon name={n.i} size={18} />
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8 }}>
+                      <div style={{ fontSize: 13.5, fontWeight: 600, color: t.ink }}>{n.t}</div>
+                      <div style={{ fontSize: 11, color: t.inkSoft, flexShrink: 0 }}>{n.time}</div>
+                    </div>
+                    <div style={{ fontSize: 12, color: t.inkMuted, marginTop: 4, lineHeight: 1.5 }}>{n.d}</div>
+                  </div>
+                  {n.unread && <div style={{ position: 'absolute', top: 18, insetInlineEnd: 14, width: 8, height: 8, borderRadius: 4, background: t.primary }} />}
+                </div>
+              ))}
+            </Card>
+          </div>
+        ))}
+      </div>
+    </Screen>
+  );
+}
+
+window.ScrTrackingFazaa = ScrTrackingFazaa;
+window.ScrTrackingMurafaqa = ScrTrackingMurafaqa;
+window.ScrChat = ScrChat;
+window.ScrCall = ScrCall;
+window.ScrNotifications = ScrNotifications;
+
+
+/* ===== src/screens-profile.jsx ===== */
+// Sanad — profile (3 variants), settings, ratings flow + reviews list
+
+function ScrProfileA({ theme: t }) {
+  t = t || useTheme();
+  return (
+    <Screen theme={t}>
+      <StatusBar theme={t} />
+      <div style={{ flex: 1, overflowY: 'auto', paddingBottom: 100 }}>
+        {/* Hero header */}
+        <div style={{
+          background: `linear-gradient(160deg, ${t.primaryDeep || t.primary} 0%, ${t.primary} 60%, ${t.primary}cc 100%)`,
+          padding: '20px 20px 60px', color: '#fff', position: 'relative',
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 }}>
+            <div style={{ fontSize: 16, fontWeight: 600 }}>حسابي</div>
+            <div style={{ width: 36, height: 36, borderRadius: 18, background: 'rgba(255,255,255,0.18)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <SanadIcon name="settings" size={18} color="#fff" />
+            </div>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+            <Avatar name="عبدالله ف" size={68} color="#fff" style={{ background: 'rgba(255,255,255,0.22)', fontSize: 24 }} theme={t} />
+            <div>
+              <div style={{ fontSize: 20, fontWeight: 700 }}>عبدالله الفهد</div>
+              <div style={{ fontSize: 12, opacity: 0.85, marginTop: 2 }} className="latin">+966 5X XXX XXXX</div>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 4, marginTop: 8,
+                background: 'rgba(255,255,255,0.2)', padding: '4px 10px', borderRadius: 999, fontSize: 11 }}>
+                <SanadIcon name="shieldCheck" size={12} color="#fff" /> موثّق
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Stats card overlapping header */}
+        <div style={{ padding: '0 16px', marginTop: -40 }}>
+          <Card theme={t} padding={16} elevated>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10 }}>
+              {[
+                { v: '٢٧', l: 'طلب' },
+                { v: '٤٫٩', l: 'تقييمك' },
+                { v: '١٢٠', l: 'نقاط ولاء' },
+              ].map((s, i, a) => (
+                <div key={i} style={{ textAlign: 'center', padding: '4px 0',
+                  borderInlineEnd: i < a.length - 1 ? `1px solid ${t.border}` : 'none' }}>
+                  <div className="latin" style={{ fontSize: 22, fontWeight: 700, color: t.ink, letterSpacing: '-0.02em' }}>{s.v}</div>
+                  <div style={{ fontSize: 11, color: t.inkMuted, marginTop: 2 }}>{s.l}</div>
+                </div>
+              ))}
+            </div>
+          </Card>
+        </div>
+
+        {/* Menu */}
+        <div style={{ padding: '20px 16px 0' }}>
+          <Card theme={t} padding={0} style={{ overflow: 'hidden', marginBottom: 12 }}>
+            {[
+              { i: 'list', l: 'طلباتي', d: '٢ جارية', c: t.primary },
+              { i: 'card', l: 'طرق الدفع', d: 'مدى · ****٤٢٧٨', c: t.primary },
+              { i: 'pin', l: 'العناوين', d: 'البيت، العمل', c: t.primary },
+              { i: 'shield', l: 'الموثّقون', d: '٣ مفضّلون', c: t.primary },
+            ].map((r, i, a) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 16px',
+                borderBottom: i < a.length - 1 ? `1px solid ${t.border}` : 'none' }}>
+                <div style={{ width: 36, height: 36, borderRadius: 11, background: r.c + '14', color: r.c,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <SanadIcon name={r.i} size={18} />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: 14, fontWeight: 500 }}>{r.l}</div>
+                  <div style={{ fontSize: 11.5, color: t.inkSoft, marginTop: 2 }}>{r.d}</div>
+                </div>
+                <SanadIcon name={t.dir === 'rtl' ? 'chevL' : 'chevR'} size={16} color={t.inkSoft} />
+              </div>
+            ))}
+          </Card>
+
+          <Card theme={t} padding={0} style={{ overflow: 'hidden' }}>
+            {[
+              { i: 'bell', l: 'الإشعارات' },
+              { i: 'globe', l: 'اللغة', d: 'العربية' },
+              { i: 'settings', l: 'الإعدادات' },
+              { i: 'logout', l: 'تسجيل الخروج', danger: true },
+            ].map((r, i, a) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 16px',
+                borderBottom: i < a.length - 1 ? `1px solid ${t.border}` : 'none' }}>
+                <SanadIcon name={r.i} size={18} color={r.danger ? t.danger : t.inkMuted} />
+                <div style={{ flex: 1, fontSize: 14, color: r.danger ? t.danger : t.ink }}>{r.l}</div>
+                {r.d && <div style={{ fontSize: 12, color: t.inkSoft }}>{r.d}</div>}
+                <SanadIcon name={t.dir === 'rtl' ? 'chevL' : 'chevR'} size={16} color={t.inkSoft} />
+              </div>
+            ))}
+          </Card>
+        </div>
+      </div>
+      <TabBar active="profile" theme={t} />
+    </Screen>
+  );
+}
+
+function ScrProfileB({ theme: t }) {
+  t = t || useTheme();
+  return (
+    <Screen theme={t}>
+      <StatusBar theme={t} />
+      <div style={{ flex: 1, overflowY: 'auto', paddingBottom: 100, padding: '6px 20px 100px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 22 }}>
+          <div style={{ fontSize: 22, fontWeight: 700, letterSpacing: '-0.02em' }}>حسابي</div>
+          <div style={{ width: 38, height: 38, borderRadius: 12, background: t.surface, border: `1px solid ${t.border}`,
+            display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <SanadIcon name="settings" size={17} />
+          </div>
+        </div>
+
+        <Card theme={t} padding={20} style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 20 }}>
+          <Avatar name="عبدالله ف" size={64} theme={t} />
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 17, fontWeight: 700 }}>عبدالله الفهد</div>
+            <div style={{ fontSize: 12, color: t.inkMuted, marginTop: 2 }} className="latin">+966 5X XXX XXXX</div>
+            <div style={{ display: 'flex', gap: 6, marginTop: 8 }}>
+              <Tag theme={t} color={t.success} soft={t.success + '18'} icon="shieldCheck" style={{ fontSize: 10.5 }}>موثّق</Tag>
+              <Tag theme={t} color="#E0A823" soft="#E0A82318" icon="trophy" style={{ fontSize: 10.5 }}>عضو ذهبي</Tag>
+            </div>
+          </div>
+        </Card>
+
+        <SectionTitle theme={t}>نشاطك في سند</SectionTitle>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 10, marginBottom: 20 }}>
+          {[
+            { v: '٢٧', l: 'إجمالي الطلبات', i: 'list', c: t.primary },
+            { v: '١٤', l: 'سند فزعة', i: 'errand', c: t.primary },
+            { v: '٨', l: 'سند جليس', i: 'heart', c: t.accent },
+            { v: '٥', l: 'سند مرافقة', i: 'shield', c: '#7A1E55' },
+          ].map((s, i) => (
+            <Card key={i} theme={t} padding={14}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+                <div style={{ width: 32, height: 32, borderRadius: 9, background: s.c + '18', color: s.c,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <SanadIcon name={s.i} size={16} />
+                </div>
+                <div style={{ fontSize: 11, color: t.inkMuted, fontWeight: 500 }}>{s.l}</div>
+              </div>
+              <div className="latin" style={{ fontSize: 24, fontWeight: 700, color: t.ink, letterSpacing: '-0.02em' }}>{s.v}</div>
+            </Card>
+          ))}
+        </div>
+
+        <SectionTitle theme={t}>اختصارات</SectionTitle>
+        <Card theme={t} padding={0} style={{ overflow: 'hidden' }}>
+          {[
+            { i: 'card', l: 'طرق الدفع', d: 'مدى · ****٤٢٧٨' },
+            { i: 'pin', l: 'العناوين', d: 'البيت، العمل' },
+            { i: 'doc', l: 'الفواتير' },
+            { i: 'starFill', l: 'تقييماتي' },
+          ].map((r, i, a) => (
+            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 16px',
+              borderBottom: i < a.length - 1 ? `1px solid ${t.border}` : 'none' }}>
+              <SanadIcon name={r.i} size={18} color={t.inkMuted} />
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: 14, fontWeight: 500 }}>{r.l}</div>
+                {r.d && <div style={{ fontSize: 11.5, color: t.inkSoft, marginTop: 2 }}>{r.d}</div>}
+              </div>
+              <SanadIcon name={t.dir === 'rtl' ? 'chevL' : 'chevR'} size={16} color={t.inkSoft} />
+            </div>
+          ))}
+        </Card>
+      </div>
+      <TabBar active="profile" theme={t} />
+    </Screen>
+  );
+}
+
+function ScrProfileC({ theme: t }) {
+  // Elder-friendly large profile
+  t = t || useTheme();
+  return (
+    <Screen theme={t}>
+      <StatusBar theme={t} />
+      <TopBar theme={t} title="حسابي" back={false} />
+      <div style={{ flex: 1, overflowY: 'auto', padding: '4px 20px 100px' }}>
+        <Card theme={t} padding={22} style={{ textAlign: 'center', marginBottom: 18 }}>
+          <Avatar name="أم سعد" size={92} theme={t} style={{ margin: '0 auto 14px', fontSize: 32 }} />
+          <div style={{ fontSize: 22, fontWeight: 700 }}>أم سعد العتيبي</div>
+          <div style={{ fontSize: 14, color: t.inkMuted, marginTop: 6 }}>الرياض · حي الياسمين</div>
+        </Card>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 18 }}>
+          {[
+            { l: 'طلباتي', i: 'list', c: t.primary },
+            { l: 'الإشعارات', i: 'bell', c: t.accent },
+            { l: 'محادثاتي', i: 'chat', c: '#1E3A8A' },
+            { l: 'الدعم', i: 'phone', c: t.success },
+          ].map(b => (
+            <div key={b.l} style={{ background: t.surface, border: `1px solid ${t.border}`, borderRadius: 22,
+              padding: 22, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
+              <div style={{ width: 56, height: 56, borderRadius: 16, background: b.c + '18', color: b.c,
+                display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <SanadIcon name={b.i} size={26} />
+              </div>
+              <div style={{ fontSize: 16, fontWeight: 600 }}>{b.l}</div>
+            </div>
+          ))}
+        </div>
+
+        <Button full theme={t} variant="surface" size="lg" icon="settings">الإعدادات</Button>
+      </div>
+      <TabBar active="profile" theme={t} />
+    </Screen>
+  );
+}
+
+function ScrSettings({ theme: t }) {
+  t = t || useTheme();
+  return (
+    <Screen theme={t}>
+      <StatusBar theme={t} />
+      <TopBar theme={t} title="الإعدادات" />
+      <div style={{ flex: 1, overflowY: 'auto', padding: '4px 16px 30px' }}>
+        <div style={{ fontSize: 12, color: t.inkSoft, fontWeight: 500, marginBottom: 8, paddingInlineStart: 4 }}>الحساب</div>
+        <Card theme={t} padding={0} style={{ overflow: 'hidden', marginBottom: 18 }}>
+          {[
+            { l: 'الاسم', d: 'عبدالله الفهد' },
+            { l: 'رقم الجوال', d: '+966 5X XXX XXXX', latin: true },
+            { l: 'البريد', d: 'abdullah@example.com', latin: true },
+          ].map((r, i, a) => (
+            <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 16px',
+              borderBottom: i < a.length - 1 ? `1px solid ${t.border}` : 'none' }}>
+              <div style={{ fontSize: 14, color: t.ink }}>{r.l}</div>
+              <div style={{ fontSize: 13, color: t.inkMuted }} className={r.latin ? 'latin' : ''}>{r.d}</div>
+            </div>
+          ))}
+        </Card>
+
+        <div style={{ fontSize: 12, color: t.inkSoft, fontWeight: 500, marginBottom: 8, paddingInlineStart: 4 }}>التفضيلات</div>
+        <Card theme={t} padding={0} style={{ overflow: 'hidden', marginBottom: 18 }}>
+          {[
+            { l: 'الوضع الليلي', i: 'moon', toggle: true, on: t.dark },
+            { l: 'إشعارات الطلبات', i: 'bell', toggle: true, on: true },
+            { l: 'إشعارات تسويقية', i: 'sparkle', toggle: true, on: false },
+            { l: 'اللغة', i: 'globe', d: 'العربية' },
+          ].map((r, i, a) => (
+            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 16px',
+              borderBottom: i < a.length - 1 ? `1px solid ${t.border}` : 'none' }}>
+              <SanadIcon name={r.i} size={18} color={t.inkMuted} />
+              <div style={{ flex: 1, fontSize: 14 }}>{r.l}</div>
+              {r.toggle ? <Toggle on={r.on} theme={t} /> : <div style={{ fontSize: 13, color: t.inkSoft }}>{r.d}</div>}
+            </div>
+          ))}
+        </Card>
+
+        <div style={{ fontSize: 12, color: t.inkSoft, fontWeight: 500, marginBottom: 8, paddingInlineStart: 4 }}>الخصوصية والأمان</div>
+        <Card theme={t} padding={0} style={{ overflow: 'hidden', marginBottom: 18 }}>
+          {[
+            { l: 'تغيير كلمة المرور', i: 'shield' },
+            { l: 'سياسة الخصوصية', i: 'doc' },
+            { l: 'الشروط والأحكام', i: 'doc' },
+            { l: 'حذف الحساب', i: 'close', danger: true },
+          ].map((r, i, a) => (
+            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 16px',
+              borderBottom: i < a.length - 1 ? `1px solid ${t.border}` : 'none' }}>
+              <SanadIcon name={r.i} size={18} color={r.danger ? t.danger : t.inkMuted} />
+              <div style={{ flex: 1, fontSize: 14, color: r.danger ? t.danger : t.ink }}>{r.l}</div>
+              <SanadIcon name={t.dir === 'rtl' ? 'chevL' : 'chevR'} size={16} color={t.inkSoft} />
+            </div>
+          ))}
+        </Card>
+
+        <div style={{ textAlign: 'center', fontSize: 11, color: t.inkSoft }} className="mono">الإصدار ٢٫٠٫٠ · build 2406</div>
+      </div>
+    </Screen>
+  );
+}
+
+function ScrRateService({ theme: t }) {
+  t = t || useTheme();
+  const s = window.SanadTokens.SERVICES.fazaa;
+  return (
+    <Screen theme={t}>
+      <StatusBar theme={t} />
+      <TopBar theme={t} title="تقييم الخدمة" />
+      <div style={{ flex: 1, overflowY: 'auto', padding: '4px 20px 110px' }}>
+        <Card theme={t} padding={20} style={{ textAlign: 'center', marginBottom: 18 }}>
+          <ServiceTile service={s} size={56} theme={t} style={{ margin: '0 auto 12px' }} />
+          <div style={{ fontSize: 13, color: t.inkMuted, marginBottom: 4 }}>تم إكمال طلبك بنجاح</div>
+          <div style={{ fontSize: 18, fontWeight: 700 }}>صيدلية الدواء — حي الياسمين</div>
+          <div style={{ fontSize: 12, color: t.inkSoft, marginTop: 4 }} className="latin">#SF-2841 · ١٠ مايو ٢٠٢٦</div>
+        </Card>
+
+        <Card theme={t} padding={20} style={{ marginBottom: 14, textAlign: 'center' }}>
+          <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 6 }}>كيف كانت تجربتك؟</div>
+          <div style={{ fontSize: 12, color: t.inkMuted, marginBottom: 18 }}>تقييمك يساعدنا على الاستمرار في تحسين الخدمة</div>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginBottom: 18 }}>
+            {[1,2,3,4,5].map(n => (
+              <div key={n} style={{ width: 48, height: 48, borderRadius: 14,
+                background: n <= 4 ? '#FFF7E0' : t.surface2, color: n <= 4 ? '#E0A823' : t.inkSoft,
+                border: `1.5px solid ${n <= 4 ? '#E0A823' : t.border}`,
+                display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <SanadIcon name={n <= 4 ? 'starFill' : 'star'} size={24} color={n <= 4 ? '#E0A823' : t.inkSoft} />
+              </div>
+            ))}
+          </div>
+          <div style={{ fontSize: 13, color: t.success, fontWeight: 600 }}>تجربة ممتازة!</div>
+        </Card>
+
+        <div style={{ fontSize: 13, color: t.inkMuted, fontWeight: 500, marginBottom: 8 }}>ما الذي أعجبك؟</div>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 18 }}>
+          {[
+            { l: 'سرعة التنفيذ', sel: true },
+            { l: 'تواصل ممتاز', sel: true },
+            { l: 'أمانة', sel: false },
+            { l: 'لطف', sel: true },
+            { l: 'دقّة', sel: false },
+          ].map(c => (
+            <Tag key={c.l} theme={t} color={c.sel ? '#fff' : t.ink} soft={c.sel ? t.primary : t.surface}
+              style={{ border: `1px solid ${c.sel ? t.primary : t.border}`, padding: '8px 14px', fontSize: 13 }}>{c.l}</Tag>
+          ))}
+        </div>
+
+        <Field theme={t} label="ملاحظاتك (اختياري)" placeholder="اكتب رأيك بالتفصيل…" />
+      </div>
+
+      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0,
+        padding: '14px 20px 26px', background: t.surface, borderTop: `1px solid ${t.border}` }}>
+        <Button full theme={t} variant="primary" size="lg">إرسال التقييم</Button>
+      </div>
+    </Screen>
+  );
+}
+
+function ScrReviewsList({ theme: t }) {
+  t = t || useTheme();
+  const reviews = [
+    { name: 'سعاد محمد', service: 'سند جليس', stars: 5, text: 'تجربة هادئة وراقية، أمي ارتاحت كثيرًا للجلسة. شكرًا لكم.', time: 'قبل ٣ أيام', tags: ['لطف', 'صبر'] },
+    { name: 'أحمد العتيبي', service: 'سند فزعة', stars: 5, text: 'سريع جدًا في تنفيذ المشوار، والاتصال كان واضح طوال الوقت.', time: 'قبل أسبوع', tags: ['سرعة', 'أمانة'] },
+    { name: 'محمد عبدالله', service: 'سند مرافقة', stars: 4, text: 'مرافق محترم ومتفهم لاحتياج الوالدة، الموعد ضاع شوي بسبب الزحام.', time: 'قبل أسبوعين', tags: ['تفهّم'] },
+  ];
+  return (
+    <Screen theme={t}>
+      <StatusBar theme={t} />
+      <TopBar theme={t} title="تقييماتي" />
+      <div style={{ flex: 1, overflowY: 'auto', padding: '4px 20px 30px' }}>
+        <Card theme={t} padding={18} style={{ display: 'flex', alignItems: 'center', gap: 18, marginBottom: 16 }}>
+          <div style={{ textAlign: 'center' }}>
+            <div className="latin" style={{ fontSize: 36, fontWeight: 700, color: t.ink, lineHeight: 1, letterSpacing: '-0.03em' }}>٤٫٩</div>
+            <Stars value={5} size={14} theme={t} />
+            <div style={{ fontSize: 11, color: t.inkSoft, marginTop: 4 }}>٢٧ تقييمًا</div>
+          </div>
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 6 }}>
+            {[5,4,3,2,1].map(n => (
+              <div key={n} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span className="latin" style={{ fontSize: 11, color: t.inkSoft, width: 8 }}>{n}</span>
+                <SanadIcon name="starFill" size={11} color="#E0A823" />
+                <div style={{ flex: 1, height: 5, background: t.bgMuted, borderRadius: 3, overflow: 'hidden' }}>
+                  <div style={{ height: '100%', width: ['90%','7%','3%','0%','0%'][5-n], background: '#E0A823' }} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </Card>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          {reviews.map((r, i) => (
+            <Card key={i} theme={t} padding={16}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 10 }}>
+                <Avatar name={r.name} size={40} theme={t} />
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: 13.5, fontWeight: 600 }}>{r.name}</div>
+                  <div style={{ fontSize: 11, color: t.inkSoft }}>{r.service} · {r.time}</div>
+                </div>
+                <Stars value={r.stars} size={13} theme={t} />
+              </div>
+              <div style={{ fontSize: 13, color: t.inkMuted, lineHeight: 1.7, marginBottom: 10 }}>{r.text}</div>
+              <div style={{ display: 'flex', gap: 6 }}>
+                {r.tags.map(tg => (
+                  <Tag key={tg} theme={t} color={t.primary} soft={t.primarySoft} style={{ fontSize: 10.5 }}>{tg}</Tag>
+                ))}
+              </div>
+            </Card>
+          ))}
+        </div>
+      </div>
+    </Screen>
+  );
+}
+
+window.ScrProfileA = ScrProfileA;
+window.ScrProfileB = ScrProfileB;
+window.ScrProfileC = ScrProfileC;
+window.ScrSettings = ScrSettings;
+window.ScrRateService = ScrRateService;
+window.ScrReviewsList = ScrReviewsList;
+
+
+/* ===== src/screens-states.jsx ===== */
+// Sanad — empty / error / success / loading states + notifications + chat
+
+function ScrNotifications({ theme: t }) {
+  t = t || useTheme();
+  const groups = [
+    { label: 'اليوم', items: [
+      { i: 'check', c: t.success, t: 'تم قبول طلبك', d: 'سند فزعة · صيدلية الدواء', time: 'الآن' },
+      { i: 'truck', c: t.primary, t: 'مقدّم الخدمة في الطريق', d: 'يصل خلال ١٢ دقيقة', time: 'قبل ٣ د' },
+      { i: 'starFill', c: '#E0A823', t: 'قيّم تجربتك', d: 'جلسة سند جليس مع سعاد محمد', time: 'قبل ساعة' },
+    ]},
+    { label: 'هذا الأسبوع', items: [
+      { i: 'doc', c: t.accent, t: 'شهادة تدريب جاهزة', d: 'سند أكاديمي · المحاسبة', time: 'الإثنين' },
+      { i: 'shield', c: '#7A1E55', t: 'موعد مرافقة بعد غد', d: 'الملك فيصل التخصصي · ٩:٣٠ ص', time: 'الأحد' },
+      { i: 'sparkle', c: t.primary, t: 'عرض جديد', d: 'خصم ١٥٪ على أول طلب فزعة', time: 'السبت' },
+    ]},
+  ];
+  return (
+    <Screen theme={t}>
+      <StatusBar theme={t} />
+      <TopBar theme={t} title="الإشعارات" action={<span style={{ fontSize: 12, color: t.primary, fontWeight: 600 }}>تعليم الكل</span>} />
+      <div style={{ flex: 1, overflowY: 'auto', padding: '4px 16px 30px' }}>
+        {groups.map((g, gi) => (
+          <div key={gi} style={{ marginBottom: 18 }}>
+            <div style={{ fontSize: 11.5, color: t.inkSoft, fontWeight: 600, marginBottom: 8, paddingInlineStart: 6 }}>{g.label}</div>
+            <Card theme={t} padding={0} style={{ overflow: 'hidden' }}>
+              {g.items.map((n, i, a) => (
+                <div key={i} style={{ display: 'flex', gap: 12, padding: '14px 14px',
+                  borderBottom: i < a.length - 1 ? `1px solid ${t.border}` : 'none',
+                  background: i === 0 && gi === 0 ? t.primarySoft + '40' : 'transparent' }}>
+                  <div style={{ width: 38, height: 38, borderRadius: 12, background: n.c + '18', color: n.c,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <SanadIcon name={n.i} size={18} />
+                  </div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
+                      <div style={{ fontSize: 13.5, fontWeight: 600, flex: 1 }}>{n.t}</div>
+                      <div style={{ fontSize: 10.5, color: t.inkSoft, whiteSpace: 'nowrap' }}>{n.time}</div>
+                    </div>
+                    <div style={{ fontSize: 12, color: t.inkMuted, marginTop: 3 }}>{n.d}</div>
+                  </div>
+                </div>
+              ))}
+            </Card>
+          </div>
+        ))}
+      </div>
+    </Screen>
+  );
+}
+
+function ScrChat({ theme: t }) {
+  t = t || useTheme();
+  const messages = [
+    { from: 'them', text: 'السلام عليكم، أنا في طريقي للصيدلية الآن.', time: '١٠:٢٨ ص' },
+    { from: 'me', text: 'وعليكم السلام، يعطيك العافية.', time: '١٠:٢٩ ص' },
+    { from: 'them', text: 'الدواء متوفر الحمدلله، هل تحتاج شيء إضافي؟', time: '١٠:٣٤ ص' },
+    { from: 'me', text: 'لا فقط الدواء، شكراً.', time: '١٠:٣٤ ص' },
+    { from: 'them', text: 'تمام، خلصت ورجعت لك. الموقع المرفق هو نفس البيت؟', time: '١٠:٤١ ص' },
+  ];
+  return (
+    <Screen theme={t}>
+      <StatusBar theme={t} />
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '8px 14px',
+        borderBottom: `1px solid ${t.border}`, background: t.surface }}>
+        <div style={{ width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <SanadIcon name={t.dir === 'rtl' ? 'chevR' : 'chevL'} size={20} />
+        </div>
+        <Avatar name="أحمد ع" size={38} theme={t} />
+        <div style={{ flex: 1 }}>
+          <div style={{ fontSize: 14, fontWeight: 600 }}>أحمد العتيبي</div>
+          <div style={{ fontSize: 11, color: t.success, display: 'flex', alignItems: 'center', gap: 4 }}>
+            <span style={{ width: 6, height: 6, borderRadius: 3, background: t.success }} /> متصل · في الطريق
+          </div>
+        </div>
+        <div style={{ width: 36, height: 36, borderRadius: 11, background: t.success + '18', color: t.success,
+          display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <SanadIcon name="phone" size={16} color={t.success} />
+        </div>
+        <div style={{ width: 36, height: 36, borderRadius: 11, background: t.surface2, border: `1px solid ${t.border}`,
+          display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <SanadIcon name="more" size={16} />
+        </div>
+      </div>
+
+      <div style={{ flex: 1, overflowY: 'auto', padding: '14px 16px', background: t.bgMuted,
+        display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <div style={{ alignSelf: 'center', fontSize: 10.5, color: t.inkSoft, background: t.surface,
+          padding: '4px 12px', borderRadius: 999, marginBottom: 6 }}>اليوم · ١٠:٢٧ ص</div>
+        {messages.map((m, i) => (
+          <div key={i} style={{ display: 'flex', justifyContent: m.from === 'me' ? 'flex-start' : 'flex-end',
+            marginBottom: 2 }}>
+            <div style={{ maxWidth: '78%', padding: '10px 14px',
+              background: m.from === 'me' ? t.primary : t.surface,
+              color: m.from === 'me' ? '#fff' : t.ink,
+              borderRadius: m.from === 'me' ? '18px 18px 6px 18px' : '18px 18px 18px 6px',
+              border: m.from === 'me' ? 'none' : `1px solid ${t.border}`,
+              fontSize: 13.5, lineHeight: 1.6 }}>
+              {m.text}
+              <div style={{ fontSize: 10, marginTop: 4, opacity: 0.7,
+                color: m.from === 'me' ? 'rgba(255,255,255,0.85)' : t.inkSoft }} className="latin">{m.time}</div>
+            </div>
+          </div>
+        ))}
+
+        <div style={{ alignSelf: 'flex-end', display: 'flex', gap: 6, padding: '6px 14px', background: t.surface,
+          borderRadius: '18px 18px 18px 6px', border: `1px solid ${t.border}` }}>
+          {[0,1,2].map(d => (
+            <span key={d} style={{ width: 6, height: 6, borderRadius: 3, background: t.inkSoft, opacity: 0.5,
+              animation: `sanadDot 1.2s ${d * 0.15}s infinite` }} />
+          ))}
+        </div>
+      </div>
+
+      <div style={{ display: 'flex', gap: 8, padding: '10px 14px 22px', background: t.surface,
+        borderTop: `1px solid ${t.border}`, alignItems: 'center' }}>
+        <div style={{ width: 38, height: 38, borderRadius: 12, background: t.surface2, border: `1px solid ${t.border}`,
+          display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <SanadIcon name="paperclip" size={16} />
+        </div>
+        <div style={{ flex: 1, background: t.bgMuted, borderRadius: 999, padding: '11px 16px',
+          fontSize: 13, color: t.inkSoft }}>اكتب رسالتك…</div>
+        <div style={{ width: 42, height: 42, borderRadius: 14, background: t.primary,
+          display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <SanadIcon name="send" size={18} color="#fff" />
+        </div>
+      </div>
+      <style>{`@keyframes sanadDot { 0%, 60%, 100% { opacity: 0.3; transform: translateY(0); } 30% { opacity: 1; transform: translateY(-3px); } }`}</style>
+    </Screen>
+  );
+}
+
+function ScrSuccess({ theme: t }) {
+  t = t || useTheme();
+  return (
+    <Screen theme={t}>
+      <StatusBar theme={t} />
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center',
+        alignItems: 'center', padding: 32, textAlign: 'center' }}>
+        <div style={{ width: 120, height: 120, borderRadius: 60, background: t.success + '18',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 24,
+          position: 'relative' }}>
+          <div style={{ position: 'absolute', inset: 12, borderRadius: 999, background: t.success + '28' }} />
+          <div style={{ position: 'relative', width: 64, height: 64, borderRadius: 32, background: t.success,
+            display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <SanadIcon name="check" size={32} color="#fff" />
+          </div>
+        </div>
+        <div style={{ fontSize: 22, fontWeight: 700, marginBottom: 8 }}>تم إرسال طلبك بنجاح</div>
+        <div style={{ fontSize: 14, color: t.inkMuted, lineHeight: 1.7, maxWidth: 280, marginBottom: 24 }}>
+          سيتواصل معك مقدّم الخدمة قريبًا. يمكنك متابعة الطلب من شاشة التتبع.
+        </div>
+        <Card theme={t} padding={14} style={{ width: '100%', maxWidth: 320, marginBottom: 24 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12.5 }}>
+            <span style={{ color: t.inkMuted }}>رقم الطلب</span>
+            <span style={{ fontWeight: 600 }} className="latin">#SF-2841</span>
+          </div>
+          <div style={{ height: 1, background: t.border, margin: '10px 0' }} />
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12.5 }}>
+            <span style={{ color: t.inkMuted }}>الوقت المتوقّع</span>
+            <span style={{ fontWeight: 600 }}>خلال ١٥ دقيقة</span>
+          </div>
+        </Card>
+        <Button full theme={t} variant="primary" size="lg" style={{ maxWidth: 320 }}>متابعة الطلب</Button>
+        <div style={{ fontSize: 13, color: t.primary, fontWeight: 600, marginTop: 14 }}>العودة للرئيسية</div>
+      </div>
+    </Screen>
+  );
+}
+
+function ScrError({ theme: t }) {
+  t = t || useTheme();
+  return (
+    <Screen theme={t}>
+      <StatusBar theme={t} />
+      <TopBar theme={t} title="" />
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center',
+        alignItems: 'center', padding: 32, textAlign: 'center' }}>
+        <div style={{ width: 96, height: 96, borderRadius: 28, background: t.danger + '18',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 22 }}>
+          <SanadIcon name="warn" size={42} color={t.danger} />
+        </div>
+        <div style={{ fontSize: 20, fontWeight: 700, marginBottom: 8 }}>تعذّر إكمال الطلب</div>
+        <div style={{ fontSize: 13.5, color: t.inkMuted, lineHeight: 1.7, maxWidth: 280, marginBottom: 24 }}>
+          حدث خطأ في الاتصال أثناء تأكيد الدفع. الرجاء التأكد من الاتصال والمحاولة مرة أخرى.
+        </div>
+        <Button full theme={t} variant="primary" size="lg" style={{ maxWidth: 320 }} icon="refresh">إعادة المحاولة</Button>
+        <Button theme={t} variant="ghost" size="md" style={{ marginTop: 8 }}>تواصل مع الدعم</Button>
+      </div>
+    </Screen>
+  );
+}
+
+function ScrEmpty({ theme: t }) {
+  t = t || useTheme();
+  return (
+    <Screen theme={t}>
+      <StatusBar theme={t} />
+      <TopBar theme={t} title="طلباتي" />
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center',
+        alignItems: 'center', padding: 32, textAlign: 'center' }}>
+        <div style={{ width: 140, height: 140, borderRadius: '50%', background: t.surface2,
+          display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 20,
+          border: `1.5px dashed ${t.border}` }}>
+          <SanadIcon name="list" size={56} color={t.inkSoft} />
+        </div>
+        <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>لا توجد طلبات بعد</div>
+        <div style={{ fontSize: 13.5, color: t.inkMuted, lineHeight: 1.7, maxWidth: 260, marginBottom: 24 }}>
+          ابدأ أول طلب لك من إحدى خدماتنا الأربع — سند فزعة، جليس، أكاديمي، أو مرافقة.
+        </div>
+        <Button full theme={t} variant="primary" size="lg" style={{ maxWidth: 280 }} icon="plus">طلب جديد</Button>
+      </div>
+      <TabBar active="orders" theme={t} />
+    </Screen>
+  );
+}
+
+function ScrLoading({ theme: t }) {
+  t = t || useTheme();
+  return (
+    <Screen theme={t}>
+      <StatusBar theme={t} />
+      <TopBar theme={t} title="جاري البحث" />
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center',
+        alignItems: 'center', padding: 32, textAlign: 'center' }}>
+        <div style={{ position: 'relative', width: 130, height: 130, marginBottom: 24 }}>
+          {[0,1,2].map(r => (
+            <div key={r} style={{ position: 'absolute', inset: 0, borderRadius: '50%',
+              border: `2px solid ${t.primary}`, opacity: 0.3 - r * 0.08,
+              animation: `sanadPulse 2.4s ${r * 0.6}s infinite` }} />
+          ))}
+          <div style={{ position: 'absolute', inset: '30%', borderRadius: '50%', background: t.primary,
+            display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <SanadIcon name="search" size={28} color="#fff" />
+          </div>
+        </div>
+        <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>نبحث لك عن أقرب مقدّم</div>
+        <div style={{ fontSize: 13.5, color: t.inkMuted, lineHeight: 1.7, maxWidth: 260 }}>
+          هذا قد يستغرق دقيقة. يمكنك البقاء في الشاشة وسنعلمك بمجرد القبول.
+        </div>
+        <div style={{ display: 'flex', gap: 6, marginTop: 28 }}>
+          {[0,1,2].map(d => (
+            <span key={d} style={{ width: 8, height: 8, borderRadius: 4, background: t.primary,
+              animation: `sanadBounce 1.4s ${d * 0.2}s infinite` }} />
+          ))}
+        </div>
+      </div>
+      <style>{`
+        @keyframes sanadPulse { 0% { transform: scale(0.6); opacity: 0.6; } 100% { transform: scale(1.4); opacity: 0; } }
+        @keyframes sanadBounce { 0%, 80%, 100% { transform: scale(0.7); opacity: 0.4; } 40% { transform: scale(1); opacity: 1; } }
+      `}</style>
+    </Screen>
+  );
+}
+
+// Override tracking's chat & notifications with these polished versions
+window.ScrNotificationsV2 = ScrNotifications;
+window.ScrChatV2 = ScrChat;
+window.ScrNotifications = ScrNotifications;
+window.ScrChat = ScrChat;
+window.ScrSuccess = ScrSuccess;
+window.ScrError = ScrError;
+window.ScrEmpty = ScrEmpty;
+window.ScrLoading = ScrLoading;
+
+
+/* ===== design-canvas.jsx ===== */
+
+// DesignCanvas.jsx — Figma-ish design canvas wrapper
+// Warm gray grid bg + Sections + Artboards + PostIt notes.
+// Artboards are reorderable (grip-drag), deletable, labels/titles are
+// inline-editable, and any artboard can be opened in a fullscreen focus
+// overlay (←/→/Esc). State persists to a .design-canvas.state.json sidecar
+// via the host bridge. No assets, no deps.
+//
+// Usage:
+//   <DesignCanvas>
+//     <DCSection id="onboarding" title="Onboarding" subtitle="First-run variants">
+//       <DCArtboard id="a" label="A · Dusk" width={260} height={480}>…</DCArtboard>
+//       <DCArtboard id="b" label="B · Minimal" width={260} height={480}>…</DCArtboard>
+//     </DCSection>
+//   </DesignCanvas>
+
+const DC = {
+  bg: '#f0eee9',
+  grid: 'rgba(0,0,0,0.06)',
+  label: 'rgba(60,50,40,0.7)',
+  title: 'rgba(40,30,20,0.85)',
+  subtitle: 'rgba(60,50,40,0.6)',
+  postitBg: '#fef4a8',
+  postitText: '#5a4a2a',
+  font: '-apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif',
+};
+
+// One-time CSS injection (classes are dc-prefixed so they don't collide with
+// the hosted design's own styles).
+if (typeof document !== 'undefined' && !document.getElementById('dc-styles')) {
+  const s = document.createElement('style');
+  s.id = 'dc-styles';
+  s.textContent = [
+    '.dc-editable{cursor:text;outline:none;white-space:nowrap;border-radius:3px;padding:0 2px;margin:0 -2px}',
+    '.dc-editable:focus{background:#fff;box-shadow:0 0 0 1.5px #c96442}',
+    '[data-dc-slot]{transition:transform .18s cubic-bezier(.2,.7,.3,1)}',
+    '[data-dc-slot].dc-dragging{transition:none;z-index:10;pointer-events:none}',
+    '[data-dc-slot].dc-dragging .dc-card{box-shadow:0 12px 40px rgba(0,0,0,.25),0 0 0 2px #c96442;transform:scale(1.02)}',
+    // isolation:isolate contains artboard content's z-indexes so a
+    // z-indexed child (sticky navbar etc.) can't paint over .dc-header or
+    // the .dc-menu popover that drops into the top of the card.
+    '.dc-card{isolation:isolate;transition:box-shadow .15s,transform .15s}',
+    '.dc-card *{scrollbar-width:none}',
+    '.dc-card *::-webkit-scrollbar{display:none}',
+    // Per-artboard header: grip + label on the left, delete/expand on the
+    // right. Single flex row; when the artboard's on-screen width is too
+    // narrow for both the label yields (ellipsis, then hidden entirely below
+    // ~4ch via the container query) and the buttons stay on the row.
+    '.dc-header{position:absolute;bottom:100%;left:-4px;margin-bottom:calc(4px * var(--dc-inv-zoom,1));z-index:2;',
+    '  display:flex;align-items:center;container-type:inline-size}',
+    '.dc-labelrow{display:flex;align-items:center;gap:4px;height:24px;flex:1 1 auto;min-width:0}',
+    '.dc-grip{flex:0 0 auto;cursor:grab;display:flex;align-items:center;padding:5px 4px;border-radius:4px;transition:background .12s,opacity .12s}',
+    '.dc-grip:hover{background:rgba(0,0,0,.08)}',
+    '.dc-grip:active{cursor:grabbing}',
+    '.dc-labeltext{flex:1 1 auto;min-width:0;cursor:pointer;border-radius:4px;padding:3px 6px;',
+    '  display:flex;align-items:center;transition:background .12s;overflow:hidden}',
+    // Below ~4ch of label room: hide the label entirely, and drop the grip to
+    // hover-only (same reveal rule as .dc-btns) so a narrow header is clean
+    // until the card is moused.
+    '@container (max-width: 110px){',
+    '  .dc-labeltext{display:none}',
+    '  .dc-grip{opacity:0}',
+    '  [data-dc-slot]:hover .dc-grip{opacity:1}',
+    '}',
+    '.dc-labeltext:hover{background:rgba(0,0,0,.05)}',
+    '.dc-labeltext .dc-editable{overflow:hidden;text-overflow:ellipsis;max-width:100%}',
+    '.dc-labeltext .dc-editable:focus{overflow:visible;text-overflow:clip}',
+    '.dc-btns{flex:0 0 auto;margin-left:auto;display:flex;gap:2px;opacity:0;transition:opacity .12s}',
+    '[data-dc-slot]:hover .dc-btns,.dc-btns:has(.dc-menu){opacity:1}',
+    '.dc-expand,.dc-kebab{width:22px;height:22px;border-radius:5px;border:none;cursor:pointer;padding:0;',
+    '  background:transparent;color:rgba(60,50,40,.7);display:flex;align-items:center;justify-content:center;',
+    '  font:inherit;transition:background .12s,color .12s}',
+    '.dc-expand:hover,.dc-kebab:hover{background:rgba(0,0,0,.06);color:#2a251f}',
+    // Slot hosting an open menu floats above later siblings (which otherwise
+    // paint on top — same z-index:auto, later DOM order) so the popup isn't
+    // clipped by the next card.
+    '[data-dc-slot]:has(.dc-menu){z-index:10}',
+    '.dc-menu{position:absolute;top:100%;right:0;margin-top:4px;background:#fff;border-radius:8px;',
+    '  box-shadow:0 8px 28px rgba(0,0,0,.18),0 0 0 1px rgba(0,0,0,.05);padding:4px;min-width:160px;z-index:10}',
+    '.dc-menu button{display:block;width:100%;padding:7px 10px;border:0;background:transparent;',
+    '  border-radius:5px;font-family:inherit;font-size:13px;font-weight:500;line-height:1.2;',
+    '  color:#29261b;cursor:pointer;text-align:left;transition:background .12s;white-space:nowrap}',
+    '.dc-menu button:hover{background:rgba(0,0,0,.05)}',
+    '.dc-menu hr{border:0;border-top:1px solid rgba(0,0,0,.08);margin:4px 2px}',
+    '.dc-menu .dc-danger{color:#c96442}',
+    '.dc-menu .dc-danger:hover{background:rgba(201,100,66,.1)}',
+    // Chrome (titles / labels / buttons) counter-scales against the viewport
+    // zoom so it stays a constant on-screen size. --dc-inv-zoom is set by
+    // DCViewport on every transform update and inherits to all descendants —
+    // any overlay inside the world (e.g. a TweaksPanel on an artboard) can use
+    // it the same way.
+    //
+    // The header uses transform:scale (out-of-flow, so layout impact doesn't
+    // matter) with its world-space width set to card-width / inv-zoom so that
+    // after counter-scaling its on-screen width exactly matches the card's —
+    // that's what lets the container query + text-overflow behave against the
+    // card's visible edge at every zoom level.
+    //
+    // The section head uses CSS zoom instead of transform so its layout box
+    // grows with the counter-scale, pushing the card row down — otherwise the
+    // constant-screen-size title would overflow into the (shrinking) world-
+    // space gap and overlap the artboard headers at low zoom.
+    '.dc-header{width:calc((100% + 4px) / var(--dc-inv-zoom,1));',
+    '  transform:scale(var(--dc-inv-zoom,1));transform-origin:bottom left}',
+    '.dc-sectionhead{zoom:var(--dc-inv-zoom,1)}',
+  ].join('\n');
+  document.head.appendChild(s);
+}
+
+const DCCtx = React.createContext(null);
+
+// ─────────────────────────────────────────────────────────────
+// DesignCanvas — stateful wrapper around the pan/zoom viewport.
+// Owns runtime state (per-section order, renamed titles/labels, hidden
+// artboards, focused artboard). Order/titles/labels/hidden persist to a
+// .design-canvas.state.json
+// sidecar next to the HTML. Reads go via plain fetch() so the saved
+// arrangement is visible anywhere the HTML + sidecar are served together
+// (omelette preview, direct link, downloaded zip). Writes go through the
+// host's window.omelette bridge — editing requires the omelette runtime.
+// Focus is ephemeral.
+// ─────────────────────────────────────────────────────────────
+const DC_STATE_FILE = '.design-canvas.state.json';
+
+function DesignCanvas({ children, minScale, maxScale, style }) {
+  const [state, setState] = React.useState({ sections: {}, focus: null });
+  // Hold rendering until the sidecar read settles so the saved order/titles
+  // appear on first paint (no source-order flash). didRead gates writes until
+  // the read settles so the empty initial state can't clobber a slow read;
+  // skipNextWrite suppresses the one echo-write that would otherwise follow
+  // hydration.
+  const [ready, setReady] = React.useState(false);
+  const didRead = React.useRef(false);
+  const skipNextWrite = React.useRef(false);
+
+  React.useEffect(() => {
+    let off = false;
+    fetch('./' + DC_STATE_FILE)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((saved) => {
+        if (off || !saved || !saved.sections) return;
+        skipNextWrite.current = true;
+        setState((s) => ({ ...s, sections: saved.sections }));
+      })
+      .catch(() => {})
+      .finally(() => { didRead.current = true; if (!off) setReady(true); });
+    const t = setTimeout(() => { if (!off) setReady(true); }, 150);
+    return () => { off = true; clearTimeout(t); };
+  }, []);
+
+  React.useEffect(() => {
+    if (!didRead.current) return;
+    if (skipNextWrite.current) { skipNextWrite.current = false; return; }
+    const t = setTimeout(() => {
+      window.omelette?.writeFile(DC_STATE_FILE, JSON.stringify({ sections: state.sections })).catch(() => {});
+    }, 250);
+    return () => clearTimeout(t);
+  }, [state.sections]);
+
+  // Build registries synchronously from children so FocusOverlay can read
+  // them in the same render. Only direct DCSection > DCArtboard children are
+  // walked — wrapping them in other elements opts out of focus/reorder.
+  const registry = {};     // slotId -> { sectionId, artboard }
+  const sectionMeta = {};  // sectionId -> { title, subtitle, slotIds[] }
+  const sectionOrder = [];
+  React.Children.forEach(children, (sec) => {
+    if (!sec || sec.type !== DCSection) return;
+    const sid = sec.props.id ?? sec.props.title;
+    if (!sid) return;
+    sectionOrder.push(sid);
+    const persisted = state.sections[sid] || {};
+    const abs = [];
+    React.Children.forEach(sec.props.children, (ab) => {
+      if (!ab || ab.type !== DCArtboard) return;
+      const aid = ab.props.id ?? ab.props.label;
+      if (aid) abs.push([aid, ab]);
+    });
+    // hidden is scoped to one source revision — when the agent regenerates
+    // (artboard-ID set changes), prior deletes don't apply to new content.
+    const srcKey = abs.map(([k]) => k).join('\x1f');
+    const hidden = persisted.srcKey === srcKey ? (persisted.hidden || []) : [];
+    const srcIds = [];
+    abs.forEach(([aid, ab]) => {
+      if (hidden.includes(aid)) return;
+      registry[`${sid}/${aid}`] = { sectionId: sid, artboard: ab };
+      srcIds.push(aid);
+    });
+    const kept = (persisted.order || []).filter((k) => srcIds.includes(k));
+    sectionMeta[sid] = {
+      title: persisted.title ?? sec.props.title,
+      subtitle: sec.props.subtitle,
+      slotIds: [...kept, ...srcIds.filter((k) => !kept.includes(k))],
+    };
+  });
+
+  const api = React.useMemo(() => ({
+    state,
+    section: (id) => state.sections[id] || {},
+    patchSection: (id, p) => setState((s) => ({
+      ...s,
+      sections: { ...s.sections, [id]: { ...s.sections[id], ...(typeof p === 'function' ? p(s.sections[id] || {}) : p) } },
+    })),
+    setFocus: (slotId) => setState((s) => ({ ...s, focus: slotId })),
+  }), [state]);
+
+  // Esc exits focus; any outside pointerdown commits an in-progress rename.
+  React.useEffect(() => {
+    const onKey = (e) => { if (e.key === 'Escape') api.setFocus(null); };
+    const onPd = (e) => {
+      const ae = document.activeElement;
+      if (ae && ae.isContentEditable && !ae.contains(e.target)) ae.blur();
+    };
+    document.addEventListener('keydown', onKey);
+    document.addEventListener('pointerdown', onPd, true);
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.removeEventListener('pointerdown', onPd, true);
+    };
+  }, [api]);
+
+  return (
+    <DCCtx.Provider value={api}>
+      <DCViewport minScale={minScale} maxScale={maxScale} style={style}>{ready && children}</DCViewport>
+      {state.focus && registry[state.focus] && (
+        <DCFocusOverlay entry={registry[state.focus]} sectionMeta={sectionMeta} sectionOrder={sectionOrder} />
+      )}
+    </DCCtx.Provider>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// DCViewport — transform-based pan/zoom (internal)
+//
+// Input mapping (Figma-style):
+//   • trackpad pinch  → zoom   (ctrlKey wheel; Safari gesture* events)
+//   • trackpad scroll → pan    (two-finger)
+//   • mouse wheel     → zoom   (notched; distinguished from trackpad scroll)
+//   • middle-drag / primary-drag-on-bg → pan
+//
+// Transform state lives in a ref and is written straight to the DOM
+// (translate3d + will-change) so wheel ticks don't go through React —
+// keeps pans at 60fps on dense canvases.
+// ─────────────────────────────────────────────────────────────
+function DCViewport({ children, minScale = 0.1, maxScale = 8, style = {} }) {
+  const vpRef = React.useRef(null);
+  const worldRef = React.useRef(null);
+  const tf = React.useRef({ x: 0, y: 0, scale: 1 });
+  // Persist viewport across reloads so the user lands back where they were
+  // after an agent edit or browser refresh. The sandbox origin is already
+  // per-project; pathname keeps multiple canvas files in one project apart.
+  const tfKey = 'dc-viewport:' + location.pathname;
+  const saveT = React.useRef(0);
+
+  const lastPostedScale = React.useRef();
+  const apply = React.useCallback(() => {
+    const { x, y, scale } = tf.current;
+    const el = worldRef.current;
+    if (!el) return;
+    el.style.transform = `translate3d(${x}px, ${y}px, 0) scale(${scale})`;
+    // Exposed for zoom-invariant chrome (labels, buttons, TweaksPanel).
+    el.style.setProperty('--dc-inv-zoom', String(1 / scale));
+    // Keep the host toolbar's % readout in sync with the canvas scale. Pan
+    // ticks leave scale unchanged — skip the cross-frame post for those.
+    if (lastPostedScale.current !== scale) {
+      lastPostedScale.current = scale;
+      window.parent.postMessage({ type: '__dc_zoom', scale }, '*');
+    }
+    clearTimeout(saveT.current);
+    saveT.current = setTimeout(() => {
+      try { localStorage.setItem(tfKey, JSON.stringify(tf.current)); } catch {}
+    }, 200);
+  }, [tfKey]);
+
+  React.useLayoutEffect(() => {
+    const flush = () => {
+      clearTimeout(saveT.current);
+      try { localStorage.setItem(tfKey, JSON.stringify(tf.current)); } catch {}
+    };
+    try {
+      const s = JSON.parse(localStorage.getItem(tfKey) || 'null');
+      if (s && Number.isFinite(s.x) && Number.isFinite(s.y) && Number.isFinite(s.scale)) {
+        tf.current = { x: s.x, y: s.y, scale: Math.min(maxScale, Math.max(minScale, s.scale)) };
+        apply();
+      }
+    } catch {}
+    // Flush on pagehide and unmount so a reload within the 200ms debounce
+    // window doesn't drop the last pan/zoom.
+    window.addEventListener('pagehide', flush);
+    return () => { window.removeEventListener('pagehide', flush); flush(); };
+  }, []);
+
+  React.useEffect(() => {
+    const vp = vpRef.current;
+    if (!vp) return;
+
+    const zoomAt = (cx, cy, factor) => {
+      const r = vp.getBoundingClientRect();
+      const px = cx - r.left, py = cy - r.top;
+      const t = tf.current;
+      const next = Math.min(maxScale, Math.max(minScale, t.scale * factor));
+      const k = next / t.scale;
+      // keep the world point under the cursor fixed
+      t.x = px - (px - t.x) * k;
+      t.y = py - (py - t.y) * k;
+      t.scale = next;
+      apply();
+    };
+
+    // Mouse-wheel vs trackpad-scroll heuristic. A physical wheel sends
+    // line-mode deltas (Firefox) or large integer pixel deltas with no X
+    // component (Chrome/Safari, typically multiples of 100/120). Trackpad
+    // two-finger scroll sends small/fractional pixel deltas, often with
+    // non-zero deltaX. ctrlKey is set by the browser for trackpad pinch.
+    const isMouseWheel = (e) =>
+      e.deltaMode !== 0 ||
+      (e.deltaX === 0 && Number.isInteger(e.deltaY) && Math.abs(e.deltaY) >= 40);
+
+    const onWheel = (e) => {
+      e.preventDefault();
+      if (isGesturing) return; // Safari: gesture* owns the pinch — discard concurrent wheels
+      if ((e.ctrlKey || e.metaKey) && !isMouseWheel(e)) {
+        // trackpad pinch, or ctrl/cmd + smooth-scroll mouse. Notched
+        // wheels fall through to the fixed-step branch below.
+        zoomAt(e.clientX, e.clientY, Math.exp(-e.deltaY * 0.01));
+      } else if (isMouseWheel(e)) {
+        // notched mouse wheel — fixed-ratio step per click
+        zoomAt(e.clientX, e.clientY, Math.exp(-Math.sign(e.deltaY) * 0.18));
+      } else {
+        // trackpad two-finger scroll — pan
+        tf.current.x -= e.deltaX;
+        tf.current.y -= e.deltaY;
+        apply();
+      }
+    };
+
+    // Safari sends native gesture* events for trackpad pinch with a smooth
+    // e.scale; preferring these over the ctrl+wheel fallback gives a much
+    // better feel there. No-ops on other browsers. Safari also fires
+    // ctrlKey wheel events during the same pinch — isGesturing makes
+    // onWheel drop those entirely so they neither zoom nor pan.
+    let gsBase = 1;
+    let isGesturing = false;
+    const onGestureStart = (e) => { e.preventDefault(); isGesturing = true; gsBase = tf.current.scale; };
+    const onGestureChange = (e) => {
+      e.preventDefault();
+      zoomAt(e.clientX, e.clientY, (gsBase * e.scale) / tf.current.scale);
+    };
+    const onGestureEnd = (e) => { e.preventDefault(); isGesturing = false; };
+
+    // Drag-pan: middle button anywhere, or primary button on canvas
+    // background (anything that isn't an artboard or an inline editor).
+    let drag = null;
+    const onPointerDown = (e) => {
+      const onBg = !e.target.closest('[data-dc-slot], .dc-editable');
+      if (!(e.button === 1 || (e.button === 0 && onBg))) return;
+      e.preventDefault();
+      vp.setPointerCapture(e.pointerId);
+      drag = { id: e.pointerId, lx: e.clientX, ly: e.clientY };
+      vp.style.cursor = 'grabbing';
+    };
+    const onPointerMove = (e) => {
+      if (!drag || e.pointerId !== drag.id) return;
+      tf.current.x += e.clientX - drag.lx;
+      tf.current.y += e.clientY - drag.ly;
+      drag.lx = e.clientX; drag.ly = e.clientY;
+      apply();
+    };
+    const onPointerUp = (e) => {
+      if (!drag || e.pointerId !== drag.id) return;
+      vp.releasePointerCapture(e.pointerId);
+      drag = null;
+      vp.style.cursor = '';
+    };
+
+    // Host-driven zoom (toolbar % menu). Zooms around viewport centre so the
+    // visible midpoint stays fixed — matching the host's iframe-zoom feel.
+    const onHostMsg = (e) => {
+      const d = e.data;
+      if (d && d.type === '__dc_set_zoom' && typeof d.scale === 'number') {
+        const r = vp.getBoundingClientRect();
+        zoomAt(r.left + r.width / 2, r.top + r.height / 2, d.scale / tf.current.scale);
+      } else if (d && d.type === '__dc_probe') {
+        // Host's [readyGen] reset asks whether a canvas is present; it
+        // fires on the iframe's native 'load', which for canvases with
+        // images/fonts is after our mount-time announce, so re-announce.
+        // Clear the pan-tick guard so apply() re-posts the current scale
+        // even if it's unchanged — the host just reset dcScale to 1.
+        window.parent.postMessage({ type: '__dc_present' }, '*');
+        lastPostedScale.current = undefined;
+        apply();
+      }
+    };
+    window.addEventListener('message', onHostMsg);
+    // Announce canvas mode so the host toolbar proxies its % control here
+    // instead of scaling the iframe element (which would just shrink the
+    // viewport window of an infinite canvas). The apply() that follows emits
+    // the initial __dc_zoom so the toolbar % is correct before first pinch.
+    // lastPostedScale reset mirrors the __dc_probe handler: the layout
+    // effect's restore-path apply() may already have posted the restored
+    // scale (before __dc_present), so clear the guard to re-post it in order.
+    window.parent.postMessage({ type: '__dc_present' }, '*');
+    lastPostedScale.current = undefined;
+    apply();
+
+    vp.addEventListener('wheel', onWheel, { passive: false });
+    vp.addEventListener('gesturestart', onGestureStart, { passive: false });
+    vp.addEventListener('gesturechange', onGestureChange, { passive: false });
+    vp.addEventListener('gestureend', onGestureEnd, { passive: false });
+    vp.addEventListener('pointerdown', onPointerDown);
+    vp.addEventListener('pointermove', onPointerMove);
+    vp.addEventListener('pointerup', onPointerUp);
+    vp.addEventListener('pointercancel', onPointerUp);
+    return () => {
+      window.removeEventListener('message', onHostMsg);
+      vp.removeEventListener('wheel', onWheel);
+      vp.removeEventListener('gesturestart', onGestureStart);
+      vp.removeEventListener('gesturechange', onGestureChange);
+      vp.removeEventListener('gestureend', onGestureEnd);
+      vp.removeEventListener('pointerdown', onPointerDown);
+      vp.removeEventListener('pointermove', onPointerMove);
+      vp.removeEventListener('pointerup', onPointerUp);
+      vp.removeEventListener('pointercancel', onPointerUp);
+    };
+  }, [apply, minScale, maxScale]);
+
+  const gridSvg = `url("data:image/svg+xml,%3Csvg width='120' height='120' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M120 0H0v120' fill='none' stroke='${encodeURIComponent(DC.grid)}' stroke-width='1'/%3E%3C/svg%3E")`;
+  return (
+    <div
+      ref={vpRef}
+      className="design-canvas"
+      style={{
+        height: '100vh', width: '100vw',
+        background: DC.bg,
+        overflow: 'hidden',
+        overscrollBehavior: 'none',
+        touchAction: 'none',
+        position: 'relative',
+        fontFamily: DC.font,
+        boxSizing: 'border-box',
+        ...style,
+      }}
+    >
+      <div
+        ref={worldRef}
+        style={{
+          position: 'absolute', top: 0, left: 0,
+          transformOrigin: '0 0',
+          willChange: 'transform',
+          width: 'max-content', minWidth: '100%',
+          minHeight: '100%',
+          padding: '60px 0 80px',
+        }}
+      >
+        <div style={{ position: 'absolute', inset: -6000, backgroundImage: gridSvg, backgroundSize: '120px 120px', pointerEvents: 'none', zIndex: -1 }} />
+        {children}
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// DCSection — editable title + h-row of artboards in persisted order
+// ─────────────────────────────────────────────────────────────
+function DCSection({ id, title, subtitle, children, gap = 48 }) {
+  const ctx = React.useContext(DCCtx);
+  const sid = id ?? title;
+  const all = React.Children.toArray(children);
+  const artboards = all.filter((c) => c && c.type === DCArtboard);
+  const rest = all.filter((c) => !(c && c.type === DCArtboard));
+  const sec = (ctx && sid && ctx.section(sid)) || {};
+  // Must match DesignCanvas's srcKey computation exactly (it filters falsy
+  // IDs), or onDelete persists a srcKey that DesignCanvas never recognizes.
+  const allIds = artboards.map((a) => a.props.id ?? a.props.label).filter(Boolean);
+  const srcKey = allIds.join('\x1f');
+  const hidden = sec.srcKey === srcKey ? (sec.hidden || []) : [];
+  const srcOrder = allIds.filter((k) => !hidden.includes(k));
+
+  const order = React.useMemo(() => {
+    const kept = (sec.order || []).filter((k) => srcOrder.includes(k));
+    return [...kept, ...srcOrder.filter((k) => !kept.includes(k))];
+  }, [sec.order, srcOrder.join('|')]);
+
+  const byId = Object.fromEntries(artboards.map((a) => [a.props.id ?? a.props.label, a]));
+
+  // marginBottom counter-scales so the on-screen gap between sections stays
+  // constant — otherwise at low zoom the (world-space) gap collapses while
+  // the screen-constant sectionhead below it doesn't, and the title reads as
+  // belonging to the section above. paddingBottom below is just enough for
+  // the 24px artboard-header (abs-positioned above each card) plus ~8px, so
+  // the title sits tight against its own row at every zoom.
+  return (
+    <div data-dc-section={sid}
+      style={{ marginBottom: 'calc(80px * var(--dc-inv-zoom, 1))', position: 'relative' }}>
+      <div style={{ padding: '0 60px' }}>
+        <div className="dc-sectionhead" style={{ paddingBottom: 36 }}>
+          <DCEditable tag="div" value={sec.title ?? title}
+            onChange={(v) => ctx && sid && ctx.patchSection(sid, { title: v })}
+            style={{ fontSize: 28, fontWeight: 600, color: DC.title, letterSpacing: -0.4, marginBottom: 6, display: 'inline-block' }} />
+          {subtitle && <div style={{ fontSize: 16, color: DC.subtitle }}>{subtitle}</div>}
+        </div>
+      </div>
+      <div style={{ display: 'flex', gap, padding: '0 60px', alignItems: 'flex-start', width: 'max-content' }}>
+        {order.map((k) => (
+          <DCArtboardFrame key={k} sectionId={sid} artboard={byId[k]} order={order}
+            label={(sec.labels || {})[k] ?? byId[k].props.label}
+            onRename={(v) => ctx && ctx.patchSection(sid, (x) => ({ labels: { ...x.labels, [k]: v } }))}
+            onReorder={(next) => ctx && ctx.patchSection(sid, { order: next })}
+            onDelete={() => ctx && ctx.patchSection(sid, (x) => ({
+              hidden: [...(x.srcKey === srcKey ? (x.hidden || []) : []), k],
+              srcKey,
+            }))}
+            onFocus={() => ctx && ctx.setFocus(`${sid}/${k}`)} />
+        ))}
+      </div>
+      {rest}
+    </div>
+  );
+}
+
+// DCArtboard — marker; rendered by DCArtboardFrame via DCSection.
+function DCArtboard() { return null; }
+
+// Per-artboard export (kind: 'png' | 'html'). Both paths share the same
+// self-contained clone: computed styles baked in, @font-face / <img> /
+// inline-style background-image urls inlined as data URIs. PNG wraps the
+// clone in foreignObject→canvas at 3× the artboard's natural width×height
+// (same pipeline the host uses for page captures); HTML wraps it in a
+// minimal standalone document. Both are independent of viewport zoom.
+async function dcExport(node, w, h, name, kind) {
+  try { await document.fonts.ready; } catch {}
+  const toDataURL = (url) => fetch(url).then((r) => r.blob()).then((b) => new Promise((res) => {
+    const fr = new FileReader(); fr.onload = () => res(fr.result); fr.onerror = () => res(url); fr.readAsDataURL(b);
+  })).catch(() => url);
+
+  // Collect @font-face rules. ss.cssRules throws SecurityError on
+  // cross-origin sheets (e.g. fonts.googleapis.com) — in that case fetch
+  // the CSS text directly (those endpoints send ACAO:*) and regex-extract
+  // the blocks. @import and @media/@supports are walked so nested
+  // @font-face rules aren't missed.
+  const fontRules = [], pending = [], seen = new Set();
+  const scrapeCss = (href) => {
+    if (seen.has(href)) return; seen.add(href);
+    pending.push(fetch(href).then((r) => r.text()).then((css) => {
+      for (const m of css.match(/@font-face\s*{[^}]*}/g) || []) fontRules.push({ css: m, base: href });
+      for (const m of css.matchAll(/@import\s+(?:url\()?['"]?([^'")\s;]+)/g))
+        scrapeCss(new URL(m[1], href).href);
+    }).catch(() => {}));
+  };
+  const walk = (rules, base) => {
+    for (const r of rules) {
+      if (r.type === CSSRule.FONT_FACE_RULE) fontRules.push({ css: r.cssText, base });
+      else if (r.type === CSSRule.IMPORT_RULE && r.styleSheet) {
+        const ibase = r.styleSheet.href || base;
+        try { walk(r.styleSheet.cssRules, ibase); } catch { scrapeCss(ibase); }
+      } else if (r.cssRules) walk(r.cssRules, base);
+    }
+  };
+  for (const ss of document.styleSheets) {
+    const base = ss.href || location.href;
+    try { walk(ss.cssRules, base); } catch { if (ss.href) scrapeCss(ss.href); }
+  }
+  while (pending.length) await pending.shift();
+  const fontCss = (await Promise.all(fontRules.map(async (rule) => {
+    let out = rule.css, m; const re = /url\((['"]?)([^'")]+)\1\)/g;
+    while ((m = re.exec(rule.css))) {
+      if (m[2].indexOf('data:') === 0) continue;
+      let abs; try { abs = new URL(m[2], rule.base).href; } catch { continue; }
+      out = out.split(m[0]).join('url("' + await toDataURL(abs) + '")');
+    }
+    return out;
+  }))).join('\n');
+
+  const cloneStyled = (src) => {
+    if (src.nodeType === 8 || (src.nodeType === 1 && src.tagName === 'SCRIPT')) return document.createTextNode('');
+    const dst = src.cloneNode(false);
+    if (src.nodeType === 1) {
+      const cs = getComputedStyle(src); let txt = '';
+      for (let i = 0; i < cs.length; i++) txt += cs[i] + ':' + cs.getPropertyValue(cs[i]) + ';';
+      dst.setAttribute('style', txt + 'animation:none;transition:none;');
+      if (src.tagName === 'CANVAS') try { const im = document.createElement('img'); im.src = src.toDataURL(); im.setAttribute('style', txt); return im; } catch {}
+    }
+    for (let c = src.firstChild; c; c = c.nextSibling) dst.appendChild(cloneStyled(c));
+    return dst;
+  };
+  const clone = cloneStyled(node);
+  clone.setAttribute('xmlns', 'http://www.w3.org/1999/xhtml');
+  // Drop the card's own shadow/radius so the export is a flush w×h rect;
+  // the artboard's own background (if any) is already in the computed style.
+  clone.style.boxShadow = 'none'; clone.style.borderRadius = '0';
+
+  const jobs = [];
+  clone.querySelectorAll('img').forEach((el) => {
+    const s = el.getAttribute('src');
+    if (s && s.indexOf('data:') !== 0) jobs.push(toDataURL(el.src).then((d) => el.setAttribute('src', d)));
+  });
+  [clone, ...clone.querySelectorAll('*')].forEach((el) => {
+    const bg = el.style.backgroundImage; if (!bg) return;
+    let m; const re = /url\(["']?([^"')]+)["']?\)/g;
+    while ((m = re.exec(bg))) {
+      const tok = m[0], url = m[1];
+      if (url.indexOf('data:') === 0) continue;
+      jobs.push(toDataURL(url).then((d) => { el.style.backgroundImage = el.style.backgroundImage.split(tok).join('url("' + d + '")'); }));
+    }
+  });
+  await Promise.all(jobs);
+
+  const xml = new XMLSerializer().serializeToString(clone);
+  const save = (blob, ext) => {
+    if (!blob) return;
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = name + '.' + ext; a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  };
+
+  if (kind === 'html') {
+    const html = '<!doctype html><html><head><meta charset="utf-8"><title>' + name + '</title>' +
+      (fontCss ? '<style>' + fontCss + '</style>' : '') +
+      '</head><body style="margin:0">' + xml + '</body></html>';
+    return save(new Blob([html], { type: 'text/html' }), 'html');
+  }
+
+  // PNG: the SVG's own width/height must be the output resolution — an
+  // <img>-loaded SVG rasterizes at its intrinsic size, so sizing it at 1×
+  // and ctx.scale()-ing up would just upscale a 1× bitmap. viewBox maps the
+  // w×h foreignObject onto the px·w × px·h SVG canvas so the browser renders
+  // the HTML at full resolution.
+  const px = 3;
+  const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="' + w * px + '" height="' + h * px +
+    '" viewBox="0 0 ' + w + ' ' + h + '"><foreignObject width="' + w + '" height="' + h + '">' +
+    (fontCss ? '<style><![CDATA[' + fontCss + ']]></style>' : '') + xml + '</foreignObject></svg>';
+  const img = new Image();
+  await new Promise((res, rej) => {
+    img.onload = res; img.onerror = () => rej(new Error('svg load failed'));
+    img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+  });
+  const cv = document.createElement('canvas');
+  cv.width = w * px; cv.height = h * px;
+  cv.getContext('2d').drawImage(img, 0, 0);
+  cv.toBlob((blob) => save(blob, 'png'), 'image/png');
+}
+
+function DCArtboardFrame({ sectionId, artboard, label, order, onRename, onReorder, onFocus, onDelete }) {
+  const { id: rawId, label: rawLabel, width = 260, height = 480, children, style = {} } = artboard.props;
+  const id = rawId ?? rawLabel;
+  const ref = React.useRef(null);
+  const cardRef = React.useRef(null);
+  const menuRef = React.useRef(null);
+  const [menuOpen, setMenuOpen] = React.useState(false);
+  const [confirming, setConfirming] = React.useState(false);
+
+  // ⋯ menu: close on any outside pointerdown. Two-click delete lives inside
+  // the menu — first click arms the row, second commits; closing disarms.
+  React.useEffect(() => {
+    if (!menuOpen) { setConfirming(false); return; }
+    const off = (e) => { if (!menuRef.current || !menuRef.current.contains(e.target)) setMenuOpen(false); };
+    document.addEventListener('pointerdown', off, true);
+    return () => document.removeEventListener('pointerdown', off, true);
+  }, [menuOpen]);
+
+  const doExport = (kind) => {
+    setMenuOpen(false);
+    if (!cardRef.current) return;
+    const name = String(label || id || 'artboard').replace(/[^\w\s.-]+/g, '_');
+    dcExport(cardRef.current, width, height, name, kind)
+      .catch((e) => console.error('[design-canvas] export failed:', e));
+  };
+
+  // Live drag-reorder: dragged card sticks to cursor; siblings slide into
+  // their would-be slots in real time via transforms. DOM order only
+  // changes on drop.
+  const onGripDown = (e) => {
+    e.preventDefault(); e.stopPropagation();
+    const me = ref.current;
+    // translateX is applied in local (pre-scale) space but pointer deltas and
+    // getBoundingClientRect().left are screen-space — divide by the viewport's
+    // current scale so the dragged card tracks the cursor at any zoom level.
+    const scale = me.getBoundingClientRect().width / me.offsetWidth || 1;
+    const peers = Array.from(document.querySelectorAll(`[data-dc-section="${sectionId}"] [data-dc-slot]`));
+    const homes = peers.map((el) => ({ el, id: el.dataset.dcSlot, x: el.getBoundingClientRect().left }));
+    const slotXs = homes.map((h) => h.x);
+    const startIdx = order.indexOf(id);
+    const startX = e.clientX;
+    let liveOrder = order.slice();
+    me.classList.add('dc-dragging');
+
+    const layout = () => {
+      for (const h of homes) {
+        if (h.id === id) continue;
+        const slot = liveOrder.indexOf(h.id);
+        h.el.style.transform = `translateX(${(slotXs[slot] - h.x) / scale}px)`;
+      }
+    };
+
+    const move = (ev) => {
+      const dx = ev.clientX - startX;
+      me.style.transform = `translateX(${dx / scale}px)`;
+      const cur = homes[startIdx].x + dx;
+      let nearest = 0, best = Infinity;
+      for (let i = 0; i < slotXs.length; i++) {
+        const d = Math.abs(slotXs[i] - cur);
+        if (d < best) { best = d; nearest = i; }
+      }
+      if (liveOrder.indexOf(id) !== nearest) {
+        liveOrder = order.filter((k) => k !== id);
+        liveOrder.splice(nearest, 0, id);
+        layout();
+      }
+    };
+
+    const up = () => {
+      document.removeEventListener('pointermove', move);
+      document.removeEventListener('pointerup', up);
+      const finalSlot = liveOrder.indexOf(id);
+      me.classList.remove('dc-dragging');
+      me.style.transform = `translateX(${(slotXs[finalSlot] - homes[startIdx].x) / scale}px)`;
+      // After the settle transition, kill transitions + clear transforms +
+      // commit the reorder in the same frame so there's no visual snap-back.
+      setTimeout(() => {
+        for (const h of homes) { h.el.style.transition = 'none'; h.el.style.transform = ''; }
+        if (liveOrder.join('|') !== order.join('|')) onReorder(liveOrder);
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          for (const h of homes) h.el.style.transition = '';
+        }));
+      }, 180);
+    };
+    document.addEventListener('pointermove', move);
+    document.addEventListener('pointerup', up);
+  };
+
+  return (
+    <div ref={ref} data-dc-slot={id} style={{ position: 'relative', flexShrink: 0 }}>
+      <div className="dc-header" style={{ color: DC.label }} onPointerDown={(e) => e.stopPropagation()}>
+        <div className="dc-labelrow">
+          <div className="dc-grip" onPointerDown={onGripDown} title="Drag to reorder">
+            <svg width="9" height="13" viewBox="0 0 9 13" fill="currentColor"><circle cx="2" cy="2" r="1.1"/><circle cx="7" cy="2" r="1.1"/><circle cx="2" cy="6.5" r="1.1"/><circle cx="7" cy="6.5" r="1.1"/><circle cx="2" cy="11" r="1.1"/><circle cx="7" cy="11" r="1.1"/></svg>
+          </div>
+          <div className="dc-labeltext" onClick={onFocus} title="Click to focus">
+            <DCEditable value={label} onChange={onRename} onClick={(e) => e.stopPropagation()}
+              style={{ fontSize: 15, fontWeight: 500, color: DC.label, lineHeight: 1 }} />
+          </div>
+        </div>
+        <div className="dc-btns">
+          <div ref={menuRef} style={{ position: 'relative' }}>
+            <button className="dc-kebab" title="More" onClick={() => setMenuOpen((o) => !o)}>
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><circle cx="2.5" cy="6" r="1.1"/><circle cx="6" cy="6" r="1.1"/><circle cx="9.5" cy="6" r="1.1"/></svg>
+            </button>
+            {menuOpen && (
+              <div className="dc-menu" onPointerDown={(e) => e.stopPropagation()}>
+                <button onClick={() => doExport('png')}>Download PNG</button>
+                <button onClick={() => doExport('html')}>Download HTML</button>
+                <hr />
+                <button className="dc-danger"
+                  onClick={() => { if (confirming) { setMenuOpen(false); onDelete(); } else setConfirming(true); }}>
+                  {confirming ? 'Click again to delete' : 'Delete'}
+                </button>
+              </div>
+            )}
+          </div>
+          <button className="dc-expand" onClick={onFocus} title="Focus">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"><path d="M7 1h4v4M5 11H1V7M11 1L7.5 4.5M1 11l3.5-3.5"/></svg>
+          </button>
+        </div>
+      </div>
+      <div ref={cardRef} className="dc-card"
+        style={{ borderRadius: 2, boxShadow: '0 1px 3px rgba(0,0,0,.08),0 4px 16px rgba(0,0,0,.06)', overflow: 'hidden', width, height, background: '#fff', ...style }}>
+        {children || <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#bbb', fontSize: 13, fontFamily: DC.font }}>{id}</div>}
+      </div>
+    </div>
+  );
+}
+
+// Inline rename — commits on blur or Enter.
+function DCEditable({ value, onChange, style, tag = 'span', onClick }) {
+  const T = tag;
+  return (
+    <T className="dc-editable" contentEditable suppressContentEditableWarning
+      onClick={onClick}
+      onPointerDown={(e) => e.stopPropagation()}
+      onBlur={(e) => onChange && onChange(e.currentTarget.textContent)}
+      onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); e.currentTarget.blur(); } }}
+      style={style}>{value}</T>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// Focus mode — overlay one artboard; ←/→ within section, ↑/↓ across
+// sections, Esc or backdrop click to exit.
+// ─────────────────────────────────────────────────────────────
+function DCFocusOverlay({ entry, sectionMeta, sectionOrder }) {
+  const ctx = React.useContext(DCCtx);
+  const { sectionId, artboard } = entry;
+  const sec = ctx.section(sectionId);
+  const meta = sectionMeta[sectionId];
+  const peers = meta.slotIds;
+  const aid = artboard.props.id ?? artboard.props.label;
+  const idx = peers.indexOf(aid);
+  const secIdx = sectionOrder.indexOf(sectionId);
+
+  const go = (d) => { const n = peers[(idx + d + peers.length) % peers.length]; if (n) ctx.setFocus(`${sectionId}/${n}`); };
+  const goSection = (d) => {
+    // Sections whose artboards are all deleted have slotIds:[] — step past
+    // them to the next non-empty section so ↑/↓ doesn't dead-end.
+    const n = sectionOrder.length;
+    for (let i = 1; i < n; i++) {
+      const ns = sectionOrder[(((secIdx + d * i) % n) + n) % n];
+      const first = sectionMeta[ns] && sectionMeta[ns].slotIds[0];
+      if (first) { ctx.setFocus(`${ns}/${first}`); return; }
+    }
+  };
+
+  React.useEffect(() => {
+    const k = (e) => {
+      if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); go(1); }
+      if (e.key === 'ArrowUp') { e.preventDefault(); goSection(-1); }
+      if (e.key === 'ArrowDown') { e.preventDefault(); goSection(1); }
+    };
+    document.addEventListener('keydown', k);
+    return () => document.removeEventListener('keydown', k);
+  });
+
+  const { width = 260, height = 480, children } = artboard.props;
+  const [vp, setVp] = React.useState({ w: window.innerWidth, h: window.innerHeight });
+  React.useEffect(() => { const r = () => setVp({ w: window.innerWidth, h: window.innerHeight }); window.addEventListener('resize', r); return () => window.removeEventListener('resize', r); }, []);
+  const scale = Math.max(0.1, Math.min((vp.w - 200) / width, (vp.h - 260) / height, 2));
+
+  const [ddOpen, setDd] = React.useState(false);
+  const Arrow = ({ dir, onClick }) => (
+    <button onClick={(e) => { e.stopPropagation(); onClick(); }}
+      style={{ position: 'absolute', top: '50%', [dir]: 28, transform: 'translateY(-50%)',
+        border: 'none', background: 'rgba(255,255,255,.08)', color: 'rgba(255,255,255,.9)',
+        width: 44, height: 44, borderRadius: 22, fontSize: 18, cursor: 'pointer',
+        display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'background .15s' }}
+      onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(255,255,255,.18)')}
+      onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(255,255,255,.08)')}>
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+        <path d={dir === 'left' ? 'M11 3L5 9l6 6' : 'M7 3l6 6-6 6'} /></svg>
+    </button>
+  );
+
+  // Portal to body so position:fixed is the real viewport regardless of any
+  // transform on DesignCanvas's ancestors (including the canvas zoom itself).
+  return ReactDOM.createPortal(
+    <div onClick={() => ctx.setFocus(null)}
+      onWheel={(e) => e.preventDefault()}
+      style={{ position: 'fixed', inset: 0, zIndex: 100, background: 'rgba(24,20,16,.6)', backdropFilter: 'blur(14px)',
+        fontFamily: DC.font, color: '#fff' }}>
+
+      {/* top bar: section dropdown (left) · close (right) */}
+      <div onClick={(e) => e.stopPropagation()}
+        style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 72, display: 'flex', alignItems: 'flex-start', padding: '16px 20px 0', gap: 16 }}>
+        <div style={{ position: 'relative' }}>
+          <button onClick={() => setDd((o) => !o)}
+            style={{ border: 'none', background: 'transparent', color: '#fff', cursor: 'pointer', padding: '6px 8px',
+              borderRadius: 6, textAlign: 'left', fontFamily: 'inherit' }}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ fontSize: 18, fontWeight: 600, letterSpacing: -0.3 }}>{meta.title}</span>
+              <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" style={{ opacity: .7 }}><path d="M2 4l3.5 3.5L9 4"/></svg>
+            </span>
+            {meta.subtitle && <span style={{ display: 'block', fontSize: 13, opacity: .6, fontWeight: 400, marginTop: 2 }}>{meta.subtitle}</span>}
+          </button>
+          {ddOpen && (
+            <div style={{ position: 'absolute', top: '100%', left: 0, marginTop: 4, background: '#2a251f', borderRadius: 8,
+              boxShadow: '0 8px 32px rgba(0,0,0,.4)', padding: 4, minWidth: 200, zIndex: 10 }}>
+              {sectionOrder.filter((sid) => sectionMeta[sid].slotIds.length).map((sid) => (
+                <button key={sid} onClick={() => { setDd(false); const f = sectionMeta[sid].slotIds[0]; if (f) ctx.setFocus(`${sid}/${f}`); }}
+                  style={{ display: 'block', width: '100%', textAlign: 'left', border: 'none', cursor: 'pointer',
+                    background: sid === sectionId ? 'rgba(255,255,255,.1)' : 'transparent', color: '#fff',
+                    padding: '8px 12px', borderRadius: 5, fontSize: 14, fontWeight: sid === sectionId ? 600 : 400, fontFamily: 'inherit' }}>
+                  {sectionMeta[sid].title}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+        <div style={{ flex: 1 }} />
+        <button onClick={() => ctx.setFocus(null)}
+          onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(255,255,255,.12)')}
+          onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
+          style={{ border: 'none', background: 'transparent', color: 'rgba(255,255,255,.7)', width: 32, height: 32,
+            borderRadius: 16, fontSize: 20, cursor: 'pointer', lineHeight: 1, transition: 'background .12s' }}>×</button>
+      </div>
+
+      {/* card centered, label + index below — only the card itself stops
+          propagation so any backdrop click (including the margins around
+          the card) exits focus */}
+      <div
+        style={{ position: 'absolute', top: 64, bottom: 56, left: 100, right: 100, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 16 }}>
+        <div onClick={(e) => e.stopPropagation()} style={{ width: width * scale, height: height * scale, position: 'relative' }}>
+          <div style={{ width, height, transform: `scale(${scale})`, transformOrigin: 'top left', background: '#fff', borderRadius: 2, overflow: 'hidden',
+            boxShadow: '0 20px 80px rgba(0,0,0,.4)' }}>
+            {children || <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#bbb' }}>{aid}</div>}
+          </div>
+        </div>
+        <div onClick={(e) => e.stopPropagation()} style={{ fontSize: 14, fontWeight: 500, opacity: .85, textAlign: 'center' }}>
+          {(sec.labels || {})[aid] ?? artboard.props.label}
+          <span style={{ opacity: .5, marginLeft: 10, fontVariantNumeric: 'tabular-nums' }}>{idx + 1} / {peers.length}</span>
+        </div>
+      </div>
+
+      <Arrow dir="left" onClick={() => go(-1)} />
+      <Arrow dir="right" onClick={() => go(1)} />
+
+      {/* dots */}
+      <div onClick={(e) => e.stopPropagation()}
+        style={{ position: 'absolute', bottom: 20, left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: 8 }}>
+        {peers.map((p, i) => (
+          <button key={p} onClick={() => ctx.setFocus(`${sectionId}/${p}`)}
+            style={{ border: 'none', padding: 0, cursor: 'pointer', width: 6, height: 6, borderRadius: 3,
+              background: i === idx ? '#fff' : 'rgba(255,255,255,.3)' }} />
+        ))}
+      </div>
+    </div>,
+    document.body,
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// Post-it — absolute-positioned sticky note
+// ─────────────────────────────────────────────────────────────
+function DCPostIt({ children, top, left, right, bottom, rotate = -2, width = 180 }) {
+  return (
+    <div style={{
+      position: 'absolute', top, left, right, bottom, width,
+      background: DC.postitBg, padding: '14px 16px',
+      fontFamily: '"Comic Sans MS", "Marker Felt", "Segoe Print", cursive',
+      fontSize: 14, lineHeight: 1.4, color: DC.postitText,
+      boxShadow: '0 2px 8px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.08)',
+      transform: `rotate(${rotate}deg)`,
+      zIndex: 5,
+    }}>{children}</div>
+  );
+}
+
+Object.assign(window, { DesignCanvas, DCSection, DCArtboard, DCPostIt });
+
+
+
+/* ===== tweaks-panel.jsx ===== */
+
+// tweaks-panel.jsx
+// Reusable Tweaks shell + form-control helpers.
+//
+// Owns the host protocol (listens for __activate_edit_mode / __deactivate_edit_mode,
+// posts __edit_mode_available / __edit_mode_set_keys / __edit_mode_dismissed) so
+// individual prototypes don't re-roll it. Ships a consistent set of controls so you
+// don't hand-draw <input type="range">, segmented radios, steppers, etc.
+//
+// Usage (in an HTML file that loads React + Babel):
+//
+//   const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+//     "primaryColor": "#D97757",
+//     "palette": ["#D97757", "#29261b", "#f6f4ef"],
+//     "fontSize": 16,
+//     "density": "regular",
+//     "dark": false
+//   }/*EDITMODE-END*/;
+//
+//   function App() {
+//     const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+//     return (
+//       <div style={{ fontSize: t.fontSize, color: t.primaryColor }}>
+//         Hello
+//         <TweaksPanel>
+//           <TweakSection label="Typography" />
+//           <TweakSlider label="Font size" value={t.fontSize} min={10} max={32} unit="px"
+//                        onChange={(v) => setTweak('fontSize', v)} />
+//           <TweakRadio  label="Density" value={t.density}
+//                        options={['compact', 'regular', 'comfy']}
+//                        onChange={(v) => setTweak('density', v)} />
+//           <TweakSection label="Theme" />
+//           <TweakColor  label="Primary" value={t.primaryColor}
+//                        options={['#D97757', '#2A6FDB', '#1F8A5B', '#7A5AE0']}
+//                        onChange={(v) => setTweak('primaryColor', v)} />
+//           <TweakColor  label="Palette" value={t.palette}
+//                        options={[['#D97757', '#29261b', '#f6f4ef'],
+//                                  ['#475569', '#0f172a', '#f1f5f9']]}
+//                        onChange={(v) => setTweak('palette', v)} />
+//           <TweakToggle label="Dark mode" value={t.dark}
+//                        onChange={(v) => setTweak('dark', v)} />
+//         </TweaksPanel>
+//       </div>
+//     );
+//   }
+//
+// ─────────────────────────────────────────────────────────────────────────────
+
+const __TWEAKS_STYLE = `
+  .twk-panel{position:fixed;right:16px;bottom:16px;z-index:2147483646;width:280px;
+    max-height:calc(100vh - 32px);display:flex;flex-direction:column;
+    transform:scale(var(--dc-inv-zoom,1));transform-origin:bottom right;
+    background:rgba(250,249,247,.78);color:#29261b;
+    -webkit-backdrop-filter:blur(24px) saturate(160%);backdrop-filter:blur(24px) saturate(160%);
+    border:.5px solid rgba(255,255,255,.6);border-radius:14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.5) inset,0 12px 40px rgba(0,0,0,.18);
+    font:11.5px/1.4 ui-sans-serif,system-ui,-apple-system,sans-serif;overflow:hidden}
+  .twk-hd{display:flex;align-items:center;justify-content:space-between;
+    padding:10px 8px 10px 14px;cursor:move;user-select:none}
+  .twk-hd b{font-size:12px;font-weight:600;letter-spacing:.01em}
+  .twk-x{appearance:none;border:0;background:transparent;color:rgba(41,38,27,.55);
+    width:22px;height:22px;border-radius:6px;cursor:default;font-size:13px;line-height:1}
+  .twk-x:hover{background:rgba(0,0,0,.06);color:#29261b}
+  .twk-body{padding:2px 14px 14px;display:flex;flex-direction:column;gap:10px;
+    overflow-y:auto;overflow-x:hidden;min-height:0;
+    scrollbar-width:thin;scrollbar-color:rgba(0,0,0,.15) transparent}
+  .twk-body::-webkit-scrollbar{width:8px}
+  .twk-body::-webkit-scrollbar-track{background:transparent;margin:2px}
+  .twk-body::-webkit-scrollbar-thumb{background:rgba(0,0,0,.15);border-radius:4px;
+    border:2px solid transparent;background-clip:content-box}
+  .twk-body::-webkit-scrollbar-thumb:hover{background:rgba(0,0,0,.25);
+    border:2px solid transparent;background-clip:content-box}
+  .twk-row{display:flex;flex-direction:column;gap:5px}
+  .twk-row-h{flex-direction:row;align-items:center;justify-content:space-between;gap:10px}
+  .twk-lbl{display:flex;justify-content:space-between;align-items:baseline;
+    color:rgba(41,38,27,.72)}
+  .twk-lbl>span:first-child{font-weight:500}
+  .twk-val{color:rgba(41,38,27,.5);font-variant-numeric:tabular-nums}
+
+  .twk-sect{font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+    color:rgba(41,38,27,.45);padding:10px 0 0}
+  .twk-sect:first-child{padding-top:0}
+
+  .twk-field{appearance:none;width:100%;height:26px;padding:0 8px;
+    border:.5px solid rgba(0,0,0,.1);border-radius:7px;
+    background:rgba(255,255,255,.6);color:inherit;font:inherit;outline:none}
+  .twk-field:focus{border-color:rgba(0,0,0,.25);background:rgba(255,255,255,.85)}
+  select.twk-field{padding-right:22px;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path fill='rgba(0,0,0,.5)' d='M0 0h10L5 6z'/></svg>");
+    background-repeat:no-repeat;background-position:right 8px center}
+
+  .twk-slider{appearance:none;-webkit-appearance:none;width:100%;height:4px;margin:6px 0;
+    border-radius:999px;background:rgba(0,0,0,.12);outline:none}
+  .twk-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;
+    width:14px;height:14px;border-radius:50%;background:#fff;
+    border:.5px solid rgba(0,0,0,.12);box-shadow:0 1px 3px rgba(0,0,0,.2);cursor:default}
+  .twk-slider::-moz-range-thumb{width:14px;height:14px;border-radius:50%;
+    background:#fff;border:.5px solid rgba(0,0,0,.12);box-shadow:0 1px 3px rgba(0,0,0,.2);cursor:default}
+
+  .twk-seg{position:relative;display:flex;padding:2px;border-radius:8px;
+    background:rgba(0,0,0,.06);user-select:none}
+  .twk-seg-thumb{position:absolute;top:2px;bottom:2px;border-radius:6px;
+    background:rgba(255,255,255,.9);box-shadow:0 1px 2px rgba(0,0,0,.12);
+    transition:left .15s cubic-bezier(.3,.7,.4,1),width .15s}
+  .twk-seg.dragging .twk-seg-thumb{transition:none}
+  .twk-seg button{appearance:none;position:relative;z-index:1;flex:1;border:0;
+    background:transparent;color:inherit;font:inherit;font-weight:500;min-height:22px;
+    border-radius:6px;cursor:default;padding:4px 6px;line-height:1.2;
+    overflow-wrap:anywhere}
+
+  .twk-toggle{position:relative;width:32px;height:18px;border:0;border-radius:999px;
+    background:rgba(0,0,0,.15);transition:background .15s;cursor:default;padding:0}
+  .twk-toggle[data-on="1"]{background:#34c759}
+  .twk-toggle i{position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;
+    background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);transition:transform .15s}
+  .twk-toggle[data-on="1"] i{transform:translateX(14px)}
+
+  .twk-num{display:flex;align-items:center;height:26px;padding:0 0 0 8px;
+    border:.5px solid rgba(0,0,0,.1);border-radius:7px;background:rgba(255,255,255,.6)}
+  .twk-num-lbl{font-weight:500;color:rgba(41,38,27,.6);cursor:ew-resize;
+    user-select:none;padding-right:8px}
+  .twk-num input{flex:1;min-width:0;height:100%;border:0;background:transparent;
+    font:inherit;font-variant-numeric:tabular-nums;text-align:right;padding:0 8px 0 0;
+    outline:none;color:inherit;-moz-appearance:textfield}
+  .twk-num input::-webkit-inner-spin-button,.twk-num input::-webkit-outer-spin-button{
+    -webkit-appearance:none;margin:0}
+  .twk-num-unit{padding-right:8px;color:rgba(41,38,27,.45)}
+
+  .twk-btn{appearance:none;height:26px;padding:0 12px;border:0;border-radius:7px;
+    background:rgba(0,0,0,.78);color:#fff;font:inherit;font-weight:500;cursor:default}
+  .twk-btn:hover{background:rgba(0,0,0,.88)}
+  .twk-btn.secondary{background:rgba(0,0,0,.06);color:inherit}
+  .twk-btn.secondary:hover{background:rgba(0,0,0,.1)}
+
+  .twk-swatch{appearance:none;-webkit-appearance:none;width:56px;height:22px;
+    border:.5px solid rgba(0,0,0,.1);border-radius:6px;padding:0;cursor:default;
+    background:transparent;flex-shrink:0}
+  .twk-swatch::-webkit-color-swatch-wrapper{padding:0}
+  .twk-swatch::-webkit-color-swatch{border:0;border-radius:5.5px}
+  .twk-swatch::-moz-color-swatch{border:0;border-radius:5.5px}
+
+  .twk-chips{display:flex;gap:6px}
+  .twk-chip{position:relative;appearance:none;flex:1;min-width:0;height:46px;
+    padding:0;border:0;border-radius:6px;overflow:hidden;cursor:default;
+    box-shadow:0 0 0 .5px rgba(0,0,0,.12),0 1px 2px rgba(0,0,0,.06);
+    transition:transform .12s cubic-bezier(.3,.7,.4,1),box-shadow .12s}
+  .twk-chip:hover{transform:translateY(-1px);
+    box-shadow:0 0 0 .5px rgba(0,0,0,.18),0 4px 10px rgba(0,0,0,.12)}
+  .twk-chip[data-on="1"]{box-shadow:0 0 0 1.5px rgba(0,0,0,.85),
+    0 2px 6px rgba(0,0,0,.15)}
+  .twk-chip>span{position:absolute;top:0;bottom:0;right:0;width:34%;
+    display:flex;flex-direction:column;box-shadow:-1px 0 0 rgba(0,0,0,.1)}
+  .twk-chip>span>i{flex:1;box-shadow:0 -1px 0 rgba(0,0,0,.1)}
+  .twk-chip>span>i:first-child{box-shadow:none}
+  .twk-chip svg{position:absolute;top:6px;left:6px;width:13px;height:13px;
+    filter:drop-shadow(0 1px 1px rgba(0,0,0,.3))}
+`;
+
+// ── useTweaks ───────────────────────────────────────────────────────────────
+// Single source of truth for tweak values. setTweak persists via the host
+// (__edit_mode_set_keys → host rewrites the EDITMODE block on disk).
+function useTweaks(defaults) {
+  const [values, setValues] = React.useState(defaults);
+  // Accepts either setTweak('key', value) or setTweak({ key: value, ... }) so a
+  // useState-style call doesn't write a "[object Object]" key into the persisted
+  // JSON block.
+  const setTweak = React.useCallback((keyOrEdits, val) => {
+    const edits = typeof keyOrEdits === 'object' && keyOrEdits !== null
+      ? keyOrEdits : { [keyOrEdits]: val };
+    setValues((prev) => ({ ...prev, ...edits }));
+    window.parent.postMessage({ type: '__edit_mode_set_keys', edits }, '*');
+    // Same-window signal so in-page listeners (deck-stage rail thumbnails)
+    // can react — the parent message only reaches the host, not peers.
+    window.dispatchEvent(new CustomEvent('tweakchange', { detail: edits }));
+  }, []);
+  return [values, setTweak];
+}
+
+// ── TweaksPanel ─────────────────────────────────────────────────────────────
+// Floating shell. Registers the protocol listener BEFORE announcing
+// availability — if the announce ran first, the host's activate could land
+// before our handler exists and the toolbar toggle would silently no-op.
+// The close button posts __edit_mode_dismissed so the host's toolbar toggle
+// flips off in lockstep; the host echoes __deactivate_edit_mode back which
+// is what actually hides the panel.
+function TweaksPanel({ title = 'Tweaks', noDeckControls = false, children }) {
+  const [open, setOpen] = React.useState(false);
+  const dragRef = React.useRef(null);
+  // Auto-inject a rail toggle when a <deck-stage> is on the page. The
+  // toggle drives the deck's per-viewer _railVisible via window message;
+  // state is mirrored from the same localStorage key the deck reads so
+  // the control reflects reality across reloads. The mechanism is the
+  // message — authors who want custom placement can post it directly
+  // and pass noDeckControls to suppress this one.
+  const hasDeckStage = React.useMemo(
+    () => typeof document !== 'undefined' && !!document.querySelector('deck-stage'),
+    [],
+  );
+  // Hide the toggle until the host has actually enabled the rail (the
+  // __omelette_rail_enabled window message, posted only when the
+  // omelette_deck_rail_enabled flag is on for this user). The initial read
+  // covers TweaksPanel mounting after the message already arrived; the
+  // listener covers the common case of mounting first.
+  const [railEnabled, setRailEnabled] = React.useState(
+    () => hasDeckStage && !!document.querySelector('deck-stage')?._railEnabled,
+  );
+  React.useEffect(() => {
+    if (!hasDeckStage || railEnabled) return undefined;
+    const onMsg = (e) => {
+      if (e.data && e.data.type === '__omelette_rail_enabled') setRailEnabled(true);
+    };
+    window.addEventListener('message', onMsg);
+    return () => window.removeEventListener('message', onMsg);
+  }, [hasDeckStage, railEnabled]);
+  const [railVisible, setRailVisible] = React.useState(() => {
+    try { return localStorage.getItem('deck-stage.railVisible') !== '0'; } catch (e) { return true; }
+  });
+  const toggleRail = (on) => {
+    setRailVisible(on);
+    window.postMessage({ type: '__deck_rail_visible', on }, '*');
+  };
+  const offsetRef = React.useRef({ x: 16, y: 16 });
+  const PAD = 16;
+
+  const clampToViewport = React.useCallback(() => {
+    const panel = dragRef.current;
+    if (!panel) return;
+    const w = panel.offsetWidth, h = panel.offsetHeight;
+    const maxRight = Math.max(PAD, window.innerWidth - w - PAD);
+    const maxBottom = Math.max(PAD, window.innerHeight - h - PAD);
+    offsetRef.current = {
+      x: Math.min(maxRight, Math.max(PAD, offsetRef.current.x)),
+      y: Math.min(maxBottom, Math.max(PAD, offsetRef.current.y)),
+    };
+    panel.style.right = offsetRef.current.x + 'px';
+    panel.style.bottom = offsetRef.current.y + 'px';
+  }, []);
+
+  React.useEffect(() => {
+    if (!open) return;
+    clampToViewport();
+    if (typeof ResizeObserver === 'undefined') {
+      window.addEventListener('resize', clampToViewport);
+      return () => window.removeEventListener('resize', clampToViewport);
+    }
+    const ro = new ResizeObserver(clampToViewport);
+    ro.observe(document.documentElement);
+    return () => ro.disconnect();
+  }, [open, clampToViewport]);
+
+  React.useEffect(() => {
+    const onMsg = (e) => {
+      const t = e?.data?.type;
+      if (t === '__activate_edit_mode') setOpen(true);
+      else if (t === '__deactivate_edit_mode') setOpen(false);
+    };
+    window.addEventListener('message', onMsg);
+    window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+    return () => window.removeEventListener('message', onMsg);
+  }, []);
+
+  const dismiss = () => {
+    setOpen(false);
+    window.parent.postMessage({ type: '__edit_mode_dismissed' }, '*');
+  };
+
+  const onDragStart = (e) => {
+    const panel = dragRef.current;
+    if (!panel) return;
+    const r = panel.getBoundingClientRect();
+    const sx = e.clientX, sy = e.clientY;
+    const startRight = window.innerWidth - r.right;
+    const startBottom = window.innerHeight - r.bottom;
+    const move = (ev) => {
+      offsetRef.current = {
+        x: startRight - (ev.clientX - sx),
+        y: startBottom - (ev.clientY - sy),
+      };
+      clampToViewport();
+    };
+    const up = () => {
+      window.removeEventListener('mousemove', move);
+      window.removeEventListener('mouseup', up);
+    };
+    window.addEventListener('mousemove', move);
+    window.addEventListener('mouseup', up);
+  };
+
+  if (!open) return null;
+  return (
+    <>
+      <style>{__TWEAKS_STYLE}</style>
+      <div ref={dragRef} className="twk-panel" data-noncommentable=""
+           style={{ right: offsetRef.current.x, bottom: offsetRef.current.y }}>
+        <div className="twk-hd" onMouseDown={onDragStart}>
+          <b>{title}</b>
+          <button className="twk-x" aria-label="Close tweaks"
+                  onMouseDown={(e) => e.stopPropagation()}
+                  onClick={dismiss}>✕</button>
+        </div>
+        <div className="twk-body">
+          {children}
+          {hasDeckStage && railEnabled && !noDeckControls && (
+            <TweakSection label="Deck">
+              <TweakToggle label="Thumbnail rail" value={railVisible} onChange={toggleRail} />
+            </TweakSection>
+          )}
+        </div>
+      </div>
+    </>
+  );
+}
+
+// ── Layout helpers ──────────────────────────────────────────────────────────
+
+function TweakSection({ label, children }) {
+  return (
+    <>
+      <div className="twk-sect">{label}</div>
+      {children}
+    </>
+  );
+}
+
+function TweakRow({ label, value, children, inline = false }) {
+  return (
+    <div className={inline ? 'twk-row twk-row-h' : 'twk-row'}>
+      <div className="twk-lbl">
+        <span>{label}</span>
+        {value != null && <span className="twk-val">{value}</span>}
+      </div>
+      {children}
+    </div>
+  );
+}
+
+// ── Controls ────────────────────────────────────────────────────────────────
+
+function TweakSlider({ label, value, min = 0, max = 100, step = 1, unit = '', onChange }) {
+  return (
+    <TweakRow label={label} value={`${value}${unit}`}>
+      <input type="range" className="twk-slider" min={min} max={max} step={step}
+             value={value} onChange={(e) => onChange(Number(e.target.value))} />
+    </TweakRow>
+  );
+}
+
+function TweakToggle({ label, value, onChange }) {
+  return (
+    <div className="twk-row twk-row-h">
+      <div className="twk-lbl"><span>{label}</span></div>
+      <button type="button" className="twk-toggle" data-on={value ? '1' : '0'}
+              role="switch" aria-checked={!!value}
+              onClick={() => onChange(!value)}><i /></button>
+    </div>
+  );
+}
+
+function TweakRadio({ label, value, options, onChange }) {
+  const trackRef = React.useRef(null);
+  const [dragging, setDragging] = React.useState(false);
+  // The active value is read by pointer-move handlers attached for the lifetime
+  // of a drag — ref it so a stale closure doesn't fire onChange for every move.
+  const valueRef = React.useRef(value);
+  valueRef.current = value;
+
+  // Segments wrap mid-word once per-segment width runs out. The track is
+  // ~248px (280 panel − 28 body pad − 4 seg pad), each button loses 12px
+  // to its own padding, and 11.5px system-ui averages ~6.3px/char — so 2
+  // options fit ~16 chars each, 3 fit ~10. Past that (or >3 options), fall
+  // back to a dropdown rather than wrap.
+  const labelLen = (o) => String(typeof o === 'object' ? o.label : o).length;
+  const maxLen = options.reduce((m, o) => Math.max(m, labelLen(o)), 0);
+  const fitsAsSegments = maxLen <= ({ 2: 16, 3: 10 }[options.length] ?? 0);
+  if (!fitsAsSegments) {
+    // <select> emits strings — map back to the original option value so the
+    // fallback stays type-preserving (numbers, booleans) like the segment path.
+    const resolve = (s) => {
+      const m = options.find((o) => String(typeof o === 'object' ? o.value : o) === s);
+      return m === undefined ? s : typeof m === 'object' ? m.value : m;
+    };
+    return <TweakSelect label={label} value={value} options={options}
+                        onChange={(s) => onChange(resolve(s))} />;
+  }
+  const opts = options.map((o) => (typeof o === 'object' ? o : { value: o, label: o }));
+  const idx = Math.max(0, opts.findIndex((o) => o.value === value));
+  const n = opts.length;
+
+  const segAt = (clientX) => {
+    const r = trackRef.current.getBoundingClientRect();
+    const inner = r.width - 4;
+    const i = Math.floor(((clientX - r.left - 2) / inner) * n);
+    return opts[Math.max(0, Math.min(n - 1, i))].value;
+  };
+
+  const onPointerDown = (e) => {
+    setDragging(true);
+    const v0 = segAt(e.clientX);
+    if (v0 !== valueRef.current) onChange(v0);
+    const move = (ev) => {
+      if (!trackRef.current) return;
+      const v = segAt(ev.clientX);
+      if (v !== valueRef.current) onChange(v);
+    };
+    const up = () => {
+      setDragging(false);
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+    };
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', up);
+  };
+
+  return (
+    <TweakRow label={label}>
+      <div ref={trackRef} role="radiogroup" onPointerDown={onPointerDown}
+           className={dragging ? 'twk-seg dragging' : 'twk-seg'}>
+        <div className="twk-seg-thumb"
+             style={{ left: `calc(2px + ${idx} * (100% - 4px) / ${n})`,
+                      width: `calc((100% - 4px) / ${n})` }} />
+        {opts.map((o) => (
+          <button key={o.value} type="button" role="radio" aria-checked={o.value === value}>
+            {o.label}
+          </button>
+        ))}
+      </div>
+    </TweakRow>
+  );
+}
+
+function TweakSelect({ label, value, options, onChange }) {
+  return (
+    <TweakRow label={label}>
+      <select className="twk-field" value={value} onChange={(e) => onChange(e.target.value)}>
+        {options.map((o) => {
+          const v = typeof o === 'object' ? o.value : o;
+          const l = typeof o === 'object' ? o.label : o;
+          return <option key={v} value={v}>{l}</option>;
+        })}
+      </select>
+    </TweakRow>
+  );
+}
+
+function TweakText({ label, value, placeholder, onChange }) {
+  return (
+    <TweakRow label={label}>
+      <input className="twk-field" type="text" value={value} placeholder={placeholder}
+             onChange={(e) => onChange(e.target.value)} />
+    </TweakRow>
+  );
+}
+
+function TweakNumber({ label, value, min, max, step = 1, unit = '', onChange }) {
+  const clamp = (n) => {
+    if (min != null && n < min) return min;
+    if (max != null && n > max) return max;
+    return n;
+  };
+  const startRef = React.useRef({ x: 0, val: 0 });
+  const onScrubStart = (e) => {
+    e.preventDefault();
+    startRef.current = { x: e.clientX, val: value };
+    const decimals = (String(step).split('.')[1] || '').length;
+    const move = (ev) => {
+      const dx = ev.clientX - startRef.current.x;
+      const raw = startRef.current.val + dx * step;
+      const snapped = Math.round(raw / step) * step;
+      onChange(clamp(Number(snapped.toFixed(decimals))));
+    };
+    const up = () => {
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+    };
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', up);
+  };
+  return (
+    <div className="twk-num">
+      <span className="twk-num-lbl" onPointerDown={onScrubStart}>{label}</span>
+      <input type="number" value={value} min={min} max={max} step={step}
+             onChange={(e) => onChange(clamp(Number(e.target.value)))} />
+      {unit && <span className="twk-num-unit">{unit}</span>}
+    </div>
+  );
+}
+
+// Relative-luminance contrast pick — checkmarks drawn over a swatch need to
+// read on both #111 and #fafafa without per-option configuration. Hex input
+// only (#rgb / #rrggbb); named or rgb()/hsl() colors fall through to "light".
+function __twkIsLight(hex) {
+  const h = String(hex).replace('#', '');
+  const x = h.length === 3 ? h.replace(/./g, (c) => c + c) : h.padEnd(6, '0');
+  const n = parseInt(x.slice(0, 6), 16);
+  if (Number.isNaN(n)) return true;
+  const r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
+  return r * 299 + g * 587 + b * 114 > 148000;
+}
+
+const __TwkCheck = ({ light }) => (
+  <svg viewBox="0 0 14 14" aria-hidden="true">
+    <path d="M3 7.2 5.8 10 11 4.2" fill="none" strokeWidth="2.2"
+          strokeLinecap="round" strokeLinejoin="round"
+          stroke={light ? 'rgba(0,0,0,.78)' : '#fff'} />
+  </svg>
+);
+
+// TweakColor — curated color/palette picker. Each option is either a single
+// hex string or an array of 1-5 hex strings; the card adapts — a lone color
+// renders solid, a palette renders colors[0] as the hero (left ~2/3) with the
+// rest stacked in a sharp column on the right. onChange emits the
+// option in the shape it was passed (string stays string, array stays array).
+// Without options it falls back to the native color input for back-compat.
+function TweakColor({ label, value, options, onChange }) {
+  if (!options || !options.length) {
+    return (
+      <div className="twk-row twk-row-h">
+        <div className="twk-lbl"><span>{label}</span></div>
+        <input type="color" className="twk-swatch" value={value}
+               onChange={(e) => onChange(e.target.value)} />
+      </div>
+    );
+  }
+  // Native <input type=color> emits lowercase hex per the HTML spec, so
+  // compare case-insensitively. String() guards JSON.stringify(undefined),
+  // which returns the primitive undefined (no .toLowerCase).
+  const key = (o) => String(JSON.stringify(o)).toLowerCase();
+  const cur = key(value);
+  return (
+    <TweakRow label={label}>
+      <div className="twk-chips" role="radiogroup">
+        {options.map((o, i) => {
+          const colors = Array.isArray(o) ? o : [o];
+          const [hero, ...rest] = colors;
+          const sup = rest.slice(0, 4);
+          const on = key(o) === cur;
+          return (
+            <button key={i} type="button" className="twk-chip" role="radio"
+                    aria-checked={on} data-on={on ? '1' : '0'}
+                    aria-label={colors.join(', ')} title={colors.join(' · ')}
+                    style={{ background: hero }}
+                    onClick={() => onChange(o)}>
+              {sup.length > 0 && (
+                <span>
+                  {sup.map((c, j) => <i key={j} style={{ background: c }} />)}
+                </span>
+              )}
+              {on && <__TwkCheck light={__twkIsLight(hero)} />}
+            </button>
+          );
+        })}
+      </div>
+    </TweakRow>
+  );
+}
+
+function TweakButton({ label, onClick, secondary = false }) {
+  return (
+    <button type="button" className={secondary ? 'twk-btn secondary' : 'twk-btn'}
+            onClick={onClick}>{label}</button>
+  );
+}
+
+Object.assign(window, {
+  useTweaks, TweaksPanel, TweakSection, TweakRow,
+  TweakSlider, TweakToggle, TweakRadio, TweakSelect,
+  TweakText, TweakNumber, TweakColor, TweakButton,
+});
+
