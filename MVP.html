@@ -1,0 +1,782 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Sanad MVP — خطة المنتج الأولي</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" />
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<style>
+  :root {
+    --bg: #F5F3EE;
+    --bg-2: #EDE9DD;
+    --surface: #FFFFFF;
+    --surface-2: #FBF9F4;
+    --border: #E5E0D2;
+    --border-strong: #D7D0BC;
+    --ink: #0F1414;
+    --ink-2: #5C625F;
+    --ink-3: #8A908C;
+    --primary: #0F766E;
+    --primary-deep: #0B5A55;
+    --primary-soft: #CCFBF1;
+    --primary-tint: #F0FDFA;
+    --accent: #C9B79C;
+    --accent-soft: #F0E9D9;
+    --success: #047857;
+    --success-soft: #D1FADF;
+    --warn: #B45309;
+    --warn-soft: #FEF3C7;
+    --danger: #B91C1C;
+    --danger-soft: #FECACA;
+    --info: #1E3A8A;
+    --info-soft: #DBE4FF;
+    --fazaa: #0F766E;
+    --jalees: #7A5A36;
+    --academic: #1E3A8A;
+    --murafaqa: #7A1E55;
+  }
+
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'IBM Plex Sans Arabic', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    direction: rtl;
+  }
+  * { box-sizing: border-box; }
+  button { font: inherit; color: inherit; cursor: pointer; }
+  input, select, textarea { font: inherit; color: inherit; }
+  ::-webkit-scrollbar { width: 10px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 999px; }
+  .num { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-feature-settings: 'tnum'; }
+  .latin { font-family: 'IBM Plex Sans', 'IBM Plex Sans Arabic', system-ui; }
+
+  /* Nav */
+  .nav-header {
+    grid-column: 1 / -1;
+    position: sticky; top: 0; z-index: 200;
+    display: flex; align-items: center; justify-content: center;
+    gap: 20px; padding: 12px 24px;
+    background: linear-gradient(135deg, #0F766E 0%, #0B5A55 100%);
+    border-bottom: 2px solid #063D39;
+    box-shadow: 0 4px 12px rgba(15, 118, 110, 0.15);
+  }
+  .nav-link {
+    padding: 8px 16px; border-radius: 8px; text-decoration: none;
+    background: transparent;
+    color: #fff; font-weight: 500; font-size: 14px;
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+  .nav-link:hover { background: rgba(255,255,255,0.15); }
+  .nav-link.active { background: rgba(255,255,255,0.25); border-color: rgba(255,255,255,0.5); font-weight: 600; }
+
+  /* Layout */
+  .page-wrap { max-width: 1200px; margin: 0 auto; padding: 36px 28px 80px; }
+
+  /* Cards */
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; }
+  .card-pad { padding: 22px; }
+  .card-head { display: flex; align-items: center; gap: 12px; padding: 18px 22px; border-bottom: 1px solid var(--border); }
+  .card-head h2, .card-head h3 { margin: 0; font-weight: 600; }
+  .card-head h2 { font-size: 17px; }
+  .card-head h3 { font-size: 15px; }
+  .card-head .sub { color: var(--ink-2); font-size: 12px; margin-inline-start: 4px; }
+  .card-head .actions { margin-inline-start: auto; display: flex; gap: 8px; }
+
+  /* Buttons */
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border-radius: 12px; border: 1px solid var(--border); background: var(--surface); font-weight: 500; font-size: 13px; transition: all .15s; }
+  .btn:hover { background: var(--bg); }
+  .btn.primary { background: var(--primary); color: #fff; border-color: var(--primary); }
+  .btn.sm { padding: 5px 12px; font-size: 12px; border-radius: 9px; }
+
+  /* Pills */
+  .pill { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 999px; font-size: 11.5px; font-weight: 500; }
+  .pill .d { width: 6px; height: 6px; border-radius: 999px; background: currentColor; }
+  .pill.new     { background: var(--info-soft); color: var(--info); }
+  .pill.wait    { background: var(--warn-soft); color: var(--warn); }
+  .pill.assigned{ background: #FEF9C3; color: #92400E; }
+  .pill.live    { background: var(--primary-soft); color: var(--primary-deep); }
+  .pill.done    { background: var(--success-soft); color: var(--success); }
+  .pill.cancel  { background: var(--danger-soft); color: var(--danger); }
+  .pill.reject  { background: #F5E6E5; color: var(--danger); }
+  .pill.on      { background: var(--success-soft); color: var(--success); }
+  .pill.post    { background: var(--bg-2); color: var(--ink-3); }
+  .pill.user-c  { background: #DBE4FF; color: #1E3A8A; }
+  .pill.prov-c  { background: #FEF3C7; color: #92400E; }
+  .pill.admin-c { background: var(--primary-soft); color: var(--primary-deep); }
+
+  /* Section heading */
+  .sec-title { font-size: 20px; font-weight: 700; color: var(--ink); letter-spacing: -0.02em; margin: 0 0 6px; }
+  .sec-sub   { font-size: 13.5px; color: var(--ink-2); line-height: 1.7; margin: 0 0 22px; }
+
+  /* Grids */
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+  @media (max-width: 860px) { .grid-3 { grid-template-columns: 1fr; } }
+  @media (max-width: 680px) { .grid-2 { grid-template-columns: 1fr; } .page-wrap { padding: 20px 16px 60px; } }
+
+  /* Feature list inside card */
+  .feat-list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 0; }
+  .feat-list li { display: flex; align-items: flex-start; gap: 10px; padding: 11px 18px; border-bottom: 1px solid var(--border); font-size: 13.5px; line-height: 1.6; }
+  .feat-list li:last-child { border-bottom: none; }
+  .feat-list li .icon { width: 22px; height: 22px; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+
+  /* Flow steps */
+  .flow-wrap { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .flow-step { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 14px 18px; display: flex; flex-direction: column; gap: 4px; min-width: 130px; flex: 1; position: relative; }
+  .flow-step .num-badge { width: 26px; height: 26px; border-radius: 8px; background: var(--primary); color: #fff; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-bottom: 6px; font-family: 'IBM Plex Mono', monospace; }
+  .flow-step .step-title { font-size: 13px; font-weight: 600; color: var(--ink); }
+  .flow-step .step-sub   { font-size: 11.5px; color: var(--ink-3); line-height: 1.5; }
+  .flow-arrow { color: var(--ink-3); font-size: 18px; flex-shrink: 0; }
+  @media (max-width: 680px) { .flow-wrap { flex-direction: column; } .flow-arrow { transform: rotate(90deg); } }
+
+  /* Priority table */
+  table.tbl { width: 100%; border-collapse: collapse; }
+  .tbl th { text-align: right; font-size: 11px; font-weight: 600; color: var(--ink-3); text-transform: uppercase; letter-spacing: .8px; padding: 12px 18px; border-bottom: 1px solid var(--border); background: var(--surface-2); }
+  .tbl td { padding: 13px 18px; border-bottom: 1px solid var(--border); font-size: 13.5px; vertical-align: top; }
+  .tbl tr:last-child td { border-bottom: none; }
+  .tbl tr:hover td { background: var(--surface-2); }
+
+  /* Service cards */
+  .svc-dot { width: 10px; height: 10px; border-radius: 999px; display: inline-block; flex-shrink: 0; }
+
+  /* Section divider */
+  .section-gap { margin-bottom: 44px; }
+
+  /* Post-MVP chips */
+  .postmvp-grid { display: flex; flex-wrap: wrap; gap: 10px; padding: 20px 22px; }
+  .postmvp-chip { display: inline-flex; align-items: center; gap: 7px; background: var(--bg-2); border: 1px solid var(--border); border-radius: 10px; padding: 8px 14px; font-size: 13px; color: var(--ink-2); }
+
+  /* Hero banner */
+  .mvp-hero { background: linear-gradient(135deg, #0F766E 0%, #0B5A55 60%, #063D39 100%); border-radius: 22px; padding: 32px 36px; color: #fff; margin-bottom: 44px; position: relative; overflow: hidden; }
+  .mvp-hero::before { content: ''; position: absolute; top: -40px; left: -40px; width: 220px; height: 220px; border-radius: 999px; background: rgba(255,255,255,0.05); }
+  .mvp-hero::after  { content: ''; position: absolute; bottom: -60px; right: 60px; width: 160px; height: 160px; border-radius: 999px; background: rgba(255,255,255,0.04); }
+  .mvp-hero h1 { font-size: 26px; font-weight: 700; margin: 0 0 10px; letter-spacing: -0.02em; position: relative; }
+  .mvp-hero p  { font-size: 14.5px; color: rgba(255,255,255,0.78); line-height: 1.8; margin: 0; max-width: 760px; position: relative; }
+  .mvp-hero .en-sub { font-size: 12px; color: rgba(255,255,255,0.5); font-family: 'IBM Plex Sans', monospace; letter-spacing: 0.06em; margin-bottom: 14px; }
+
+  /* Inline bilingual */
+  .bi { display: flex; flex-direction: column; gap: 2px; }
+  .bi .ar { font-size: 13.5px; font-weight: 500; color: var(--ink); }
+  .bi .en { font-size: 11.5px; color: var(--ink-3); font-family: 'IBM Plex Sans', system-ui; direction: ltr; text-align: right; }
+
+  /* Settings helper */
+  .setting-row { display: flex; align-items: flex-start; gap: 14px; padding: 16px 22px; border-bottom: 1px solid var(--border); }
+  .setting-row:last-child { border-bottom: none; }
+  .switch-demo { width: 42px; height: 24px; border-radius: 12px; background: var(--primary); position: relative; flex-shrink: 0; margin-top: 2px; }
+  .switch-demo::after { content: ''; position: absolute; top: 3px; inset-inline-end: 3px; width: 18px; height: 18px; border-radius: 9px; background: #fff; }
+
+  /* Scrollspy sidebar for desktop */
+  .layout-with-toc { display: grid; grid-template-columns: 220px 1fr; gap: 36px; align-items: start; }
+  @media (max-width: 900px) { .layout-with-toc { grid-template-columns: 1fr; } .toc { display: none; } }
+  .toc { position: sticky; top: 80px; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 18px 0; }
+  .toc-item { display: block; padding: 8px 18px; font-size: 13px; color: var(--ink-2); cursor: pointer; text-decoration: none; transition: all .12s; border-inline-start: 2.5px solid transparent; }
+  .toc-item:hover { color: var(--ink); background: var(--bg); }
+  .toc-item.active { color: var(--primary); font-weight: 600; border-inline-start-color: var(--primary); background: var(--primary-tint); }
+  .toc-label { font-size: 10px; font-weight: 600; color: var(--ink-3); letter-spacing: 1px; text-transform: uppercase; padding: 10px 18px 4px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+
+<script type="text/babel" data-presets="react">
+const { useState, useEffect, useRef } = React;
+
+// ── Icons (inline SVG) ───────────────────────────────────────
+const Ico = {
+  check:   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>,
+  user:    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>,
+  users:   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>,
+  shield:  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2 4 5v6c0 5 3.5 9.7 8 11 4.5-1.3 8-6 8-11V5l-8-3z"/></svg>,
+  star:    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="m12 2 3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>,
+  card:    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>,
+  list:    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>,
+  warn:    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>,
+  heart:   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1A5.5 5.5 0 0 0 3.2 12.4l1 1L12 21l7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.6z"/></svg>,
+  chat:    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>,
+  block:   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>,
+  cog:     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 0 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 0 1-4 0v-.1a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 0 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 0 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 0 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>,
+  money:   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3"/></svg>,
+  pin:     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>,
+  sparkle: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2L9.5 9.5 2 12l7.5 2.5L12 22l2.5-7.5L22 12l-7.5-2.5z"/></svg>,
+  cap:     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M2 9 12 4l10 5-10 5z"/><path d="M6 11v5c3 2 9 2 12 0v-5"/></svg>,
+  x:       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>,
+  car:     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3 17h2l1-4h12l1 4h2v-2l-1.5-5A2 2 0 0 0 17.6 8H6.4A2 2 0 0 0 4.5 9.5L3 14.5z"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg>,
+  med:     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12h6M12 9v6"/><circle cx="12" cy="12" r="9"/></svg>,
+  bell:    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10 21a2 2 0 0 0 4 0"/></svg>,
+};
+
+// ── Logo ────────────────────────────────────────────────────
+function Logo({ size = 44 }) {
+  return <img src="assets/sanad-logo.png" alt="سنــد" style={{ height: size, width: 'auto', display: 'block' }} />;
+}
+
+// ── Navigation Header ────────────────────────────────────────
+function NavigationHeader() {
+  const pages = [
+    { key: 'main',     label: 'Sanad Design',    file: 'index.html' },
+    { key: 'provider', label: 'Sanad Provider',  file: 'Sanad Provider.html' },
+    { key: 'user',     label: 'Sanad User',      file: 'Sanad User.html' },
+    { key: 'manager',  label: 'Sanad Manager',   file: 'Sanad Manager.html' },
+    { key: 'mvp',      label: 'MVP',             file: 'MVP.html' },
+  ];
+  return (
+    <div className="nav-header">
+      <Logo size={30} />
+      {pages.map(p => (
+        <a key={p.key} href={p.file}
+          className={'nav-link' + (p.key === 'mvp' ? ' active' : '')}>
+          {p.label}
+        </a>
+      ))}
+    </div>
+  );
+}
+
+// ── Feature list item ────────────────────────────────────────
+function Feat({ icon, color, children, en }) {
+  return (
+    <li>
+      <div className="icon" style={{ background: color + '18', color }}>
+        {icon}
+      </div>
+      <div className="bi">
+        <span className="ar">{children}</span>
+        {en && <span className="en">{en}</span>}
+      </div>
+    </li>
+  );
+}
+
+// ── Status pill ──────────────────────────────────────────────
+function Pill({ kind, children }) {
+  return <span className={`pill ${kind}`}><span className="d" />{children}</span>;
+}
+
+// ── Role card ────────────────────────────────────────────────
+function RoleCard({ icon, color, title, en, count, desc }) {
+  return (
+    <div className="card" style={{ overflow: 'hidden' }}>
+      <div style={{ padding: '20px 22px', display: 'flex', alignItems: 'flex-start', gap: 16, borderBottom: '1px solid var(--border)' }}>
+        <div style={{ width: 48, height: 48, borderRadius: 14, background: color + '18', color, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" dangerouslySetInnerHTML={{ __html: icon }} />
+        </div>
+        <div style={{ flex: 1 }}>
+          <div className="bi">
+            <span style={{ fontSize: 16, fontWeight: 700 }}>{title}</span>
+            <span style={{ fontSize: 11.5, color: 'var(--ink-3)', fontFamily: 'IBM Plex Sans, system-ui', direction: 'ltr', textAlign: 'right' }}>{en}</span>
+          </div>
+        </div>
+        <span style={{ fontSize: 12, fontWeight: 600, color, background: color + '14', padding: '3px 10px', borderRadius: 999 }}>{count} ميزة</span>
+      </div>
+      <div style={{ padding: '14px 22px', fontSize: 13, color: 'var(--ink-2)', lineHeight: 1.7 }}>{desc}</div>
+    </div>
+  );
+}
+
+// ── Table of contents ────────────────────────────────────────
+const SECTIONS = [
+  { id: 's1',  ar: 'هدف المنتج',         en: 'MVP Goal' },
+  { id: 's2',  ar: 'الأدوار الرئيسية',   en: 'Main Roles' },
+  { id: 's3',  ar: 'ميزات المستخدم',     en: 'User Features' },
+  { id: 's4',  ar: 'ميزات المزوّد',      en: 'Provider Features' },
+  { id: 's5',  ar: 'ميزات الإدارة',      en: 'Admin Features' },
+  { id: 's6',  ar: 'وصف الخدمات',        en: 'Service Descriptions' },
+  { id: 's7',  ar: 'تدفق الطلب',         en: 'Request Flow' },
+  { id: 's8',  ar: 'حالات الطلب',        en: 'Request Statuses' },
+  { id: 's9',  ar: 'قائمة الأولويات',    en: 'Priority List' },
+  { id: 's10', ar: 'ما بعد MVP',          en: 'Post-MVP' },
+];
+
+function TOC({ active }) {
+  return (
+    <div className="toc">
+      <div className="toc-label">المحتويات · Contents</div>
+      {SECTIONS.map(s => (
+        <a key={s.id} href={'#' + s.id}
+          className={'toc-item' + (active === s.id ? ' active' : '')}>
+          <span>{s.ar}</span>
+          <span style={{ display: 'block', fontSize: 10.5, color: 'var(--ink-3)', fontFamily: 'IBM Plex Sans, system-ui', direction: 'ltr' }}>{s.en}</span>
+        </a>
+      ))}
+    </div>
+  );
+}
+
+// ── Section wrapper ──────────────────────────────────────────
+function Section({ id, ar, en, sub, enSub, children }) {
+  return (
+    <div id={id} className="section-gap" style={{ scrollMarginTop: 90 }}>
+      <div className="bi" style={{ marginBottom: 18 }}>
+        <h2 style={{ margin: 0, fontSize: 20, fontWeight: 700, letterSpacing: '-0.02em' }}>{ar}</h2>
+        <span style={{ fontSize: 12, color: 'var(--ink-3)', fontFamily: 'IBM Plex Sans, system-ui', direction: 'ltr', display: 'block' }}>{en}</span>
+      </div>
+      {sub && <p style={{ fontSize: 13.5, color: 'var(--ink-2)', lineHeight: 1.8, margin: '0 0 22px', maxWidth: 720 }}>{sub}</p>}
+      {children}
+    </div>
+  );
+}
+
+// ── Main App ─────────────────────────────────────────────────
+function App() {
+  const [active, setActive] = useState('s1');
+
+  useEffect(() => {
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) setActive(e.target.id); });
+    }, { rootMargin: '-20% 0px -70% 0px' });
+    SECTIONS.forEach(s => { const el = document.getElementById(s.id); if (el) obs.observe(el); });
+    return () => obs.disconnect();
+  }, []);
+
+  return (
+    <>
+      <NavigationHeader />
+      <div className="page-wrap">
+
+        {/* ── Hero banner ── */}
+        <div className="mvp-hero">
+          <div className="en-sub">SANAD · MINIMUM VIABLE PRODUCT</div>
+          <h1>خطة المنتج الأولي — MVP</h1>
+          <p>
+            يحدد هذا المستند نطاق النسخة الأولى القابلة للإطلاق من تطبيق سنــد، مع تحديد الأدوار والميزات والتدفقات والأولويات الأساسية.
+            الهدف هو التحقق من صحة التدفق الرئيسي بأقل قدر من التعقيد.
+          </p>
+        </div>
+
+        <div className="layout-with-toc">
+          <TOC active={active} />
+
+          <div>
+
+            {/* ══ S1: MVP Goal ══ */}
+            <Section id="s1" ar="هدف المنتج الأولي" en="MVP Goal"
+              sub="النسخة الأولى من سنــد تهدف إلى إثبات صحة التدفق الأساسي فقط: المستخدم يطلب خدمة ← المزوّد يقبلها وينفّذها ← الإدارة تشرف ← الدفع/الكوبون ← التقييم/الشكوى.">
+              <div className="card">
+                <div className="card-head"><h3>الهدف الرئيسي · Core Goal</h3></div>
+                <div style={{ padding: '22px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 18px', background: 'var(--primary-tint)', border: '1px solid var(--primary-soft)', borderRadius: 14 }}>
+                    <div style={{ width: 40, height: 40, borderRadius: 12, background: 'var(--primary)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      {Ico.user}
+                    </div>
+                    <div>
+                      <div style={{ fontWeight: 600, fontSize: 13.5 }}>المستخدم يطلب خدمة</div>
+                      <div style={{ fontSize: 11.5, color: 'var(--ink-3)', fontFamily: 'IBM Plex Sans, system-ui' }}>User requests a service</div>
+                    </div>
+                  </div>
+                  {[
+                    { icon: Ico.users,  color: '#B45309', ar: 'المزوّد يقبل وينفّذ',          en: 'Provider accepts & executes' },
+                    { icon: Ico.shield, color: 'var(--primary)', ar: 'الإدارة تشرف وتسند',     en: 'Admin supervises & assigns' },
+                    { icon: Ico.card,   color: '#047857', ar: 'الدفع أو تطبيق الكوبون',       en: 'Payment or coupon applied' },
+                    { icon: Ico.star,   color: '#E0A823', ar: 'التقييم أو الشكوى',            en: 'Review or complaint' },
+                  ].map((row, i) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '13px 18px', background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 14 }}>
+                      <div style={{ width: 40, height: 40, borderRadius: 12, background: row.color + '14', color: row.color, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                        {row.icon}
+                      </div>
+                      <div>
+                        <div style={{ fontWeight: 500, fontSize: 13.5 }}>{row.ar}</div>
+                        <div style={{ fontSize: 11.5, color: 'var(--ink-3)', fontFamily: 'IBM Plex Sans, system-ui' }}>{row.en}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </Section>
+
+            {/* ══ S2: Main Roles ══ */}
+            <Section id="s2" ar="الأدوار الرئيسية" en="Main Roles"
+              sub="ثلاثة أدوار أساسية تشكّل نواة تطبيق سنــد في نسخته الأولى.">
+              <div className="grid-3">
+                <RoleCard
+                  icon='<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>'
+                  color="var(--info)"
+                  title="المستخدم" en="User / Customer"
+                  count="11"
+                  desc="يطلب الخدمات، يتتبعها، يدفع، يقيّم، ويتواصل مع مقدّم الخدمة."
+                />
+                <RoleCard
+                  icon='<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>'
+                  color="var(--warn)"
+                  title="المزوّد / السائق" en="Provider / Driver"
+                  count="9"
+                  desc="يسجّل، ينتظر الموافقة، يقبل الطلبات أو يرفضها، وينفّذ الخدمة."
+                />
+                <RoleCard
+                  icon='<path d="M12 2 4 5v6c0 5 3.5 9.7 8 11 4.5-1.3 8-6 8-11V5l-8-3z"/>'
+                  color="var(--primary)"
+                  title="الإدارة" en="Admin / Manager"
+                  count="10"
+                  desc="تشرف على الطلبات، تدير المزوّدين والعملاء، الكوبونات، والشكاوى."
+                />
+              </div>
+            </Section>
+
+            {/* ══ S3: User Features ══ */}
+            <Section id="s3" ar="ميزات المستخدم" en="User MVP Features">
+              <div className="card">
+                <div className="card-head">
+                  <h3>ميزات المستخدم</h3>
+                  <span className="sub">User MVP Features · 11 ميزة</span>
+                  <div className="actions">
+                    <span className="pill user-c"><span className="d" />مستخدم · User</span>
+                  </div>
+                </div>
+                <ul className="feat-list">
+                  {[
+                    { ar: 'تصفّح الخدمات',                     en: 'Browse services',                icon: Ico.list,    c: 'var(--info)' },
+                    { ar: 'عرض تفاصيل الخدمة',                en: 'View service details',            icon: Ico.list,    c: 'var(--info)' },
+                    { ar: 'تقديم طلب خدمة',                   en: 'Submit service request',          icon: Ico.check,   c: 'var(--success)' },
+                    { ar: 'تتبّع حالة الطلب',                 en: 'Track request status',             icon: Ico.pin,     c: 'var(--primary)' },
+                    { ar: 'الدفع / إتمام الطلب',              en: 'Payment / checkout',               icon: Ico.card,    c: '#047857' },
+                    { ar: 'تطبيق كوبون خصم',                  en: 'Apply coupon code',               icon: Ico.sparkle, c: '#B45309' },
+                    { ar: 'التواصل مع المزوّد (نصًا أو هاتفًا)', en: 'Contact provider (chat or call)', icon: Ico.chat,  c: 'var(--primary)' },
+                    { ar: 'إضافة مزوّد للمفضّلة',            en: 'Add provider to favorites',        icon: Ico.heart,   c: '#E0A823' },
+                    { ar: 'تقديم شكوى',                       en: 'Submit complaint',                 icon: Ico.warn,    c: 'var(--danger)' },
+                    { ar: 'عرض رد الإدارة على الشكوى',        en: 'View admin response to complaint', icon: Ico.shield,  c: 'var(--primary)' },
+                    { ar: 'تقييم الخدمة المكتملة',             en: 'Rate completed service',          icon: Ico.star,    c: '#E0A823' },
+                  ].map((f, i) => <Feat key={i} icon={f.icon} color={f.c} en={f.en}>{f.ar}</Feat>)}
+                </ul>
+              </div>
+            </Section>
+
+            {/* ══ S4: Provider Features ══ */}
+            <Section id="s4" ar="ميزات المزوّد / السائق" en="Provider / Driver MVP Features">
+              <div className="card">
+                <div className="card-head">
+                  <h3>ميزات المزوّد</h3>
+                  <span className="sub">Provider MVP Features · 9 ميزات</span>
+                  <div className="actions">
+                    <span className="pill prov-c"><span className="d" />مزوّد · Provider</span>
+                  </div>
+                </div>
+                <ul className="feat-list">
+                  {[
+                    { ar: 'التسجيل كمزوّد خدمة',              en: 'Register as provider',                   icon: Ico.user,   c: '#B45309' },
+                    { ar: 'استكمال الملف الشخصي والوثائق',     en: 'Complete profile & upload documents',     icon: Ico.shield, c: '#B45309' },
+                    { ar: 'انتظار موافقة الإدارة',              en: 'Wait for admin approval',                icon: Ico.warn,   c: '#B45309' },
+                    { ar: 'عرض الطلبات المسندة',               en: 'View assigned requests',                 icon: Ico.list,   c: 'var(--primary)' },
+                    { ar: 'قبول أو رفض الطلب',                 en: 'Accept or reject request',              icon: Ico.check,  c: 'var(--success)' },
+                    { ar: 'التواصل مع العميل (نصًا أو هاتفًا)', en: 'Contact customer (chat or call)',       icon: Ico.chat,   c: 'var(--primary)' },
+                    { ar: 'تحديث حالة الطلب',                  en: 'Update request status',                 icon: Ico.cog,    c: 'var(--primary)' },
+                    { ar: 'عرض التقييمات',                     en: 'View ratings',                          icon: Ico.star,   c: '#E0A823' },
+                    { ar: 'عرض حالة الحجب / التعطيل إن طُبّق', en: 'Show blocked/inactive status if blocked by admin', icon: Ico.block, c: 'var(--danger)' },
+                  ].map((f, i) => <Feat key={i} icon={f.icon} color={f.c} en={f.en}>{f.ar}</Feat>)}
+                </ul>
+              </div>
+            </Section>
+
+            {/* ══ S5: Admin Features ══ */}
+            <Section id="s5" ar="ميزات الإدارة" en="Admin MVP Features">
+              <div className="card" style={{ marginBottom: 18 }}>
+                <div className="card-head">
+                  <h3>ميزات الإدارة</h3>
+                  <span className="sub">Admin MVP Features · 10 ميزات</span>
+                  <div className="actions">
+                    <span className="pill admin-c"><span className="d" />إدارة · Admin</span>
+                  </div>
+                </div>
+                <ul className="feat-list">
+                  {[
+                    { ar: 'عرض ملخص لوحة التحكم',              en: 'View dashboard summary',                 icon: Ico.list,    c: 'var(--primary)' },
+                    { ar: 'إدارة طلبات الخدمة',                en: 'Manage service requests',                icon: Ico.cog,     c: 'var(--primary)' },
+                    { ar: 'إسناد مزوّد يدويًا',                en: 'Assign provider manually',              icon: Ico.users,   c: '#B45309' },
+                    { ar: 'قبول أو رفض طلبات المزوّدين',       en: 'Approve or reject provider registrations', icon: Ico.check, c: 'var(--success)' },
+                    { ar: 'حجب مزوّد أو رفع الحجب عنه',       en: 'Block or unblock a provider',           icon: Ico.block,   c: 'var(--danger)' },
+                    { ar: 'إدارة الشكاوى والرد على المستخدمين', en: 'Manage complaints and respond to users', icon: Ico.warn,  c: 'var(--danger)' },
+                    { ar: 'إدارة الكوبونات (إنشاء / تعديل)',   en: 'Manage coupons (create / edit)',         icon: Ico.sparkle, c: '#047857' },
+                    { ar: 'عرض حالة المدفوعات',                en: 'View payment status',                    icon: Ico.money,   c: '#047857' },
+                    { ar: 'إدارة الإعدادات الأساسية',           en: 'Manage basic settings',                 icon: Ico.cog,     c: 'var(--ink-2)' },
+                  ].map((f, i) => <Feat key={i} icon={f.icon} color={f.c} en={f.en}>{f.ar}</Feat>)}
+                </ul>
+              </div>
+
+              {/* Settings detail */}
+              <div className="card">
+                <div className="card-head"><h3>إعدادات الإدارة الأساسية · Basic Admin Settings</h3></div>
+                <div className="setting-row">
+                  <div className="switch-demo" />
+                  <div style={{ flex: 1 }}>
+                    <div className="bi">
+                      <span style={{ fontSize: 13.5, fontWeight: 600 }}>الإسناد التلقائي</span>
+                      <span style={{ fontSize: 11.5, color: 'var(--ink-3)', fontFamily: 'IBM Plex Sans, system-ui', direction: 'ltr' }}>Automatic assignment</span>
+                    </div>
+                    <div style={{ marginTop: 6, padding: '10px 14px', background: 'var(--primary-tint)', border: '1px solid var(--primary-soft)', borderRadius: 10, fontSize: 13, color: 'var(--primary-deep)', lineHeight: 1.7 }}>
+                      <strong>عند تفعيله</strong>، يمكن للنظام اقتراح مزوّد مناسب أو إسناد الطلب تلقائيًا بناءً على نوع الخدمة وتوافر المزوّد.
+                      <div style={{ fontSize: 11.5, color: 'var(--ink-3)', fontFamily: 'IBM Plex Sans, system-ui', marginTop: 4, direction: 'ltr' }}>
+                        When enabled, the system can suggest or assign a suitable provider based on service type and availability.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="setting-row">
+                  <div className="switch-demo" />
+                  <div style={{ flex: 1 }}>
+                    <div className="bi">
+                      <span style={{ fontSize: 13.5, fontWeight: 600 }}>التنبيهات</span>
+                      <span style={{ fontSize: 11.5, color: 'var(--ink-3)', fontFamily: 'IBM Plex Sans, system-ui', direction: 'ltr' }}>Notifications</span>
+                    </div>
+                    <div style={{ marginTop: 6, padding: '10px 14px', background: 'var(--primary-tint)', border: '1px solid var(--primary-soft)', borderRadius: 10, fontSize: 13, color: 'var(--primary-deep)', lineHeight: 1.7 }}>
+                      <strong>عند تفعيله</strong>، يتلقّى المستخدمون والمزوّدون تنبيهات عند تغيّر حالة الطلب.
+                      <div style={{ fontSize: 11.5, color: 'var(--ink-3)', fontFamily: 'IBM Plex Sans, system-ui', marginTop: 4, direction: 'ltr' }}>
+                        When enabled, users and providers receive alerts when request status changes.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Section>
+
+            {/* ══ S6: Service Descriptions ══ */}
+            <Section id="s6" ar="وصف الخدمات المُحدَّث" en="Updated Service Descriptions"
+              sub="الأوصاف الصحيحة لخدمات سنــد في نسخة MVP، بعد إزالة المحتوى غير الملائم.">
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                {[
+                  {
+                    key: 'academic', ar: 'سند أكاديمي', en: 'Sanad Academic',
+                    color: 'var(--academic)', dot: '#1E3A8A',
+                    desc: 'يُتيح لطلاب ذوي الاحتياجات الخاصة داخل نطاق الحرم الجامعي طلب مساعدة حضورية من طلاب آخرين في نفس الحرم. تركّز الخدمة على الدعم والمساعدة داخل الحرم ولا تُصدر أي شهادات.',
+                    descEn: 'Allows students with special needs within the campus area to request assistance from other students within the same campus scope. The service focuses on support and assistance inside campus and does not provide certificates.',
+                    removed: ['الجلسات الافتراضية أو عن بُعد', 'إصدار الشهادات أو المؤهلات'],
+                  },
+                  {
+                    key: 'jalees', ar: 'سند جليس', en: 'Sanad Caregiver',
+                    color: 'var(--jalees)', dot: '#7A5A36',
+                    desc: 'خدمة دعم ومرافقة شخصية حضورية بناءً على احتياج المستخدم، في المنزل أو مقر الإقامة. لا تشمل جلسات فيديو أو دعمًا عن بُعد أو جلسات افتراضية بأي شكل.',
+                    descEn: 'In-person support and companionship service based on the user\'s need, at home or the place of residence. Removes any mention of video, virtual sessions, remote support, or online sessions.',
+                    removed: ['جلسات الفيديو', 'الدعم عن بُعد / الاتصال الافتراضي', 'الجلسات الإلكترونية'],
+                  },
+                  {
+                    key: 'murafaqa', ar: 'سند مرافقة', en: 'Sanad Companion',
+                    color: 'var(--murafaqa)', dot: '#7A1E55',
+                    desc: 'خدمة مرافقة شخصية بناءً على التاريخ والوقت والموقع والملاحظات المحددة من المستخدم. يقدّم مرافق مدرّب ومتفاهم الدعم اللازم خلال التنقل والانتظار.',
+                    descEn: 'Personal companionship service based on selected date, time, location, and notes. Removes the option "select number of companions".',
+                    removed: ['تحديد عدد المرافقين'],
+                  },
+                  {
+                    key: 'fazaa', ar: 'سند فزعة / سائق', en: 'Sanad Driver',
+                    color: 'var(--fazaa)', dot: '#0F766E',
+                    desc: 'خدمة مساعدة في التنقل أو المشاوير مع تفاصيل الطلب، والتواصل مع العميل، وتحديثات حالة الرحلة.',
+                    descEn: 'Transportation or trip assistance service with request details, customer communication, and trip status updates.',
+                    removed: [],
+                  },
+                ].map((svc, i) => (
+                  <div key={i} className="card" style={{ overflow: 'hidden' }}>
+                    <div className="card-head">
+                      <div style={{ width: 10, height: 10, borderRadius: 999, background: svc.dot }} />
+                      <div className="bi">
+                        <h3 style={{ margin: 0 }}>{svc.ar}</h3>
+                      </div>
+                      <span style={{ fontSize: 12, color: 'var(--ink-3)', fontFamily: 'IBM Plex Sans, system-ui', marginInlineStart: 4 }}>{svc.en}</span>
+                    </div>
+                    <div style={{ padding: '16px 22px', borderBottom: svc.removed.length ? '1px solid var(--border)' : 'none' }}>
+                      <div style={{ fontSize: 13.5, color: 'var(--ink)', lineHeight: 1.8, marginBottom: 8 }}>{svc.desc}</div>
+                      <div style={{ fontSize: 12.5, color: 'var(--ink-3)', fontFamily: 'IBM Plex Sans, system-ui', lineHeight: 1.7, direction: 'ltr', borderInlineStart: '2px solid var(--border)', paddingInlineStart: 12, marginTop: 8 }}>{svc.descEn}</div>
+                    </div>
+                    {svc.removed.length > 0 && (
+                      <div style={{ padding: '12px 22px', background: 'var(--danger-soft)' }}>
+                        <div style={{ fontSize: 11.5, fontWeight: 600, color: 'var(--danger)', marginBottom: 6 }}>تمت الإزالة من هذه النسخة · Removed from this version</div>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                          {svc.removed.map((r, ri) => (
+                            <span key={ri} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '4px 10px', background: '#fff', border: '1px solid var(--danger-soft)', borderRadius: 8, fontSize: 12.5, color: 'var(--danger)' }}>
+                              {Ico.x} {r}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </Section>
+
+            {/* ══ S7: Request Flow ══ */}
+            <Section id="s7" ar="تدفق الطلب" en="MVP Request Flow"
+              sub="خطوات تدفق الطلب من البداية حتى الانتهاء في نسخة MVP.">
+              <div className="card card-pad">
+                <div className="flow-wrap">
+                  {[
+                    { n: '01', ar: 'اختيار الخدمة',       en: 'Select service',           who: 'user' },
+                    null,
+                    { n: '02', ar: 'تقديم الطلب',         en: 'Submit request',           who: 'user' },
+                    null,
+                    { n: '03', ar: 'المراجعة / الإسناد',  en: 'Admin reviews or assigns', who: 'admin' },
+                    null,
+                    { n: '04', ar: 'قبول المزوّد',        en: 'Provider accepts',         who: 'prov' },
+                    null,
+                    { n: '05', ar: 'الدفع / الكوبون',     en: 'User pays / coupon',       who: 'user' },
+                    null,
+                    { n: '06', ar: 'بدء الخدمة',          en: 'Service starts',           who: 'prov' },
+                    null,
+                    { n: '07', ar: 'اكتمال الخدمة',       en: 'Service completed',        who: 'prov' },
+                    null,
+                    { n: '08', ar: 'تقييم أو شكوى',       en: 'Rate or complaint',        who: 'user' },
+                  ].map((step, i) => {
+                    if (!step) return <div key={i} className="flow-arrow">←</div>;
+                    const whoColor = { user: 'var(--info)', admin: 'var(--primary)', prov: '#B45309' }[step.who];
+                    const whoLabel = { user: 'مستخدم', admin: 'إدارة', prov: 'مزوّد' }[step.who];
+                    return (
+                      <div key={i} className="flow-step">
+                        <div className="num-badge" style={{ background: whoColor }}>{step.n}</div>
+                        <div className="step-title">{step.ar}</div>
+                        <div className="step-sub" style={{ fontFamily: 'IBM Plex Sans, system-ui', direction: 'ltr' }}>{step.en}</div>
+                        <div style={{ marginTop: 6 }}>
+                          <span style={{ fontSize: 10.5, color: whoColor, fontWeight: 600, background: whoColor + '14', padding: '2px 8px', borderRadius: 999 }}>{whoLabel}</span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </Section>
+
+            {/* ══ S8: Request Statuses ══ */}
+            <Section id="s8" ar="حالات الطلب" en="MVP Request Statuses"
+              sub="الحالات الرسمية للطلبات في نسخة MVP — لا تُضاف حالات إضافية قبل اكتمال هذه.">
+              <div className="card">
+                <div className="card-head"><h3>حالات الطلب · Request Statuses</h3><span className="sub">8 حالات</span></div>
+                <table className="tbl">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>الحالة · Status</th>
+                      <th>الوصف · Description</th>
+                      <th>الطرف</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[
+                      { n: 1,  pill: 'new',      ar: 'جديد',                    en: 'New',                      desc: 'تم استلام الطلب ولم يُسند بعد.',            who: 'إدارة', wc: 'admin-c' },
+                      { n: 2,  pill: 'wait',     ar: 'بانتظار الإسناد',         en: 'Waiting for assignment',   desc: 'الطلب قيد المراجعة وانتظار تحديد مزوّد.',   who: 'إدارة', wc: 'admin-c' },
+                      { n: 3,  pill: 'assigned', ar: 'مُسند',                   en: 'Assigned',                 desc: 'تم تحديد مزوّد للطلب.',                     who: 'إدارة', wc: 'admin-c' },
+                      { n: 4,  pill: 'live',     ar: 'مقبول من المزوّد',        en: 'Accepted by provider',     desc: 'قبل المزوّد الطلب وهو في طريقه.',            who: 'مزوّد', wc: 'prov-c' },
+                      { n: 5,  pill: 'live',     ar: 'قيد التنفيذ',             en: 'In progress',              desc: 'الخدمة جارية حاليًا.',                       who: 'مزوّد', wc: 'prov-c' },
+                      { n: 6,  pill: 'done',     ar: 'مكتمل',                   en: 'Completed',                desc: 'تم إنهاء الخدمة بنجاح.',                    who: 'مزوّد', wc: 'prov-c' },
+                      { n: 7,  pill: 'cancel',   ar: 'ملغى',                    en: 'Cancelled',                desc: 'تم إلغاء الطلب من المستخدم أو الإدارة.',    who: 'الكل', wc: 'user-c' },
+                      { n: 8,  pill: 'reject',   ar: 'مرفوض',                   en: 'Rejected',                 desc: 'رُفض الطلب من الإدارة أو المزوّد.',         who: 'مزوّد/إدارة', wc: 'admin-c' },
+                    ].map(r => (
+                      <tr key={r.n}>
+                        <td className="num" style={{ color: 'var(--ink-3)', width: 36 }}>0{r.n}</td>
+                        <td>
+                          <Pill kind={r.pill}>{r.ar}</Pill>
+                          <div style={{ fontSize: 11, color: 'var(--ink-3)', fontFamily: 'IBM Plex Sans, system-ui', marginTop: 4, direction: 'ltr' }}>{r.en}</div>
+                        </td>
+                        <td style={{ color: 'var(--ink-2)', fontSize: 13 }}>{r.desc}</td>
+                        <td><span className={`pill ${r.wc}`}><span className="d" />{r.who}</span></td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </Section>
+
+            {/* ══ S9: Priority List ══ */}
+            <Section id="s9" ar="قائمة الأولويات" en="MVP Priority List"
+              sub="ترتيب تطوير الميزات حسب الأهمية والتسلسل المنطقي في نسخة MVP.">
+              <div className="card">
+                <div className="card-head"><h3>أولويات التطوير · Development Priorities</h3></div>
+                <table className="tbl">
+                  <thead>
+                    <tr>
+                      <th>الأولوية</th>
+                      <th>الميزة · Feature</th>
+                      <th>الأهمية</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[
+                      { p: 1,  ar: 'طلب الخدمة',                     en: 'Service request',                level: 'حرجة',    lc: 'danger' },
+                      { p: 2,  ar: 'إدارة الطلبات',                   en: 'Request management',             level: 'حرجة',    lc: 'danger' },
+                      { p: 3,  ar: 'قبول المزوّد للطلب',             en: 'Provider acceptance',             level: 'حرجة',    lc: 'danger' },
+                      { p: 4,  ar: 'حالات الطلب',                    en: 'Request statuses',                level: 'حرجة',    lc: 'danger' },
+                      { p: 5,  ar: 'محاكاة الدفع',                   en: 'Payment simulation',              level: 'عالية',   lc: 'warn' },
+                      { p: 6,  ar: 'الشكاوى وردود الإدارة',           en: 'Complaints & admin responses',   level: 'عالية',   lc: 'warn' },
+                      { p: 7,  ar: 'الكوبونات',                       en: 'Coupons',                        level: 'متوسطة',  lc: 'live' },
+                      { p: 8,  ar: 'التقييم',                         en: 'Rating',                         level: 'متوسطة',  lc: 'live' },
+                      { p: 9,  ar: 'المزوّدون المفضّلون',             en: 'Favorite providers',             level: 'منخفضة',  lc: 'post' },
+                      { p: 10, ar: 'حجب المزوّد',                    en: 'Block provider',                  level: 'منخفضة',  lc: 'post' },
+                    ].map(r => (
+                      <tr key={r.p}>
+                        <td>
+                          <div style={{ width: 28, height: 28, borderRadius: 8, background: r.lc === 'danger' ? 'var(--danger)' : r.lc === 'warn' ? 'var(--warn)' : r.lc === 'live' ? 'var(--primary)' : 'var(--border)', color: r.lc === 'post' ? 'var(--ink-3)' : '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700, fontFamily: 'IBM Plex Mono, monospace' }}>
+                            {r.p}
+                          </div>
+                        </td>
+                        <td>
+                          <div className="bi">
+                            <span style={{ fontWeight: 500 }}>{r.ar}</span>
+                            <span style={{ fontSize: 11.5, color: 'var(--ink-3)', fontFamily: 'IBM Plex Sans, system-ui', direction: 'ltr' }}>{r.en}</span>
+                          </div>
+                        </td>
+                        <td><Pill kind={r.lc}>{r.level}</Pill></td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </Section>
+
+            {/* ══ S10: Post-MVP ══ */}
+            <Section id="s10" ar="ما بعد MVP — للمراحل القادمة" en="Post-MVP / Later"
+              sub="هذه الميزات مهمة لكنها خارج نطاق النسخة الأولى. يُضافُ كل منها في مرحلة لاحقة بعد التحقق من المنتج.">
+              <div className="card">
+                <div className="card-head">
+                  <h3>Post-MVP / بعد النسخة الأولى</h3>
+                  <span className="sub">لا تُدرج في نطاق MVP</span>
+                </div>
+                <div className="postmvp-grid">
+                  {[
+                    { ar: 'ميزات الذكاء الاصطناعي',          en: 'AI features' },
+                    { ar: 'تقارير مالية متقدمة',               en: 'Advanced financial reports' },
+                    { ar: 'لوحة أرباح المزوّد',               en: 'Provider earnings dashboard' },
+                    { ar: 'تتبّع الخريطة الحي',               en: 'Live map tracking' },
+                    { ar: 'بوابة دفع حقيقية',                 en: 'Real payment gateway integration' },
+                    { ar: 'نظام محادثة متقدّم',               en: 'Complex chat system' },
+                    { ar: 'جلسات الفيديو',                    en: 'Video sessions' },
+                    { ar: 'الشهادات والمؤهلات',               en: 'Certificates' },
+                    { ar: 'تحليلات متقدمة',                   en: 'Advanced analytics' },
+                    { ar: 'برنامج الولاء',                     en: 'Loyalty program' },
+                  ].map((item, i) => (
+                    <div key={i} className="postmvp-chip">
+                      {Ico.x}
+                      <div className="bi" style={{ gap: 0 }}>
+                        <span style={{ fontSize: 13 }}>{item.ar}</span>
+                        <span style={{ fontSize: 10.5, color: 'var(--ink-3)', fontFamily: 'IBM Plex Sans, system-ui', direction: 'ltr' }}>{item.en}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div style={{ padding: '14px 22px', borderTop: '1px solid var(--border)', background: 'var(--surface-2)', fontSize: 12.5, color: 'var(--ink-2)', lineHeight: 1.7 }}>
+                  تُضاف هذه الميزات بعد إطلاق النسخة الأولى والتحقق من صحة المنتج مع المستخدمين الفعليين. · These features will be added after launching MVP and validating the product with real users.
+                </div>
+              </div>
+            </Section>
+
+          </div>{/* end main content */}
+        </div>{/* end layout-with-toc */}
+      </div>{/* end page-wrap */}
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
