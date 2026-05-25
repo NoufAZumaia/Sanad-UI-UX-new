@@ -322,6 +322,10 @@ const I = {
   med: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12h6M12 9v6"/><circle cx="12" cy="12" r="9"/></svg>,
   more: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><circle cx="5" cy="12" r=".5"/><circle cx="12" cy="12" r=".5"/><circle cx="19" cy="12" r=".5"/></svg>,
   out: <svg className="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>,
+  warn: <svg className="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>,
+  sparkle: <svg className="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2L9.5 9.5 2 12l7.5 2.5L12 22l2.5-7.5L22 12l-7.5-2.5z"/></svg>,
+  block: <svg className="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>,
+  reply: <svg className="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 17 4 12 9 7"/><path d="M20 18v-2a4 4 0 0 0-4-4H4"/></svg>,
 };
 
 const SVC = {
@@ -419,6 +423,8 @@ function Sidebar({ active, setActive }) {
     { id: 'finance',   label: 'المالية',         icon: I.money },
     { id: 'reports',   label: 'التقارير',        icon: I.chart },
     { id: 'reviews',   label: 'التقييمات',       icon: I.star },
+    { id: 'complaints',label: 'الشكاوى',         icon: I.warn, badge: 5 },
+    { id: 'coupons',   label: 'الكوبونات',       icon: I.sparkle },
     { sec: 'النظام' },
     { id: 'settings',  label: 'الإعدادات',       icon: I.cog },
   ];
@@ -957,7 +963,15 @@ function Providers() {
                   <td className="num">{fmt(p.jobs)}</td>
                   <td><Pill kind={p.status}>{p.status === 'on' ? 'متصل' : 'غير متصل'}</Pill></td>
                   <td style={{ color: 'var(--ink-3)' }}>{p.joined}</td>
-                  <td><button className="btn sm">عرض</button></td>
+                  <td>
+                    <div style={{ display: 'flex', gap: 6 }}>
+                      <button className="btn sm">عرض</button>
+                      <button className="btn sm" style={{ color: 'var(--danger)', borderColor: 'var(--danger-soft)', background: 'var(--danger-soft)' }}
+                        title="حجب المزوّد">
+                        {I.block}
+                      </button>
+                    </div>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -1111,37 +1125,50 @@ function Settings() {
       <div className="content">
         <div className="grid-3">
           <div className="card">
-            <div className="card-head"><h3>الإسناد التلقائي</h3></div>
+            <div className="card-head">
+              <h3>الإسناد التلقائي</h3>
+              <span className="sub">توزيع الطلبات على المزوّدين</span>
+            </div>
+            <div style={{ padding: '14px 22px', background: 'var(--primary-tint)', borderBottom: '1px solid var(--border)', fontSize: 12.5, color: 'var(--primary-deep)', lineHeight: 1.6 }}>
+              يتيح هذا القسم التحكم في آلية توزيع الطلبات الواردة على مزوّدي الخدمة تلقائيًا دون تدخل يدوي.
+            </div>
             <div style={{ padding: 22, display: 'flex', flexDirection: 'column', gap: 18 }}>
               {[
-                ['live', 'تفعيل الإسناد المباشر', 'إسناد الطلبات للمزوّد الأقرب آلياً'],
-                ['autoDispatch', 'إسناد ذكي بـ AI', 'تجريبي — استخدم الذكاء الاصطناعي للتطابق'],
-                ['holiday', 'وضع الإجازة الرسمية', 'تخفيض الأسعار خلال العطل'],
+                ['live', 'إسناد تلقائي فوري', 'عند تفعيله، يُسند كل طلب جديد تلقائيًا للمزوّد الأقرب والمتاح — دون انتظار موافقة يدوية من الإدارة.'],
+                ['autoDispatch', 'إسناد ذكي (تجريبي)', 'يستخدم الذكاء الاصطناعي للمطابقة بين الطلب والمزوّد بناءً على التقييم والتخصص والموقع معًا. قيد الاختبار.'],
+                ['holiday', 'وضع الإجازة الرسمية', 'عند التفعيل، يُعدَّل سلوك الإسناد لاستيعاب انخفاض عدد المزوّدين في أيام العطل الرسمية.'],
               ].map(([k, l, s]) => (
-                <div key={k} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <div key={k} style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
                   <div style={{ flex: 1 }}>
                     <div style={{ fontWeight: 500, fontSize: 13.5 }}>{l}</div>
-                    <div style={{ color: 'var(--ink-3)', fontSize: 11.5, marginTop: 2 }}>{s}</div>
+                    <div style={{ color: 'var(--ink-3)', fontSize: 12, marginTop: 4, lineHeight: 1.6 }}>{s}</div>
                   </div>
-                  <div className={`switch ${t[k] ? 'on' : ''}`} onClick={() => setT({ ...t, [k]: !t[k] })} />
+                  <div className={`switch ${t[k] ? 'on' : ''}`} style={{ marginTop: 2, flexShrink: 0 }} onClick={() => setT({ ...t, [k]: !t[k] })} />
                 </div>
               ))}
             </div>
           </div>
 
           <div className="card">
-            <div className="card-head"><h3>التنبيهات</h3></div>
+            <div className="card-head">
+              <h3>التنبيهات</h3>
+              <span className="sub">إشعارات العملاء والفريق</span>
+            </div>
+            <div style={{ padding: '14px 22px', background: 'var(--primary-tint)', borderBottom: '1px solid var(--border)', fontSize: 12.5, color: 'var(--primary-deep)', lineHeight: 1.6 }}>
+              التحكم في الإشعارات التلقائية التي يتلقّاها العملاء والفريق الداخلي خلال مراحل الطلب.
+            </div>
             <div style={{ padding: 22, display: 'flex', flexDirection: 'column', gap: 18 }}>
               {[
-                ['sms', 'رسائل SMS للعملاء', 'تأكيد الطلب، الوصول، والإكمال'],
-                ['twoFa', 'تحقق ثنائي للفريق', 'إلزامي عند تسجيل الدخول'],
+                ['sms', 'رسائل SMS للعملاء', 'يُرسَل للعميل رسالة نصية عند تأكيد الطلب، وعند انطلاق المزوّد، وعند الإكمال. مفيد للعملاء الذين لا يستخدمون التطبيق باستمرار.'],
+                ['twoFa', 'تحقق ثنائي لأعضاء الفريق', 'يُلزَم كل عضو في فريق الإدارة بالتحقق من هويته عبر رمز SMS عند كل تسجيل دخول جديد لحماية الحساب.'],
+                ['pushNotif', 'إشعارات الطلبات الحرجة', 'إرسال إشعار فوري لمشرف العمليات عند وصول طلب عالي الأولوية أو تأخر إسناد طلب لأكثر من ٥ دقائق.'],
               ].map(([k, l, s]) => (
-                <div key={k} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <div key={k} style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
                   <div style={{ flex: 1 }}>
                     <div style={{ fontWeight: 500, fontSize: 13.5 }}>{l}</div>
-                    <div style={{ color: 'var(--ink-3)', fontSize: 11.5, marginTop: 2 }}>{s}</div>
+                    <div style={{ color: 'var(--ink-3)', fontSize: 12, marginTop: 4, lineHeight: 1.6 }}>{s}</div>
                   </div>
-                  <div className={`switch ${t[k] ? 'on' : ''}`} onClick={() => setT({ ...t, [k]: !t[k] })} />
+                  <div className={`switch ${(t[k] !== undefined ? t[k] : k === 'pushNotif') ? 'on' : ''}`} style={{ marginTop: 2, flexShrink: 0 }} onClick={() => setT({ ...t, [k]: !(t[k] !== undefined ? t[k] : true) })} />
                 </div>
               ))}
             </div>
@@ -1315,6 +1342,260 @@ function Dispatch() {
   );
 }
 
+// ───── Complaints ─────
+function Complaints() {
+  const [replyOpen, setReplyOpen] = useState(null);
+  const [replies, setReplies] = useState({});
+  const [replyText, setReplyText] = useState('');
+
+  const COMPLAINTS = [
+    { id: 'CMP-0041', customer: 'محمد العتيبي', cAv: 'م ع', cat: 'سلوك مقدّم الخدمة', detail: 'المندوب كان غير محترم وتأخر كثيرًا دون إخطار.', ref: 'SND-2487', date: '١٤ مايو ٢٠٢٦', status: 'pending' },
+    { id: 'CMP-0040', customer: 'حصة المطيري', cAv: 'ح م', cat: 'جودة الخدمة', detail: 'الجليسة لم تكن تتفاعل مع والدتي بالشكل المطلوب.', ref: 'SND-2485', date: '١٢ مايو ٢٠٢٦', status: 'pending' },
+    { id: 'CMP-0038', customer: 'فاطمة السبيعي', cAv: 'ف س', cat: 'تأخير في الخدمة', detail: 'وصل المرافق متأخرًا ٢٥ دقيقة وأدى لتفويت الموعد.', ref: 'SND-2486', date: '٢ مايو ٢٠٢٦', status: 'resolved' },
+    { id: 'CMP-0035', customer: 'سعد المالكي', cAv: 'س م', cat: 'مشكلة في الدفع', detail: 'تم خصم المبلغ مرتين من بطاقتي.', ref: 'SND-2483', date: '٢٨ أبريل ٢٠٢٦', status: 'resolved' },
+  ];
+
+  const statusMap = { pending: { l: 'قيد المراجعة', k: 'assigned' }, resolved: { l: 'تمت المعالجة', k: 'done' } };
+
+  const handleReply = (id) => {
+    if (replyText.trim()) {
+      setReplies({ ...replies, [id]: replyText });
+      setReplyOpen(null);
+      setReplyText('');
+    }
+  };
+
+  return (
+    <>
+      <Topbar crumb="الأعمال" title="الشكاوى" sub={`${COMPLAINTS.filter(c => c.status === 'pending').length} شكاوى بانتظار الرد`}
+        actions={<button className="btn">{I.download}<span>تصدير</span></button>} />
+      <div className="content">
+        <div className="kpis" style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}>
+          <KPI label="إجمالي الشكاوى"   value="٤١"  delta="٣" up={false} spark={[38,39,40,40,41,41]} color="#B91C1C" />
+          <KPI label="قيد المراجعة"    value="٢"   delta="١" up={false} spark={[5,4,3,3,2,2]} color="#B45309" />
+          <KPI label="تمت المعالجة"    value="٣٩"  delta="٥" up spark={[30,32,34,36,38,39]} color="#047857" />
+          <KPI label="متوسط وقت الرد"  value="١٨ س" delta="٢ س" up spark={[24,22,20,19,18,18]} color="#0F766E" />
+        </div>
+
+        <div className="card">
+          <div className="card-head">
+            <h3>قائمة الشكاوى</h3>
+            <div className="actions">
+              <button className="chip active">الكل</button>
+              <button className="chip">قيد المراجعة</button>
+              <button className="chip">تمت المعالجة</button>
+            </div>
+          </div>
+          <table className="tbl">
+            <thead>
+              <tr>
+                <th>العميل</th>
+                <th>نوع الشكوى</th>
+                <th>الطلب</th>
+                <th>التاريخ</th>
+                <th>الحالة</th>
+                <th>الإجراء</th>
+              </tr>
+            </thead>
+            <tbody>
+              {COMPLAINTS.map(c => (
+                <tr key={c.id}>
+                  <td>
+                    <div className="who">
+                      <div className="av">{c.cAv}</div>
+                      <div>
+                        <div className="name">{c.customer}</div>
+                        <div className="meta">{c.id}</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div style={{ fontWeight: 500, fontSize: 13 }}>{c.cat}</div>
+                    <div style={{ fontSize: 11.5, color: 'var(--ink-3)', marginTop: 2, maxWidth: 260 }}>{c.detail}</div>
+                    {(replies[c.id] || c.status === 'resolved') && (
+                      <div style={{ marginTop: 6, padding: '6px 10px', background: 'var(--primary-tint)',
+                        borderRadius: 8, fontSize: 12, color: 'var(--primary-deep)', borderInlineStart: '3px solid var(--primary)' }}>
+                        <span style={{ fontWeight: 600 }}>رد الإدارة: </span>
+                        {replies[c.id] || (c.id === 'CMP-0038' ? 'تم مراجعة الشكوى واتخاذ الإجراء اللازم. نعتذر عن الإزعاج.' : 'تم استرداد المبلغ المخصوم مرتين.')}
+                      </div>
+                    )}
+                  </td>
+                  <td><span className="id">{c.ref}</span></td>
+                  <td style={{ color: 'var(--ink-3)', fontSize: 12.5 }}>{c.date}</td>
+                  <td><Pill kind={statusMap[c.status].k}>{statusMap[c.status].l}</Pill></td>
+                  <td>
+                    {c.status === 'pending' && !replies[c.id] ? (
+                      replyOpen === c.id ? (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 6, minWidth: 220 }}>
+                          <textarea
+                            value={replyText}
+                            onChange={e => setReplyText(e.target.value)}
+                            placeholder="اكتب ردك للعميل..."
+                            rows={3}
+                            style={{ width: '100%', border: '1px solid var(--border)', borderRadius: 8, padding: '6px 10px',
+                              fontFamily: 'inherit', fontSize: 12.5, resize: 'none', direction: 'rtl', outline: 'none' }}
+                          />
+                          <div style={{ display: 'flex', gap: 6 }}>
+                            <button className="btn sm primary" onClick={() => handleReply(c.id)}>{I.reply} إرسال</button>
+                            <button className="btn sm" onClick={() => setReplyOpen(null)}>إلغاء</button>
+                          </div>
+                        </div>
+                      ) : (
+                        <button className="btn sm primary" onClick={() => { setReplyOpen(c.id); setReplyText(''); }}>
+                          {I.reply} رد
+                        </button>
+                      )
+                    ) : (
+                      <span style={{ fontSize: 12, color: 'var(--success)', display: 'flex', alignItems: 'center', gap: 4 }}>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        تم الرد
+                      </span>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </>
+  );
+}
+
+// ───── Coupons ─────
+function Coupons() {
+  const [showForm, setShowForm] = useState(false);
+  const COUPONS = [
+    { code: 'SANAD10', discount: '١٠٪', type: 'نسبة مئوية', uses: 142, max: 500, expires: '٣١ مايو ٢٠٢٦', status: 'on', svc: 'الكل' },
+    { code: 'FAZAA20', discount: '٢٠٪', type: 'نسبة مئوية', uses: 89,  max: 200, expires: '١٥ يونيو ٢٠٢٦', status: 'on', svc: 'سند فزعة' },
+    { code: 'WELCOME', discount: '١٥ ر.س', type: 'مبلغ ثابت', uses: 312, max: 1000, expires: '٣١ ديسمبر ٢٠٢٦', status: 'on', svc: 'الكل' },
+    { code: 'SUMMER25', discount: '٢٥٪', type: 'نسبة مئوية', uses: 28,  max: 100, expires: '٣١ أغسطس ٢٠٢٦', status: 'off', svc: 'الكل' },
+  ];
+  return (
+    <>
+      <Topbar crumb="الأعمال" title="الكوبونات" sub={`${COUPONS.filter(c => c.status === 'on').length} كوبونات نشطة`}
+        actions={
+          <button className="btn primary" onClick={() => setShowForm(!showForm)}>
+            {I.plus}<span>{showForm ? 'إلغاء' : 'كوبون جديد'}</span>
+          </button>
+        }
+      />
+      <div className="content">
+        {showForm && (
+          <div className="card card-pad" style={{ marginBottom: 22 }}>
+            <div className="card-head" style={{ borderBottom: '1px solid var(--border)', marginBottom: 18, paddingBottom: 14 }}>
+              <h3>إنشاء كوبون جديد</h3>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 16, marginBottom: 16 }}>
+              <div>
+                <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink-2)', marginBottom: 6 }}>رمز الكوبون</div>
+                <input placeholder="مثال: EID30" style={{ width: '100%', padding: '9px 12px', border: '1px solid var(--border)',
+                  borderRadius: 10, fontFamily: 'inherit', fontSize: 13.5, background: 'var(--bg)', direction: 'ltr', outline: 'none' }} />
+              </div>
+              <div>
+                <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink-2)', marginBottom: 6 }}>نوع الخصم</div>
+                <select style={{ width: '100%', padding: '9px 12px', border: '1px solid var(--border)',
+                  borderRadius: 10, fontFamily: 'inherit', fontSize: 13.5, background: 'var(--bg)', outline: 'none' }}>
+                  <option>نسبة مئوية (%)</option>
+                  <option>مبلغ ثابت (ر.س)</option>
+                </select>
+              </div>
+              <div>
+                <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink-2)', marginBottom: 6 }}>قيمة الخصم</div>
+                <input placeholder="مثال: 10" type="number" style={{ width: '100%', padding: '9px 12px', border: '1px solid var(--border)',
+                  borderRadius: 10, fontFamily: 'inherit', fontSize: 13.5, background: 'var(--bg)', direction: 'ltr', outline: 'none' }} />
+              </div>
+              <div>
+                <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink-2)', marginBottom: 6 }}>الخدمة</div>
+                <select style={{ width: '100%', padding: '9px 12px', border: '1px solid var(--border)',
+                  borderRadius: 10, fontFamily: 'inherit', fontSize: 13.5, background: 'var(--bg)', outline: 'none' }}>
+                  <option>الكل</option>
+                  <option>سند فزعة</option>
+                  <option>سند جليس</option>
+                  <option>سند أكاديمي</option>
+                  <option>سند مرافقة</option>
+                </select>
+              </div>
+              <div>
+                <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink-2)', marginBottom: 6 }}>الحد الأقصى للاستخدام</div>
+                <input placeholder="مثال: 500" type="number" style={{ width: '100%', padding: '9px 12px', border: '1px solid var(--border)',
+                  borderRadius: 10, fontFamily: 'inherit', fontSize: 13.5, background: 'var(--bg)', direction: 'ltr', outline: 'none' }} />
+              </div>
+              <div>
+                <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink-2)', marginBottom: 6 }}>تاريخ الانتهاء</div>
+                <input type="date" style={{ width: '100%', padding: '9px 12px', border: '1px solid var(--border)',
+                  borderRadius: 10, fontFamily: 'inherit', fontSize: 13.5, background: 'var(--bg)', direction: 'ltr', outline: 'none' }} />
+              </div>
+            </div>
+            <div style={{ display: 'flex', gap: 10 }}>
+              <button className="btn primary">{I.plus} إنشاء الكوبون</button>
+              <button className="btn" onClick={() => setShowForm(false)}>إلغاء</button>
+            </div>
+          </div>
+        )}
+
+        <div className="kpis" style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}>
+          <KPI label="كوبونات نشطة"   value="٣"   delta="١" up   spark={[2,2,3,3,3,3]} color="#047857" />
+          <KPI label="استخدامات اليوم" value="٢٤"  delta="٦" up   spark={[15,17,18,20,22,24]} color="#0F766E" />
+          <KPI label="إجمالي التوفير" value="١٤٢ ر.س" delta="١٢٪" up spark={[80,90,100,115,128,142]} color="#1E3A8A" />
+          <KPI label="معدل الاستخدام" value="٣٤٪"  delta="٢٪" up   spark={[28,30,31,32,33,34]} color="#B45309" />
+        </div>
+
+        <div className="card">
+          <div className="card-head"><h3>الكوبونات</h3></div>
+          <table className="tbl">
+            <thead>
+              <tr>
+                <th>رمز الكوبون</th>
+                <th>الخصم</th>
+                <th>الخدمة</th>
+                <th>الاستخدامات</th>
+                <th>تاريخ الانتهاء</th>
+                <th>الحالة</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {COUPONS.map((c, i) => (
+                <tr key={i}>
+                  <td>
+                    <span style={{ fontFamily: 'IBM Plex Mono, monospace', fontSize: 14, fontWeight: 600,
+                      background: 'var(--bg-2)', padding: '3px 10px', borderRadius: 6 }}>{c.code}</span>
+                  </td>
+                  <td>
+                    <div style={{ fontWeight: 600 }}>{c.discount}</div>
+                    <div style={{ fontSize: 11.5, color: 'var(--ink-3)' }}>{c.type}</div>
+                  </td>
+                  <td style={{ fontSize: 13 }}>{c.svc}</td>
+                  <td>
+                    <div style={{ fontSize: 13 }}>{c.uses} / {c.max}</div>
+                    <div style={{ height: 4, background: 'var(--bg-2)', borderRadius: 2, marginTop: 4, width: 80 }}>
+                      <div style={{ height: '100%', background: 'var(--primary)', borderRadius: 2,
+                        width: `${Math.round((parseInt(c.uses) / parseInt(c.max)) * 100)}%` }} />
+                    </div>
+                  </td>
+                  <td style={{ color: 'var(--ink-3)', fontSize: 12.5 }}>{c.expires}</td>
+                  <td><Pill kind={c.status}>{c.status === 'on' ? 'نشط' : 'موقوف'}</Pill></td>
+                  <td>
+                    <div style={{ display: 'flex', gap: 6 }}>
+                      <button className="btn sm">تعديل</button>
+                      <button className="btn sm" style={{ color: c.status === 'on' ? 'var(--danger)' : 'var(--success)',
+                        borderColor: c.status === 'on' ? 'var(--danger-soft)' : 'var(--success-soft)',
+                        background: c.status === 'on' ? 'var(--danger-soft)' : 'var(--success-soft)' }}>
+                        {c.status === 'on' ? 'إيقاف' : 'تفعيل'}
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </>
+  );
+}
+
 // ───── App ─────
 function App() {
   const [page, setPage] = useState('dashboard');
@@ -1331,6 +1612,8 @@ function App() {
   else if (page === 'reports')   content = <Reports />;
   else if (page === 'reviews')   content = <Reviews />;
   else if (page === 'settings')  content = <Settings />;
+  else if (page === 'complaints') content = <Complaints />;
+  else if (page === 'coupons')   content = <Coupons />;
 
   return (
     <>

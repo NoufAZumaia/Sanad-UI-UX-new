@@ -1566,29 +1566,6 @@ function ServiceDetail({ theme: t, service, hero, features, audiences, pricing }
           </Card>
         </div>
 
-        {/* Audiences */}
-        <div style={{ padding: '0 20px 14px' }}>
-          <SectionTitle theme={t}>الفئات المستفيدة</SectionTitle>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-            {audiences.map(a => (
-              <Tag key={a} theme={t} color={service.color} soft={service.soft} style={{ padding: '8px 14px', fontSize: 12.5 }}>{a}</Tag>
-            ))}
-          </div>
-        </div>
-
-        {/* Pricing */}
-        <div style={{ padding: '0 20px 14px' }}>
-          <SectionTitle theme={t}>التكلفة التقديرية</SectionTitle>
-          <Card theme={t} padding={16}>
-            {pricing.map((p, i) => (
-              <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 0',
-                borderBottom: i < pricing.length - 1 ? `1px solid ${t.border}` : 'none' }}>
-                <div style={{ fontSize: 13.5, color: t.ink }}>{p.l}</div>
-                <div style={{ fontSize: 13.5, fontWeight: 600, color: t.ink }} className="latin">{p.v}</div>
-              </div>
-            ))}
-          </Card>
-        </div>
       </div>
 
       {/* CTA */}
@@ -1624,11 +1601,11 @@ function ScrServiceFazaa({ theme: t }) {
 function ScrServiceJalees({ theme: t }) {
   t = t || useTheme();
   return <ServiceDetail theme={t} service={window.SanadTokens.SERVICES.jalees}
-    hero="مرافقة اجتماعية ودعم نفسي: قراءة، حوار، تذكير بالأدوية، ودعم خلال الجلسات الترفيهية والعلاجية."
+    hero="مرافقة اجتماعية ودعم شخصي في المنزل: قراءة، حوار، تذكير بالأدوية، ومشاركة في الأنشطة الترفيهية والعلاجية — حضوريًا وجهًا لوجه."
     features={[
       'اختر نوع التفاعل: قراءة، حوار، ألعاب ذهنية، أو مساعدة في الحركة.',
-      'حدّد مدة الجلسة ومكانها — في المنزل أو افتراضيًا.',
-      'تواصل مباشر بالصوت أو الرسائل خلال الجلسة.',
+      'حدّد مدة الجلسة ومكانها — في المنزل أو مقر إقامة المستفيد.',
+      'تواصل مع مقدّم الخدمة عبر المحادثة النصية أو الهاتف.',
       'ملاحظات مدوّنة من مقدّم الخدمة بعد كل جلسة.',
     ]}
     audiences={['كبار السن', 'الأسر', 'ذوو الإعاقة', 'الأطفال', 'مرضى']}
@@ -1642,18 +1619,17 @@ function ScrServiceJalees({ theme: t }) {
 function ScrServiceAcademic({ theme: t }) {
   t = t || useTheme();
   return <ServiceDetail theme={t} service={window.SanadTokens.SERVICES.academic}
-    hero="برامج تدريب ميداني لطلاب الجامعات تحت إشراف أكاديمي مباشر، تساعدك على ربط الدراسة بسوق العمل."
+    hero="يُمكّن طلاب ذوي الاحتياجات الخاصة داخل نطاق الحرم الجامعي من طلب مساعدة حضورية من طلاب آخرين في نفس الحرم — دعم أكاديمي من الزملاء، في المكان نفسه."
     features={[
-      'استعراض البرامج التدريبية المتاحة حسب التخصص.',
-      'معرفة تفاصيل البرنامج، المدة، والمتطلبات.',
-      'التقديم عبر التطبيق ومتابعة حالة الطلب.',
-      'الحصول على شهادة معتمدة بعد إتمام التدريب.',
+      'اطلب مساعدة من طالب متطوّع أو مُسجَّل ضمن نطاق حرمك الجامعي.',
+      'حدّد نوع الدعم: شرح مادة، قراءة نص، تنقل داخل الحرم، أو مساعدة إدارية.',
+      'تتبّع حالة طلبك والتواصل مع الطالب المساعد عبر التطبيق.',
+      'قيّم التجربة بعد انتهاء الجلسة لمساعدة الآخرين.',
     ]}
-    audiences={['طلاب الجامعات', 'الخريجون الجدد', 'الباحثون عن تدريب']}
+    audiences={['طلاب ذوو الاحتياجات الخاصة', 'طلاب الجامعات']}
     pricing={[
-      { l: 'برنامج تدريب صيفي', v: 'مجاني' },
-      { l: 'برنامج متخصص', v: '٢٥٠ ر.س' },
-      { l: 'إصدار الشهادة', v: 'مشمول' },
+      { l: 'جلسة مساعدة (ساعة)', v: '٣٠ ر.س' },
+      { l: 'دعم أثناء الامتحانات', v: '٥٠ ر.س' },
     ]} />;
 }
 
@@ -1662,7 +1638,7 @@ function ScrServiceMurafaqa({ theme: t }) {
   return <ServiceDetail theme={t} service={window.SanadTokens.SERVICES.murafaqa}
     hero="مرافقة المواعيد الطبية والحكومية والاجتماعية، مع دعم خلال التنقل والانتظار وإنجاز الإجراءات."
     features={[
-      'حجز الموعد وتحديد عدد المرافقين.',
+      'حجز الموعد بسهولة مع تحديد الموقع والوقت.',
       'مرافق مدرّب ومتفاهم مع احتياج المستفيد.',
       'تتبّع الرحلة وتحديثات لحظية للوصول.',
       'تلخيص الزيارة وتقييم الخدمة بعد الانتهاء.',
@@ -1739,12 +1715,8 @@ function ScrRequestFazaa({ theme: t }) {
       <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0,
         padding: '14px 20px 26px', background: t.surface, borderTop: `1px solid ${t.border}`,
         display: 'flex', alignItems: 'center', gap: 12 }}>
-        <div style={{ flex: 1 }}>
-          <div style={{ fontSize: 11, color: t.inkSoft }}>التكلفة التقديرية</div>
-          <div style={{ fontSize: 18, fontWeight: 700 }} className="latin">٣٥ <span style={{ fontSize: 12, fontWeight: 500, color: t.inkMuted }}>ر.س</span></div>
-        </div>
-        <Button theme={t} variant="primary" size="lg" iconRight={t.dir === 'rtl' ? 'arrowL' : 'arrowR'}
-          style={{ background: s.color, flex: 1.2 }}>تأكيد الطلب</Button>
+        <Button full theme={t} variant="primary" size="lg" iconRight={t.dir === 'rtl' ? 'arrowL' : 'arrowR'}
+          style={{ background: s.color }}>تأكيد الطلب</Button>
       </div>
     </Screen>
   );
@@ -1799,7 +1771,7 @@ function ScrRequestJalees({ theme: t }) {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 18 }}>
           {[
             { l: 'في المنزل', i: 'home', sel: true },
-            { l: 'افتراضي', i: 'video', sel: false },
+            { l: 'مقر الإقامة', i: 'pin', sel: false },
           ].map(o => (
             <div key={o.l} style={{
               background: o.sel ? s.soft : t.surface, color: o.sel ? s.color : t.ink,
@@ -1839,11 +1811,7 @@ function ScrRequestJalees({ theme: t }) {
       <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0,
         padding: '14px 20px 26px', background: t.surface, borderTop: `1px solid ${t.border}`,
         display: 'flex', alignItems: 'center', gap: 12 }}>
-        <div style={{ flex: 1 }}>
-          <div style={{ fontSize: 11, color: t.inkSoft }}>التكلفة التقديرية</div>
-          <div style={{ fontSize: 18, fontWeight: 700 }} className="latin">٦٠ <span style={{ fontSize: 12, fontWeight: 500, color: t.inkMuted }}>ر.س</span></div>
-        </div>
-        <Button theme={t} variant="primary" size="lg" style={{ background: s.color, flex: 1.2 }}>تأكيد الجدولة</Button>
+        <Button full theme={t} variant="primary" size="lg" style={{ background: s.color }}>تأكيد الجدولة</Button>
       </div>
     </Screen>
   );
@@ -1855,28 +1823,28 @@ function ScrRequestAcademic({ theme: t }) {
   return (
     <Screen theme={t}>
       <StatusBar theme={t} />
-      <TopBar theme={t} title="تقديم على البرنامج" />
+      <TopBar theme={t} title="طلب دعم أكاديمي" />
       <div style={{ flex: 1, overflowY: 'auto', padding: '14px 20px 110px' }}>
         <Card theme={t} padding={16} style={{ marginBottom: 16 }}>
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
             <ServiceTile service={s} size={48} theme={t} />
             <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 15, fontWeight: 600 }}>برنامج محاسبة تطبيقي</div>
-              <div style={{ fontSize: 12, color: t.inkMuted }}>جامعة الملك سعود · ١٢٠ ساعة</div>
+              <div style={{ fontSize: 15, fontWeight: 600 }}>دعم مادة اجتماعيات</div>
+              <div style={{ fontSize: 12, color: t.inkMuted }}>جامعة الملك سعود · الحرم الرئيسي</div>
               <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
-                <Tag theme={t} color={s.color} soft={s.soft} style={{ fontSize: 10.5 }}>٠١/٠٦ — ٣١/٠٨</Tag>
-                <Tag theme={t} color={t.ink} soft={t.surface2} style={{ fontSize: 10.5, border: `1px solid ${t.border}` }}>صيفي</Tag>
+                <Tag theme={t} color={s.color} soft={s.soft} style={{ fontSize: 10.5 }}>حضوري</Tag>
+                <Tag theme={t} color={t.ink} soft={t.surface2} style={{ fontSize: 10.5, border: `1px solid ${t.border}` }}>داخل الحرم</Tag>
               </div>
             </div>
           </div>
         </Card>
 
-        <SectionTitle theme={t}>المتطلبات</SectionTitle>
+        <SectionTitle theme={t}>تفاصيل الطلب</SectionTitle>
         <Card theme={t} padding={0} style={{ overflow: 'hidden', marginBottom: 16 }}>
           {[
-            'مستوى دراسي لا يقل عن ٣',
-            'موافقة الجامعة',
-            'إجادة استخدام الحاسب',
+            'حدّد نوع الدعم المطلوب: شرح المادة، قراءة النص، أو المساعدة الإدارية.',
+            'يجب أن يكون الطالب المساعد منتسبًا لنفس الحرم الجامعي.',
+            'تتم الجلسة حضوريًا داخل نطاق الحرم.',
           ].map((r, i, a) => (
             <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: 14,
               borderBottom: i < a.length - 1 ? `1px solid ${t.border}` : 'none' }}>
@@ -1901,8 +1869,8 @@ function ScrRequestAcademic({ theme: t }) {
               <SanadIcon name="paperclip" size={18} />
             </div>
             <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 13.5, fontWeight: 500 }}>إرفاق السجل الأكاديمي</div>
-              <div style={{ fontSize: 11.5, color: t.inkSoft }}>PDF أو صورة — حتى ٥ م.ب</div>
+              <div style={{ fontSize: 13.5, fontWeight: 500 }}>إرفاق بطاقة الطالب</div>
+              <div style={{ fontSize: 11.5, color: t.inkSoft }}>لإثبات الانتساب للحرم الجامعي</div>
             </div>
             <Button theme={t} variant="surface" size="sm">رفع</Button>
           </div>
@@ -1948,8 +1916,7 @@ function ScrRequestMurafaqa({ theme: t }) {
           <Field theme={t} label="التاريخ" value="١٢ مايو ٢٠٢٦" icon="calendar" readOnly />
           <Field theme={t} label="الوقت" value="٩:٣٠ ص" icon="clock" readOnly />
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 14 }}>
-          <Field theme={t} label="عدد المرافقين" value="١" readOnly />
+        <div style={{ marginBottom: 14 }}>
           <Field theme={t} label="مدّة متوقّعة" value="٣ ساعات" icon="clock" readOnly />
         </div>
 
@@ -1970,11 +1937,7 @@ function ScrRequestMurafaqa({ theme: t }) {
       <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0,
         padding: '14px 20px 26px', background: t.surface, borderTop: `1px solid ${t.border}`,
         display: 'flex', alignItems: 'center', gap: 12 }}>
-        <div style={{ flex: 1 }}>
-          <div style={{ fontSize: 11, color: t.inkSoft }}>التكلفة التقديرية</div>
-          <div style={{ fontSize: 18, fontWeight: 700 }} className="latin">٧٠ <span style={{ fontSize: 12, fontWeight: 500, color: t.inkMuted }}>ر.س</span></div>
-        </div>
-        <Button theme={t} variant="primary" size="lg" style={{ background: s.color, flex: 1.2 }}>تأكيد الحجز</Button>
+        <Button full theme={t} variant="primary" size="lg" style={{ background: s.color }}>تأكيد الحجز</Button>
       </div>
     </Screen>
   );
@@ -1984,6 +1947,314 @@ window.ScrRequestFazaa = ScrRequestFazaa;
 window.ScrRequestJalees = ScrRequestJalees;
 window.ScrRequestAcademic = ScrRequestAcademic;
 window.ScrRequestMurafaqa = ScrRequestMurafaqa;
+
+
+/* ===== src/screens-payment.jsx ===== */
+// Sanad — payment screen with coupon support
+
+function ScrPayment({ theme: t }) {
+  t = t || useTheme();
+  const [coupon, setCoupon] = React.useState('');
+  const [couponApplied, setCouponApplied] = React.useState(false);
+  const methods = [
+    { id: 'mada', l: 'مدى', d: '****٤٢٧٨', icon: 'card', sel: true },
+    { id: 'wallet', l: 'المحفظة', d: 'رصيد ٢٤٠ ر.س', icon: 'money', sel: false },
+    { id: 'cash', l: 'نقداً عند الاستلام', d: '', icon: 'cash', sel: false },
+  ];
+  return (
+    <Screen theme={t}>
+      <StatusBar theme={t} />
+      <TopBar theme={t} title="الدفع" />
+      <div style={{ flex: 1, overflowY: 'auto', padding: '14px 20px 110px' }}>
+
+        <SectionTitle theme={t}>ملخص الطلب</SectionTitle>
+        <Card theme={t} padding={16} style={{ marginBottom: 18 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0',
+            borderBottom: `1px solid ${t.border}` }}>
+            <div style={{ fontSize: 13, color: t.inkMuted }}>الخدمة</div>
+            <div style={{ fontSize: 13, fontWeight: 500 }}>سند فزعة</div>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0',
+            borderBottom: `1px solid ${t.border}` }}>
+            <div style={{ fontSize: 13, color: t.inkMuted }}>السعر الأساسي</div>
+            <div style={{ fontSize: 13, fontWeight: 500 }} className="latin">٣٥ ر.س</div>
+          </div>
+          {couponApplied && (
+            <div style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0',
+              borderBottom: `1px solid ${t.border}` }}>
+              <div style={{ fontSize: 13, color: t.success }}>خصم الكوبون (١٠٪)</div>
+              <div style={{ fontSize: 13, fontWeight: 600, color: t.success }} className="latin">- ٣٫٥ ر.س</div>
+            </div>
+          )}
+          <div style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0' }}>
+            <div style={{ fontSize: 14, fontWeight: 700 }}>الإجمالي</div>
+            <div style={{ fontSize: 16, fontWeight: 700, color: t.primary }} className="latin">
+              {couponApplied ? '٣١٫٥' : '٣٥'} ر.س
+            </div>
+          </div>
+        </Card>
+
+        <SectionTitle theme={t}>كوبون الخصم</SectionTitle>
+        <Card theme={t} padding={14} style={{ marginBottom: 18 }}>
+          <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+            <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 10, background: t.bgMuted,
+              border: `1px solid ${couponApplied ? t.success : t.border}`, borderRadius: 14, padding: '10px 14px' }}>
+              <SanadIcon name="sparkle" size={16} color={couponApplied ? t.success : t.inkSoft} />
+              <input
+                value={coupon}
+                onChange={e => setCoupon(e.target.value)}
+                placeholder="أدخل رمز الكوبون"
+                style={{ border: 'none', background: 'transparent', flex: 1, fontSize: 13.5, outline: 'none',
+                  fontFamily: 'inherit', direction: 'rtl' }}
+                readOnly={couponApplied}
+              />
+              {couponApplied && <SanadIcon name="check" size={16} color={t.success} />}
+            </div>
+            <Button theme={t} variant={couponApplied ? 'surface' : 'primary'} size="sm"
+              style={{ background: couponApplied ? t.bgMuted : t.primary, flexShrink: 0 }}
+              onClick={() => { if (!couponApplied && coupon) setCouponApplied(true); else if (couponApplied) { setCouponApplied(false); setCoupon(''); } }}>
+              {couponApplied ? 'إزالة' : 'تطبيق'}
+            </Button>
+          </div>
+          {couponApplied && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 10, padding: '8px 12px',
+              background: t.success + '12', borderRadius: 10 }}>
+              <SanadIcon name="check" size={14} color={t.success} />
+              <span style={{ fontSize: 12.5, color: t.success, fontWeight: 500 }}>تم تطبيق الكوبون — خصم ١٠٪</span>
+            </div>
+          )}
+        </Card>
+
+        <SectionTitle theme={t}>طريقة الدفع</SectionTitle>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 18 }}>
+          {methods.map(m => (
+            <div key={m.id} style={{
+              background: m.sel ? t.primarySoft + '30' : t.surface,
+              border: `1.5px solid ${m.sel ? t.primary : t.border}`,
+              borderRadius: 16, padding: 16, display: 'flex', alignItems: 'center', gap: 14
+            }}>
+              <div style={{ width: 40, height: 40, borderRadius: 12, background: m.sel ? t.primary + '18' : t.bgMuted,
+                display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <SanadIcon name={m.icon} size={20} color={m.sel ? t.primary : t.inkMuted} />
+              </div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: 14, fontWeight: 600 }}>{m.l}</div>
+                {m.d && <div style={{ fontSize: 11.5, color: t.inkMuted, marginTop: 2 }}>{m.d}</div>}
+              </div>
+              <div style={{ width: 20, height: 20, borderRadius: 10,
+                border: `2px solid ${m.sel ? t.primary : t.border}`,
+                background: m.sel ? t.primary : 'transparent',
+                display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                {m.sel && <SanadIcon name="check" size={12} color="#fff" strokeWidth={2.5} />}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <button style={{ width: '100%', textAlign: 'start', padding: '12px 16px', background: 'transparent',
+          border: `1.5px dashed ${t.border}`, borderRadius: 16, display: 'flex', alignItems: 'center',
+          gap: 12, cursor: 'pointer', fontFamily: 'inherit' }}>
+          <SanadIcon name="plus" size={18} color={t.primary} />
+          <span style={{ fontSize: 13.5, color: t.primary, fontWeight: 500 }}>إضافة بطاقة جديدة</span>
+        </button>
+      </div>
+
+      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0,
+        padding: '14px 20px 26px', background: t.surface, borderTop: `1px solid ${t.border}` }}>
+        <Button full theme={t} variant="primary" size="lg">
+          {couponApplied ? 'ادفع ٣١٫٥ ر.س' : 'ادفع ٣٥ ر.س'}
+        </Button>
+      </div>
+    </Screen>
+  );
+}
+
+window.ScrPayment = ScrPayment;
+
+
+/* ===== src/screens-favorites.jsx ===== */
+// Sanad — favorite service providers list
+
+function ScrFavorites({ theme: t }) {
+  t = t || useTheme();
+  const favorites = [
+    { n: 'سعاد محمد', s: 'سند جليس', r: '٤٫٩', jobs: '٢٤ جلسة', av: 'س م', color: window.SanadTokens.SERVICES.jalees.color },
+    { n: 'محمد عبدالله', s: 'سند مرافقة', r: '٤٫٨', jobs: '١٢ رحلة', av: 'م ع', color: window.SanadTokens.SERVICES.murafaqa.color },
+    { n: 'أحمد العتيبي', s: 'سند فزعة', r: '٤٫٩', jobs: '٣١ مشوار', av: 'أ ع', color: window.SanadTokens.SERVICES.fazaa.color },
+  ];
+  return (
+    <Screen theme={t}>
+      <StatusBar theme={t} />
+      <TopBar theme={t} title="المفضّلون" />
+      <div style={{ flex: 1, overflowY: 'auto', padding: '14px 16px 30px' }}>
+        {favorites.length === 0 ? (
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+            padding: '60px 32px', textAlign: 'center' }}>
+            <SanadIcon name="heart" size={52} color={t.inkSoft} />
+            <div style={{ fontSize: 17, fontWeight: 700, marginTop: 16, marginBottom: 8 }}>لا يوجد مفضّلون بعد</div>
+            <div style={{ fontSize: 13.5, color: t.inkMuted, lineHeight: 1.7 }}>
+              بعد إتمام أول طلب، يمكنك إضافة مقدّم الخدمة للمفضّلة لحجزه مرة أخرى بسهولة.
+            </div>
+          </div>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            {favorites.map((p, i) => (
+              <Card key={i} theme={t} padding={16}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+                  <Avatar name={p.av} size={52} color={p.color} theme={t} />
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 4 }}>{p.n}</div>
+                    <div style={{ fontSize: 12, color: t.inkMuted, marginBottom: 6 }}>{p.s}</div>
+                    <div style={{ display: 'flex', gap: 12, fontSize: 11.5, color: t.inkSoft }}>
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                        <SanadIcon name="starFill" size={12} color="#E0A823" />{p.r}
+                      </span>
+                      <span>·</span>
+                      <span>{p.jobs} معي</span>
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8, alignItems: 'flex-end' }}>
+                    <button style={{ width: 36, height: 36, borderRadius: 11, background: t.danger + '14',
+                      border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+                      <SanadIcon name="heartFill" size={18} color={t.danger} />
+                    </button>
+                    <Button theme={t} variant="primary" size="sm" style={{ background: p.color }}>احجز</Button>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        )}
+      </div>
+    </Screen>
+  );
+}
+
+window.ScrFavorites = ScrFavorites;
+
+
+/* ===== src/screens-complaint.jsx ===== */
+// Sanad — user complaint submission and status
+
+function ScrComplaint({ theme: t }) {
+  t = t || useTheme();
+  const categories = ['سلوك مقدّم الخدمة', 'تأخير في الخدمة', 'جودة الخدمة', 'مشكلة في الدفع', 'أخرى'];
+  const [sel, setSel] = React.useState(0);
+  return (
+    <Screen theme={t}>
+      <StatusBar theme={t} />
+      <TopBar theme={t} title="تقديم شكوى" />
+      <div style={{ flex: 1, overflowY: 'auto', padding: '14px 20px 110px' }}>
+        <div style={{ fontSize: 13.5, color: t.inkMuted, lineHeight: 1.7, marginBottom: 20 }}>
+          نأخذ كل شكوى بجدية. يرجى وصف ما حدث وسيتواصل معك فريق الدعم خلال ٢٤ ساعة.
+        </div>
+
+        <SectionTitle theme={t}>الطلب المرتبط</SectionTitle>
+        <Card theme={t} padding={14} style={{ marginBottom: 18, display: 'flex', alignItems: 'center', gap: 12 }}>
+          <ServiceTile service={window.SanadTokens.SERVICES.fazaa} size={44} theme={t} />
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 13.5, fontWeight: 600 }}>صيدلية الدواء</div>
+            <div style={{ fontSize: 11.5, color: t.inkMuted }}>سند فزعة · ١٤ مايو ٢٠٢٦</div>
+          </div>
+          <Tag theme={t} color={t.success} soft={t.success + '18'} style={{ fontSize: 11 }}>مكتمل</Tag>
+        </Card>
+
+        <SectionTitle theme={t}>نوع الشكوى</SectionTitle>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 18 }}>
+          {categories.map((c, i) => (
+            <button key={i} onClick={() => setSel(i)} style={{
+              width: '100%', textAlign: 'start', padding: '14px 16px', fontFamily: 'inherit',
+              background: sel === i ? t.primarySoft + '30' : t.surface,
+              border: `1.5px solid ${sel === i ? t.primary : t.border}`,
+              borderRadius: 14, display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer'
+            }}>
+              <div style={{ width: 20, height: 20, borderRadius: 10,
+                border: `2px solid ${sel === i ? t.primary : t.border}`,
+                background: sel === i ? t.primary : 'transparent',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                {sel === i && <SanadIcon name="check" size={12} color="#fff" strokeWidth={2.5} />}
+              </div>
+              <span style={{ fontSize: 13.5, fontWeight: sel === i ? 600 : 500 }}>{c}</span>
+            </button>
+          ))}
+        </div>
+
+        <SectionTitle theme={t}>تفاصيل الشكوى</SectionTitle>
+        <div style={{ background: t.surface, border: `1px solid ${t.border}`, borderRadius: 16,
+          padding: 14, marginBottom: 18 }}>
+          <textarea
+            placeholder="اشرح ما حدث بالتفصيل..."
+            rows={5}
+            style={{ width: '100%', border: 'none', background: 'transparent', resize: 'none',
+              fontFamily: 'inherit', fontSize: 13.5, color: t.ink, outline: 'none',
+              lineHeight: 1.7, direction: 'rtl' }}
+          />
+        </div>
+
+        <SectionTitle theme={t}>مرفقات (اختياري)</SectionTitle>
+        <button style={{ width: '100%', padding: '16px', background: t.bgMuted,
+          border: `1.5px dashed ${t.border}`, borderRadius: 16, display: 'flex',
+          alignItems: 'center', justifyContent: 'center', gap: 10, cursor: 'pointer',
+          fontFamily: 'inherit', marginBottom: 18 }}>
+          <SanadIcon name="camera" size={20} color={t.inkSoft} />
+          <span style={{ fontSize: 13.5, color: t.inkMuted }}>إرفاق صورة أو لقطة شاشة</span>
+        </button>
+      </div>
+
+      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0,
+        padding: '14px 20px 26px', background: t.surface, borderTop: `1px solid ${t.border}` }}>
+        <Button full theme={t} variant="primary" size="lg">إرسال الشكوى</Button>
+      </div>
+    </Screen>
+  );
+}
+
+function ScrComplaintStatus({ theme: t }) {
+  t = t || useTheme();
+  const complaints = [
+    { id: 'CMP-0041', cat: 'سلوك مقدّم الخدمة', date: '١٤ مايو ٢٠٢٦', status: 'pending', reply: null },
+    { id: 'CMP-0038', cat: 'تأخير في الخدمة', date: '٢ مايو ٢٠٢٦', status: 'resolved',
+      reply: 'تم مراجعة الشكوى واتخاذ الإجراء اللازم. نعتذر عن الإزعاج ونضمن لك تجربة أفضل.' },
+  ];
+  const statusMap = { pending: { l: 'قيد المراجعة', c: t.warn }, resolved: { l: 'تمت المعالجة', c: t.success } };
+  return (
+    <Screen theme={t}>
+      <StatusBar theme={t} />
+      <TopBar theme={t} title="شكاواي" action={
+        <div style={{ fontSize: 12, color: t.primary, fontWeight: 600, cursor: 'pointer' }}>شكوى جديدة</div>
+      } />
+      <div style={{ flex: 1, overflowY: 'auto', padding: '14px 16px 30px' }}>
+        {complaints.map((c, i) => (
+          <Card key={i} theme={t} padding={0} style={{ marginBottom: 14, overflow: 'hidden' }}>
+            <div style={{ padding: '14px 16px', borderBottom: `1px solid ${t.border}`,
+              display: 'flex', alignItems: 'center', gap: 12 }}>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: 13.5, fontWeight: 600, marginBottom: 4 }}>{c.cat}</div>
+                <div style={{ fontSize: 11.5, color: t.inkSoft }}>{c.id} · {c.date}</div>
+              </div>
+              <Tag theme={t} color={statusMap[c.status].c} soft={statusMap[c.status].c + '18'}
+                style={{ fontSize: 11 }}>{statusMap[c.status].l}</Tag>
+            </div>
+            {c.reply && (
+              <div style={{ padding: '12px 16px', background: t.primarySoft + '20' }}>
+                <div style={{ fontSize: 11, color: t.primary, fontWeight: 600, marginBottom: 6 }}>رد الإدارة</div>
+                <div style={{ fontSize: 13, color: t.inkMuted, lineHeight: 1.7 }}>{c.reply}</div>
+              </div>
+            )}
+            {!c.reply && (
+              <div style={{ padding: '10px 16px', background: t.bgMuted }}>
+                <div style={{ fontSize: 12, color: t.inkSoft }}>سيصلك رد الإدارة قريبًا عبر الإشعارات.</div>
+              </div>
+            )}
+          </Card>
+        ))}
+      </div>
+    </Screen>
+  );
+}
+
+window.ScrComplaint = ScrComplaint;
+window.ScrComplaintStatus = ScrComplaintStatus;
 
 
 /* ===== src/screens-tracking.jsx ===== */
@@ -2233,10 +2504,10 @@ function ScrCall({ theme: t }) {
         <div style={{ position: 'relative', display: 'flex', gap: 24, justifyContent: 'center', alignItems: 'center', width: '100%' }}>
           {[
             { i: 'mic', l: 'كتم', danger: false },
-            { i: 'video', l: 'كاميرا', danger: false },
+            { i: 'chat', l: 'رسالة', danger: false },
             { i: 'close', l: 'إنهاء', danger: true, big: true },
-            { i: 'chat', l: 'محادثة', danger: false },
-            { i: 'user', l: 'إضافة', danger: false },
+            { i: 'bell', l: 'صامت', danger: false },
+            { i: 'user', l: 'الملف', danger: false },
           ].map((b, i) => (
             <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
               <div style={{
@@ -2372,8 +2643,9 @@ function ScrProfileA({ theme: t }) {
             {[
               { i: 'list', l: 'طلباتي', d: '٢ جارية', c: t.primary },
               { i: 'card', l: 'طرق الدفع', d: 'مدى · ****٤٢٧٨', c: t.primary },
+              { i: 'heart', l: 'المفضّلون', d: '٣ مزوّدين', c: '#E0A823' },
               { i: 'pin', l: 'العناوين', d: 'البيت، العمل', c: t.primary },
-              { i: 'shield', l: 'الموثّقون', d: '٣ مفضّلون', c: t.primary },
+              { i: 'doc', l: 'شكاواي', d: 'عرض حالة شكاواك', c: t.danger },
             ].map((r, i, a) => (
               <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 16px',
                 borderBottom: i < a.length - 1 ? `1px solid ${t.border}` : 'none' }}>
@@ -2718,7 +2990,7 @@ function ScrNotifications2({ theme: t }) {
       { i: 'starFill', c: '#E0A823', t: 'قيّم تجربتك', d: 'جلسة سند جليس مع سعاد محمد', time: 'قبل ساعة' },
     ]},
     { label: 'هذا الأسبوع', items: [
-      { i: 'doc', c: t.accent, t: 'شهادة تدريب جاهزة', d: 'سند أكاديمي · المحاسبة', time: 'الإثنين' },
+      { i: 'calendar', c: t.accent, t: 'جلسة غدًا في الحرم', d: 'سند أكاديمي · دعم اجتماعية', time: 'الإثنين' },
       { i: 'shield', c: '#7A1E55', t: 'موعد مرافقة بعد غد', d: 'الملك فيصل التخصصي · ٩:٣٠ ص', time: 'الأحد' },
       { i: 'sparkle', c: t.primary, t: 'عرض جديد', d: 'خصم ١٥٪ على أول طلب فزعة', time: 'السبت' },
     ]},
@@ -4505,10 +4777,15 @@ function makeUserRoutes(theme) {
     serviceAcademic:{ render: () => <ScrServiceAcademic theme={theme} />, next: 'requestAcademic' },
     serviceMurafaqa:{ render: () => <ScrServiceMurafaqa theme={theme} />, next: 'requestMurafaqa' },
 
-    requestFazaa:    { render: () => <ScrRequestFazaa theme={theme} />, next: 'loading' },
-    requestJalees:   { render: () => <ScrRequestJalees theme={theme} />, next: 'loading' },
-    requestAcademic: { render: () => <ScrRequestAcademic theme={theme} />, next: 'success' },
-    requestMurafaqa: { render: () => <ScrRequestMurafaqa theme={theme} />, next: 'loading' },
+    requestFazaa:    { render: () => <ScrRequestFazaa theme={theme} />, next: 'payment' },
+    requestJalees:   { render: () => <ScrRequestJalees theme={theme} />, next: 'payment' },
+    requestAcademic: { render: () => <ScrRequestAcademic theme={theme} />, next: 'payment' },
+    requestMurafaqa: { render: () => <ScrRequestMurafaqa theme={theme} />, next: 'payment' },
+
+    payment:       { render: () => <ScrPayment theme={theme} />, next: 'loading' },
+    favorites:     { render: () => <ScrFavorites theme={theme} />, next: 'home' },
+    complaint:     { render: () => <ScrComplaint theme={theme} />, next: 'complaintStatus' },
+    complaintStatus: { render: () => <ScrComplaintStatus theme={theme} />, next: 'home' },
 
     loading:       { render: () => <ScrLoading theme={theme} />, next: 'success', auto: 2200 },
     success:       { render: () => <ScrSuccess theme={theme} />, next: 'tracking' },
@@ -4550,6 +4827,7 @@ const USER_ROUTE_GROUPS = [
     { k: 'requestJalees', l: 'طلب جليس' },
     { k: 'requestAcademic', l: 'طلب أكاديمي' },
     { k: 'requestMurafaqa', l: 'طلب مرافقة' },
+    { k: 'payment', l: 'الدفع' },
   ]},
   { label: 'الحالات', items: [
     { k: 'loading', l: 'بحث' },
@@ -4565,6 +4843,9 @@ const USER_ROUTE_GROUPS = [
   ]},
   { label: 'الحساب', items: [
     { k: 'profile', l: 'حسابي' },
+    { k: 'favorites', l: 'المفضّلون' },
+    { k: 'complaint', l: 'تقديم شكوى' },
+    { k: 'complaintStatus', l: 'حالة الشكاوى' },
     { k: 'settings', l: 'الإعدادات' },
   ]},
 ];
@@ -4685,6 +4966,7 @@ const USER_SCREENS = [
   { sec: 'request', id: 'req-jalees', label: 'Request · Jalees', render: t => <ScrRequestJalees theme={t} /> },
   { sec: 'request', id: 'req-academic', label: 'Request · Academic', render: t => <ScrRequestAcademic theme={t} /> },
   { sec: 'request', id: 'req-murafaqa', label: 'Request · Murafaqa', render: t => <ScrRequestMurafaqa theme={t} /> },
+  { sec: 'request', id: 'payment', label: 'Payment', render: t => <ScrPayment theme={t} /> },
 
   { sec: 'tracking', id: 'track-fazaa', label: 'Tracking · Fazaa', render: t => <ScrTrackingFazaa theme={t} /> },
   { sec: 'tracking', id: 'track-murafaqa', label: 'Tracking · Murafaqa', render: t => <ScrTrackingMurafaqa theme={t} /> },
@@ -4694,6 +4976,9 @@ const USER_SCREENS = [
   { sec: 'account', id: 'profile-a', label: 'Profile · Hero', render: t => <ScrProfileA theme={t} /> },
   { sec: 'account', id: 'profile-b', label: 'Profile · Stats', render: t => <ScrProfileB theme={t} /> },
   { sec: 'account', id: 'profile-c', label: 'Profile · Elder', render: t => <ScrProfileC theme={t} /> },
+  { sec: 'account', id: 'favorites', label: 'المفضّلون', render: t => <ScrFavorites theme={t} /> },
+  { sec: 'account', id: 'complaint', label: 'تقديم شكوى', render: t => <ScrComplaint theme={t} /> },
+  { sec: 'account', id: 'complaint-status', label: 'حالة الشكاوى', render: t => <ScrComplaintStatus theme={t} /> },
   { sec: 'account', id: 'settings', label: 'Settings', render: t => <ScrSettings theme={t} /> },
   { sec: 'account', id: 'rate', label: 'Rate service', render: t => <ScrRateService theme={t} /> },
   { sec: 'account', id: 'reviews', label: 'My reviews', render: t => <ScrReviewsList theme={t} /> },
@@ -4708,9 +4993,9 @@ const USER_SECTIONS = [
   { id: 'auth', title: '01 — Onboarding & Auth', sub: 'Splash, intro, login, profile setup' },
   { id: 'home', title: '02 — Home & Discovery', sub: '3 home variants + browser + notifications' },
   { id: 'services', title: '03 — Service Detail', sub: 'الخدمات الأربع' },
-  { id: 'request', title: '04 — Request Creation', sub: 'تدفقات إنشاء الطلب' },
+  { id: 'request', title: '04 — Request & Payment', sub: 'تدفقات إنشاء الطلب والدفع والكوبون' },
   { id: 'tracking', title: '05 — Tracking & Comms', sub: 'تتبع لحظي، محادثة، اتصال' },
-  { id: 'account', title: '06 — Account & Reviews', sub: 'الحساب، الإعدادات، التقييمات' },
+  { id: 'account', title: '06 — Account & Reviews', sub: 'الحساب، المفضّلون، الشكاوى، الإعدادات، التقييمات' },
   { id: 'states', title: '07 — System States', sub: 'نجاح، خطأ، فارغ، تحميل' },
 ];
 

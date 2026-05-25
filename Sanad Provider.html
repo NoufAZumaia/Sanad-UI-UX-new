@@ -1176,9 +1176,9 @@ function ScrProvHome({ theme: t, online = true }) {
             </div>
             <div style={{ display: 'flex', gap: 14, marginTop: 16, paddingTop: 14, borderTop: '1px solid rgba(255,255,255,0.18)' }}>
               {[
-                { l: 'أرباح اليوم', v: '٤٢٧ ر.س' },
-                { l: 'مهام', v: '٧' },
-                { l: 'تقييم', v: '٤٫٩' },
+                { l: 'مهام اليوم', v: '٧' },
+                { l: 'تقييمي', v: '٤٫٩' },
+                { l: 'نشط منذ', v: '٣ س' },
               ].map((s, i, a) => (
                 <div key={i} style={{ flex: 1, paddingInlineEnd: i < a.length - 1 ? 14 : 0,
                   borderInlineEnd: i < a.length - 1 ? '1px solid rgba(255,255,255,0.18)' : 'none' }}>
@@ -1214,14 +1214,14 @@ function ScrProvHome({ theme: t, online = true }) {
           </div>
         </div>
 
-        {/* shortcuts */}
+        {/* quick actions */}
         <div style={{ padding: '0 16px' }}>
-          <SectionTitle theme={t}>اختصارات</SectionTitle>
+          <SectionTitle theme={t}>وصول سريع</SectionTitle>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
             {[
-              { l: 'الأرباح', i: 'card', c: t.primary, k: 'provEarnings' },
               { l: 'المهام', i: 'list', c: t.accent, k: 'provTask' },
               { l: 'التقييمات', i: 'starFill', c: '#E0A823', k: 'provRatings' },
+              { l: 'حسابي', i: 'user', c: t.primary, k: 'provProfile' },
               { l: 'الإعدادات', i: 'settings', c: t.inkMuted, k: 'provSettings' },
             ].map(q => (
               <button key={q.l} data-tab={q.k} style={{ background: t.surface, border: `1px solid ${t.border}`,
@@ -1329,7 +1329,7 @@ function ProvTabBar({ active = 'home', theme: t }) {
   const items = [
     { k: 'provHome', l: 'الرئيسية', i: 'home', a: 'home' },
     { k: 'provTask', l: 'المهام', i: 'list', a: 'tasks' },
-    { k: 'provEarnings', l: 'الأرباح', i: 'card', a: 'earnings' },
+    { k: 'provRatings', l: 'التقييمات', i: 'starFill', a: 'ratings' },
     { k: 'provProfile', l: 'حسابي', i: 'user', a: 'profile' },
   ];
   return (
@@ -1405,8 +1405,8 @@ function ScrProvNavigation({ theme: t }) {
             display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <SanadIcon name="phone" size={18} color={t.primary} />
           </button>
-          <button style={{ width: 40, height: 40, borderRadius: 12, background: t.bgMuted, border: 'none',
-            display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <button data-tab="provChat" style={{ width: 40, height: 40, borderRadius: 12, background: t.bgMuted, border: 'none',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
             <SanadIcon name="chat" size={18} color={t.primary} />
           </button>
         </div>
@@ -1531,6 +1531,80 @@ function ScrProvComplete({ theme: t }) {
 }
 
 Object.assign(window, { ScrProvNavigation, ScrProvInProgress, ScrProvComplete });
+
+
+/* ===== src-provider/screens-chat.jsx ===== */
+// Sanad PROVIDER — chat with customer
+
+function ScrProvChat({ theme: t }) {
+  t = t || useTheme();
+  const messages = [
+    { from: 'them', text: 'السلام عليكم، هل وصلت للصيدلية؟', time: '١٠:٣٠ ص' },
+    { from: 'me', text: 'وعليكم السلام، نعم أنا في الصيدلية الآن.', time: '١٠:٣١ ص' },
+    { from: 'them', text: 'ممتاز، الدواء باسم سعود عبدالله.', time: '١٠:٣١ ص' },
+    { from: 'me', text: 'فهمت، سأتأكد منه الآن.', time: '١٠:٣٢ ص' },
+    { from: 'them', text: 'شكرًا جزيلًا!', time: '١٠:٣٣ ص' },
+  ];
+  return (
+    <Screen theme={t}>
+      <StatusBar theme={t} />
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '8px 14px',
+        borderBottom: `1px solid ${t.border}`, background: t.surface }}>
+        <div style={{ width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <SanadIcon name={t.dir === 'rtl' ? 'chevR' : 'chevL'} size={20} />
+        </div>
+        <Avatar name="نورا ز" size={38} theme={t} />
+        <div style={{ flex: 1 }}>
+          <div style={{ fontSize: 14, fontWeight: 600 }}>نورا الزهراني</div>
+          <div style={{ fontSize: 11, color: t.inkMuted }}>العميل · طلب #ST-4827</div>
+        </div>
+        <button style={{ width: 38, height: 38, borderRadius: 12, background: t.success + '18', border: 'none',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+          <SanadIcon name="phone" size={17} color={t.success} />
+        </button>
+      </div>
+
+      <div style={{ flex: 1, overflowY: 'auto', padding: '14px 16px', background: t.bgMuted,
+        display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <div style={{ alignSelf: 'center', fontSize: 10.5, color: t.inkSoft, background: t.surface,
+          padding: '4px 12px', borderRadius: 999, marginBottom: 6 }}>اليوم · ١٠:٢٩ ص</div>
+        {messages.map((m, i) => (
+          <div key={i} style={{ display: 'flex', justifyContent: m.from === 'me' ? 'flex-start' : 'flex-end' }}>
+            <div style={{
+              maxWidth: '75%', padding: '10px 14px', borderRadius: 18,
+              borderBottomInlineStart: m.from === 'me' ? 4 : 18,
+              borderBottomInlineEnd: m.from !== 'me' ? 4 : 18,
+              background: m.from === 'me' ? t.primary : t.surface,
+              color: m.from === 'me' ? '#fff' : t.ink,
+              boxShadow: '0 1px 4px rgba(0,0,0,0.06)'
+            }}>
+              <div style={{ fontSize: 13.5, lineHeight: 1.6 }}>{m.text}</div>
+              <div style={{ fontSize: 10, opacity: 0.65, marginTop: 4, textAlign: m.from === 'me' ? 'start' : 'end' }}>{m.time}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div style={{ padding: '10px 14px 26px', background: t.surface, borderTop: `1px solid ${t.border}`,
+        display: 'flex', gap: 10, alignItems: 'flex-end' }}>
+        <button style={{ width: 40, height: 40, borderRadius: 12, background: t.bgMuted, border: `1px solid ${t.border}`,
+          display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, cursor: 'pointer' }}>
+          <SanadIcon name="camera" size={18} color={t.inkMuted} />
+        </button>
+        <div style={{ flex: 1, background: t.bgMuted, border: `1px solid ${t.border}`, borderRadius: 14,
+          padding: '10px 14px', minHeight: 42, display: 'flex', alignItems: 'center' }}>
+          <div style={{ fontSize: 13.5, color: t.inkSoft }}>اكتب رسالة...</div>
+        </div>
+        <div style={{ width: 42, height: 42, borderRadius: 13, background: t.primary,
+          display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, cursor: 'pointer' }}>
+          <SanadIcon name="send" size={18} color="#fff" />
+        </div>
+      </div>
+    </Screen>
+  );
+}
+
+window.ScrProvChat = ScrProvChat;
 
 
 /* ===== src-provider/screens-earnings.jsx ===== */
@@ -3351,9 +3425,9 @@ const PROV_SCREENS = {
   provIncoming:{ c: 'ScrProvIncoming',    next: 'provNavigation',label: '07 Incoming request' },
   provDecline: { c: 'ScrProvDecline',     next: 'provHome',      label: '08 Decline reason' },
   provNavigation:{c:'ScrProvNavigation',  next: 'provInProgress',label: '09 Navigation' },
-  provInProgress:{c:'ScrProvInProgress',  next: 'provComplete',  label: '10 In progress' },
-  provComplete:{ c: 'ScrProvComplete',    next: 'provHome',      label: '11 Complete' },
-  provEarnings:{ c: 'ScrProvEarnings',    next: 'provHome',      label: '12 Earnings' },
+  provChat:    { c: 'ScrProvChat',        next: 'provNavigation',label: '10 Chat with customer' },
+  provInProgress:{c:'ScrProvInProgress',  next: 'provComplete',  label: '11 In progress' },
+  provComplete:{ c: 'ScrProvComplete',    next: 'provHome',      label: '12 Complete' },
   provRatings: { c: 'ScrProvRatings',     next: 'provHome',      label: '13 Ratings' },
   provProfile: { c: 'ScrProvProfile',     next: 'provSettings',  label: '14 Profile' },
   provSettings:{ c: 'ScrProvSettings',    next: 'provHome',      label: '15 Settings' },
@@ -3472,7 +3546,7 @@ function SanadProviderCanvas({ theme }) {
     { id: 'auth', title: 'التسجيل والتفعيل', screens: ['splash', 'login', 'register', 'documents', 'pending'] },
     { id: 'home', title: 'الرئيسية والاتصال', screens: ['provHome', 'provOffline', 'provIncoming', 'provDecline'] },
     { id: 'task', title: 'تنفيذ المهمة', screens: ['provNavigation', 'provInProgress', 'provComplete'] },
-    { id: 'wallet', title: 'الأرباح والتقييمات', screens: ['provEarnings', 'provRatings', 'provTask'] },
+    { id: 'wallet', title: 'التقييمات والتواصل', screens: ['provChat', 'provRatings', 'provTask'] },
     { id: 'account', title: 'الحساب والإعدادات', screens: ['provProfile'] },
   ];
 
