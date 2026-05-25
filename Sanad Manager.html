@@ -415,7 +415,6 @@ function Sidebar({ active, setActive }) {
     { sec: 'العمليات' },
     { id: 'dashboard', label: 'اللوحة الرئيسية', icon: I.dash },
     { id: 'requests',  label: 'الطلبات',         icon: I.list, badge: 18 },
-    { id: 'dispatch',  label: 'الإسناد المباشر', icon: I.shield },
     { sec: 'الناس' },
     { id: 'providers', label: 'المزوّدون',       icon: I.users },
     { id: 'customers', label: 'العملاء',         icon: I.user },
@@ -1605,7 +1604,6 @@ function App() {
   if (openReq) content = <RequestDetail req={openReq} onBack={() => setOpenReq(null)} />;
   else if (page === 'dashboard') content = <Dashboard />;
   else if (page === 'requests')  content = <Requests onOpen={setOpenReq} />;
-  else if (page === 'dispatch')  content = <Dispatch />;
   else if (page === 'providers') content = <Providers />;
   else if (page === 'customers') content = <Customers />;
   else if (page === 'finance')   content = <Finance />;

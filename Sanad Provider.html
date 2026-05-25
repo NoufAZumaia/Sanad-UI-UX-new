@@ -966,17 +966,51 @@ window.PHONE_H = PHONE_H;
 function ScrProvSplash({ theme: t }) {
   t = t || useTheme();
   return (
-    <Screen theme={t} bg={t.surface}>
-      <StatusBar theme={t} />
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 24 }}>
-        <Logo size={120} />
+    <Screen theme={t} bg="#0B5A55" style={{ alignItems: 'center', justifyContent: 'center' }}>
+      <StatusBar theme={t} dark />
+      {/* full-bleed brand gradient */}
+      <div style={{ position: 'absolute', inset: 0,
+        background: 'linear-gradient(160deg, #0F766E 0%, #0B5A55 50%, #063D39 100%)',
+        zIndex: 0 }} />
+      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '55%',
+        background: 'radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.07) 0%, transparent 70%)',
+        zIndex: 1 }} />
+
+      <div style={{ position: 'relative', zIndex: 2, flex: 1, display: 'flex', flexDirection: 'column',
+        alignItems: 'center', justifyContent: 'center', gap: 32, padding: '0 32px' }}>
+        {/* Logo */}
+        <div style={{ width: 140, height: 140, borderRadius: 36,
+          background: 'rgba(255,255,255,0.12)', backdropFilter: 'blur(12px)',
+          border: '1.5px solid rgba(255,255,255,0.22)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          boxShadow: '0 20px 60px rgba(0,0,0,0.25)' }}>
+          <img src="assets/sanad-logo.png" alt="سنــد"
+            style={{ width: 96, height: 96, objectFit: 'contain', filter: 'brightness(0) invert(1)' }} />
+        </div>
+
         <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: 17, fontWeight: 600 }}>سنــد · مقدّم الخدمة</div>
-          <div style={{ fontSize: 13, color: t.inkMuted, marginTop: 6 }}>مساحة عمل المندوبين</div>
+          <div style={{ fontSize: 32, fontWeight: 700, color: '#fff', letterSpacing: '-0.02em', marginBottom: 6 }}>سنــد</div>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.15)',
+            padding: '5px 14px', borderRadius: 999, marginBottom: 10 }}>
+            <div style={{ width: 6, height: 6, borderRadius: 3, background: '#4ADE80' }} />
+            <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.9)', fontWeight: 600 }}>مقدّم الخدمة</div>
+          </div>
+          <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.65)', lineHeight: 1.7 }}>مساحة عمل المندوبين</div>
+        </div>
+
+        {/* loading dots */}
+        <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
+          {[0,1,2].map(i => (
+            <div key={i} style={{ width: 8, height: 8, borderRadius: 4,
+              background: i === 0 ? '#fff' : 'rgba(255,255,255,0.35)' }} />
+          ))}
         </div>
       </div>
-      <div style={{ padding: '0 24px 40px', textAlign: 'center' }}>
-        <div className="mono" style={{ fontSize: 11, color: t.inkSoft, letterSpacing: '0.1em' }}>SANAD PROVIDER · v2.0</div>
+
+      <div style={{ position: 'relative', zIndex: 2, padding: '20px 24px 40px', textAlign: 'center' }}>
+        <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.12em', fontFamily: 'IBM Plex Mono, monospace' }}>
+          SANAD PROVIDER · v2.0
+        </div>
       </div>
     </Screen>
   );
@@ -1053,6 +1087,16 @@ function ScrProvRegister({ theme: t }) {
 
 function ScrProvDocuments({ theme: t }) {
   t = t || useTheme();
+  const docs = [
+    { l: 'صورة الهوية الوطنية', sub: 'الوجهان — صورة واضحة', req: true,  st: 'done',    c: t.success },
+    { l: 'رخصة القيادة',        sub: 'سارية المفعول',         req: true,  st: 'done',    c: t.success },
+    { l: 'رخصة العمل',          sub: 'صادرة من الجهة المختصة', req: true, st: 'pending', c: t.warn },
+    { l: 'السيرة الذاتية (CV)', sub: 'PDF · حتى ٥ م.ب',       req: true,  st: 'pending', c: t.warn },
+    { l: 'الشهادات والمؤهلات',  sub: 'دبلوم، بكالوريوس، أو دورات معتمدة', req: false, st: 'optional', c: t.inkSoft },
+    { l: 'وثائق داعمة',        sub: 'أي مستندات إضافية تدعم طلبك', req: false, st: 'optional', c: t.inkSoft },
+    { l: 'استمارة السيارة',    sub: 'للخدمات التي تتطلب تنقلاً',   req: false, st: 'optional', c: t.inkSoft },
+  ];
+  const stLabel = { done: 'تم الرفع', pending: 'بانتظار الرفع', optional: 'اختياري' };
   return (
     <Screen theme={t}>
       <StatusBar theme={t} />
@@ -1061,28 +1105,81 @@ function ScrProvDocuments({ theme: t }) {
         <StepBar theme={t} steps={4} active={2} />
         <div style={{ fontSize: 12, color: t.inkSoft, marginTop: 8 }}>الخطوة ٣ من ٤ · الوثائق المطلوبة</div>
       </div>
-      <div style={{ flex: 1, padding: '16px 24px', display: 'flex', flexDirection: 'column', gap: 12, overflowY: 'auto' }}>
-        {[
-          { l: 'صورة الهوية الوطنية', st: 'تم الرفع', c: t.success },
-          { l: 'رخصة القيادة', st: 'تم الرفع', c: t.success },
-          { l: 'استمارة السيارة', st: 'بانتظار الرفع', c: t.warn },
-          { l: 'شهادة عدم محكومية', st: 'اختياري', c: t.inkSoft },
-        ].map((d, i) => (
-          <Card key={i} theme={t} padding={14} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <div style={{ width: 40, height: 40, borderRadius: 10, background: d.c + '18', color: d.c,
-              display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <SanadIcon name="doc" size={20} />
-            </div>
-            <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 13.5, fontWeight: 600 }}>{d.l}</div>
-              <div style={{ fontSize: 11.5, color: d.c, fontWeight: 500 }}>{d.st}</div>
-            </div>
-            <Button theme={t} variant="surface" size="sm">{d.st === 'تم الرفع' ? 'تعديل' : 'رفع'}</Button>
-          </Card>
+
+      <div style={{ flex: 1, overflowY: 'auto', padding: '14px 20px 110px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+        {/* progress bar */}
+        <Card theme={t} padding={14} style={{ marginBottom: 4 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
+            <div style={{ fontSize: 12.5, fontWeight: 500 }}>تقدّم رفع الوثائق</div>
+            <div style={{ fontSize: 12, color: t.primary, fontWeight: 600 }}>٢ / ٤ مطلوبة</div>
+          </div>
+          <div style={{ height: 6, background: t.bgMuted, borderRadius: 3 }}>
+            <div style={{ height: '100%', width: '50%', background: `linear-gradient(90deg, ${t.primary} 0%, ${t.success} 100%)`, borderRadius: 3 }} />
+          </div>
+        </Card>
+
+        <div style={{ fontSize: 11.5, fontWeight: 600, color: t.inkSoft, paddingInlineStart: 4, marginTop: 4 }}>مطلوبة</div>
+        {docs.filter(d => d.req).map((d, i) => (
+          <DocUploadCard key={i} doc={d} theme={t} stLabel={stLabel} />
         ))}
-        <Button full theme={t} variant="primary" size="lg" style={{ marginTop: 8 }}>إرسال للمراجعة</Button>
+
+        <div style={{ fontSize: 11.5, fontWeight: 600, color: t.inkSoft, paddingInlineStart: 4, marginTop: 8 }}>اختيارية</div>
+        {docs.filter(d => !d.req).map((d, i) => (
+          <DocUploadCard key={i} doc={d} theme={t} stLabel={stLabel} />
+        ))}
+      </div>
+
+      <div style={{ position: 'absolute', bottom: 0, insetInlineStart: 0, insetInlineEnd: 0,
+        padding: '14px 20px 26px', background: t.surface, borderTop: `1px solid ${t.border}` }}>
+        <Button full theme={t} variant="primary" size="lg">إرسال للمراجعة</Button>
       </div>
     </Screen>
+  );
+}
+
+function DocUploadCard({ doc: d, theme: t, stLabel }) {
+  const [fileName, setFileName] = React.useState(d.st === 'done' ? 'ملف_مرفوع.pdf' : null);
+  return (
+    <Card theme={t} padding={0} style={{ overflow: 'hidden' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: 14 }}>
+        <div style={{ width: 42, height: 42, borderRadius: 12, background: d.c + '18', color: d.c,
+          display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+          <SanadIcon name="doc" size={22} />
+        </div>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontSize: 13.5, fontWeight: 600 }}>{d.l}</div>
+          <div style={{ fontSize: 11.5, color: t.inkSoft, marginTop: 2 }}>{d.sub}</div>
+          {fileName && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 6,
+              padding: '4px 10px', background: t.success + '14', borderRadius: 8, width: 'fit-content' }}>
+              <SanadIcon name="check" size={12} color={t.success} strokeWidth={2.5} />
+              <span style={{ fontSize: 11, color: t.success, fontWeight: 500 }}>{fileName}</span>
+            </div>
+          )}
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 6, alignItems: 'flex-end' }}>
+          <Tag theme={t} color={d.c} soft={d.c + '18'} style={{ fontSize: 10.5 }}>{stLabel[d.st]}</Tag>
+        </div>
+      </div>
+      <div style={{ borderTop: `1px solid ${t.border}`, padding: '10px 14px', display: 'flex', gap: 8 }}>
+        <button
+          onClick={() => setFileName(d.l.includes('CV') ? 'CV_محمد_العتيبي.pdf' : d.l.includes('رخصة العمل') ? 'work_license.pdf' : d.l.includes('شهادات') ? 'certificates.pdf' : 'document.pdf')}
+          style={{ flex: 1, padding: '9px 12px', border: `1.5px dashed ${t.border}`, borderRadius: 10,
+            background: 'transparent', fontFamily: 'inherit', cursor: 'pointer',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+            color: t.primary, fontSize: 12.5, fontWeight: 500 }}>
+          <SanadIcon name="paperclip" size={14} color={t.primary} />
+          {fileName ? 'استبدال الملف' : 'اختر ملفًا أو صورة'}
+        </button>
+        <button style={{ padding: '9px 12px', border: `1px solid ${t.border}`, borderRadius: 10,
+          background: 'transparent', fontFamily: 'inherit', cursor: 'pointer',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+          color: t.inkMuted, fontSize: 12.5 }}>
+          <SanadIcon name="camera" size={14} color={t.inkMuted} />
+          كاميرا
+        </button>
+      </div>
+    </Card>
   );
 }
 

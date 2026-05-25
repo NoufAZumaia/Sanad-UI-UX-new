@@ -968,17 +968,46 @@ window.PHONE_H = PHONE_H;
 function ScrSplash({ theme: t }) {
   t = t || useTheme();
   return (
-    <Screen theme={t} bg={t.surface} style={{ alignItems: 'center', justifyContent: 'center' }}>
-      <StatusBar theme={t} />
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 28 }}>
-        <Logo size={120} />
-        <div style={{ textAlign: 'center', maxWidth: 280 }}>
-          <div style={{ fontSize: 17, fontWeight: 600, color: t.ink, marginBottom: 6 }}>سنــد</div>
-          <div style={{ fontSize: 14, color: t.inkMuted, lineHeight: 1.6 }}>رفقة تسندك في كل خطوة</div>
+    <Screen theme={t} bg="#0F766E" style={{ alignItems: 'center', justifyContent: 'center' }}>
+      <StatusBar theme={t} dark />
+      {/* full-bleed brand gradient */}
+      <div style={{ position: 'absolute', inset: 0,
+        background: 'linear-gradient(160deg, #0F766E 0%, #0B5A55 55%, #063D39 100%)',
+        zIndex: 0 }} />
+      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '55%',
+        background: 'radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.08) 0%, transparent 70%)',
+        zIndex: 1 }} />
+
+      <div style={{ position: 'relative', zIndex: 2, flex: 1, display: 'flex', flexDirection: 'column',
+        alignItems: 'center', justifyContent: 'center', gap: 32, padding: '0 32px' }}>
+        {/* Logo */}
+        <div style={{ width: 140, height: 140, borderRadius: 36,
+          background: 'rgba(255,255,255,0.12)', backdropFilter: 'blur(12px)',
+          border: '1.5px solid rgba(255,255,255,0.22)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          boxShadow: '0 20px 60px rgba(0,0,0,0.25)' }}>
+          <img src="assets/sanad-logo.png" alt="سنــد"
+            style={{ width: 96, height: 96, objectFit: 'contain', filter: 'brightness(0) invert(1)' }} />
+        </div>
+
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontSize: 32, fontWeight: 700, color: '#fff', letterSpacing: '-0.02em', marginBottom: 10 }}>سنــد</div>
+          <div style={{ fontSize: 15, color: 'rgba(255,255,255,0.75)', lineHeight: 1.7 }}>رفقة تسندك في كل خطوة</div>
+        </div>
+
+        {/* loading dots */}
+        <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
+          {[0,1,2].map(i => (
+            <div key={i} style={{ width: 8, height: 8, borderRadius: 4,
+              background: i === 0 ? '#fff' : 'rgba(255,255,255,0.4)' }} />
+          ))}
         </div>
       </div>
-      <div style={{ padding: '28px 24px 40px', textAlign: 'center' }}>
-        <div className="mono" style={{ fontSize: 11, color: t.inkSoft, letterSpacing: '0.1em' }}>الإصدار ٢٫٠٫٠</div>
+
+      <div style={{ position: 'relative', zIndex: 2, padding: '20px 24px 40px', textAlign: 'center' }}>
+        <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.45)', letterSpacing: '0.12em', fontFamily: 'IBM Plex Mono, monospace' }}>
+          الإصدار ٢٫٠٫٠
+        </div>
       </div>
     </Screen>
   );
