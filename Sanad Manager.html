@@ -887,8 +887,85 @@ function RequestDetail({ req, onBack }) {
 // ───── Providers ─────
 function Providers() {
   const [tab, setTab] = useState('active');
+  const [blockTarget, setBlockTarget] = useState(null);
+  const [blockReason, setBlockReason] = useState('');
+  const [blockedIds, setBlockedIds] = useState(new Set());
+  const [toast, setToast] = useState(null);
+
+  function confirmBlock() {
+    if (!blockTarget) return;
+    setBlockedIds(prev => new Set([...prev, blockTarget.id]));
+    setToast(`تم حظر ${blockTarget.name} بنجاح`);
+    setBlockTarget(null);
+    setBlockReason('');
+    setTimeout(() => setToast(null), 3500);
+  }
+
   return (
     <>
+      {/* success toast */}
+      {toast && (
+        <div style={{ position: 'fixed', top: 20, insetInlineEnd: 20, zIndex: 9999,
+          background: '#fff', border: '1px solid var(--success)', borderRadius: 12,
+          padding: '12px 18px', boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
+          display: 'flex', alignItems: 'center', gap: 10, fontSize: 14, fontWeight: 500 }}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--success)"
+            strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+          {toast}
+        </div>
+      )}
+
+      {/* block confirmation modal */}
+      {blockTarget && (
+        <div onClick={() => { setBlockTarget(null); setBlockReason(''); }}
+          style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.45)', zIndex: 1000,
+            display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
+          <div onClick={e => e.stopPropagation()}
+            style={{ background: '#fff', borderRadius: 20, padding: 28, width: '100%', maxWidth: 440,
+              boxShadow: '0 20px 60px rgba(0,0,0,0.2)' }}>
+            <div style={{ textAlign: 'center', marginBottom: 20 }}>
+              <div style={{ width: 56, height: 56, borderRadius: 28,
+                background: 'var(--danger-soft)', display: 'flex', alignItems: 'center',
+                justifyContent: 'center', margin: '0 auto 14px' }}>
+                {I.block}
+              </div>
+              <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>حظر مقدم الخدمة</div>
+              <div style={{ fontSize: 14, color: 'var(--ink-2)', lineHeight: 1.65 }}>
+                هل أنت متأكد من حظر هذا مقدم الخدمة؟<br />
+                سيتم إيقاف ظهوره للمستخدمين مؤقتًا.
+              </div>
+              <div style={{ marginTop: 8, padding: '6px 14px', background: 'var(--bg)',
+                borderRadius: 8, display: 'inline-block', fontSize: 13, fontWeight: 600 }}>
+                {blockTarget.name} · {blockTarget.id}
+              </div>
+            </div>
+            <div style={{ marginBottom: 16 }}>
+              <label style={{ display: 'block', fontSize: 13, fontWeight: 600,
+                color: 'var(--ink-2)', marginBottom: 6 }}>سبب الحظر</label>
+              <select value={blockReason} onChange={e => setBlockReason(e.target.value)}
+                style={{ width: '100%', padding: '10px 12px', borderRadius: 10,
+                  border: '1.5px solid var(--border)', background: 'var(--bg)',
+                  fontSize: 14, fontFamily: 'inherit', color: 'var(--ink)' }}>
+                <option value="">اختر سببًا...</option>
+                <option>سلوك غير لائق مع العميل</option>
+                <option>مخالفة شروط الخدمة</option>
+                <option>تقييمات سلبية متكررة</option>
+                <option>طلب العميل</option>
+                <option>مراجعة داخلية</option>
+              </select>
+            </div>
+            <div style={{ display: 'flex', gap: 10 }}>
+              <button className="btn" style={{ flex: 1 }}
+                onClick={() => { setBlockTarget(null); setBlockReason(''); }}>إلغاء</button>
+              <button className="btn" style={{ flex: 1, background: 'var(--danger)',
+                color: '#fff', borderColor: 'var(--danger)' }} onClick={confirmBlock}>تأكيد الحظر</button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <Topbar
         crumb="الناس"
         title="المزوّدون"
@@ -942,38 +1019,62 @@ function Providers() {
               </tr>
             </thead>
             <tbody>
-              {PROVIDERS.map(p => (
-                <tr key={p.id}>
-                  <td>
-                    <div className="who">
-                      <div className="av">{p.av}</div>
-                      <div>
-                        <div className="name">{p.name} {p.verified && <span title="موثق" style={{ color: 'var(--success)', marginInlineStart: 4 }}>✓</span>}</div>
-                        <div className="meta">{p.id}</div>
+              {PROVIDERS.map(p => {
+                const isBlocked = blockedIds.has(p.id);
+                return (
+                  <tr key={p.id} style={{ opacity: isBlocked ? 0.6 : 1 }}>
+                    <td>
+                      <div className="who">
+                        <div className="av">{p.av}</div>
+                        <div>
+                          <div className="name">
+                            {p.name}
+                            {p.verified && <span title="موثق" style={{ color: 'var(--success)', marginInlineStart: 4 }}>✓</span>}
+                            {isBlocked && (
+                              <span style={{ marginInlineStart: 6, fontSize: 10, fontWeight: 700,
+                                color: 'var(--danger)', background: 'var(--danger-soft)',
+                                padding: '2px 7px', borderRadius: 99, verticalAlign: 'middle' }}>محظور</span>
+                            )}
+                          </div>
+                          <div className="meta">{p.id}</div>
+                        </div>
                       </div>
-                    </div>
-                  </td>
-                  <td>
-                    <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                      {p.svc.map(s => <SvcTag key={s} svc={s} />)}
-                    </div>
-                  </td>
-                  <td>{p.city}</td>
-                  <td className="num">★ {p.rating}</td>
-                  <td className="num">{fmt(p.jobs)}</td>
-                  <td><Pill kind={p.status}>{p.status === 'on' ? 'متصل' : 'غير متصل'}</Pill></td>
-                  <td style={{ color: 'var(--ink-3)' }}>{p.joined}</td>
-                  <td>
-                    <div style={{ display: 'flex', gap: 6 }}>
-                      <button className="btn sm">عرض</button>
-                      <button className="btn sm" style={{ color: 'var(--danger)', borderColor: 'var(--danger-soft)', background: 'var(--danger-soft)' }}
-                        title="حجب المزوّد">
-                        {I.block}
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+                    </td>
+                    <td>
+                      <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                        {p.svc.map(s => <SvcTag key={s} svc={s} />)}
+                      </div>
+                    </td>
+                    <td>{p.city}</td>
+                    <td className="num">★ {p.rating}</td>
+                    <td className="num">{fmt(p.jobs)}</td>
+                    <td>
+                      {isBlocked
+                        ? <Pill kind="off">محظور</Pill>
+                        : <Pill kind={p.status}>{p.status === 'on' ? 'متصل' : 'غير متصل'}</Pill>
+                      }
+                    </td>
+                    <td style={{ color: 'var(--ink-3)' }}>{p.joined}</td>
+                    <td>
+                      <div style={{ display: 'flex', gap: 6 }}>
+                        <button className="btn sm">عرض</button>
+                        {isBlocked ? (
+                          <button className="btn sm"
+                            onClick={() => setBlockedIds(prev => { const n = new Set(prev); n.delete(p.id); return n; })}
+                            style={{ fontSize: 11 }}>رفع الحظر</button>
+                        ) : (
+                          <button className="btn sm"
+                            style={{ color: 'var(--danger)', borderColor: 'var(--danger-soft)', background: 'var(--danger-soft)' }}
+                            title="حظر مقدم الخدمة"
+                            onClick={() => { setBlockTarget(p); setBlockReason(''); }}>
+                            {I.block} <span style={{ fontSize: 11, marginInlineStart: 4 }}>حظر</span>
+                          </button>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
