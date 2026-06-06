@@ -2285,6 +2285,87 @@ function ScrComplaintStatus({ theme: t }) {
 window.ScrComplaint = ScrComplaint;
 window.ScrComplaintStatus = ScrComplaintStatus;
 
+function ScrSupport({ theme: t }) {
+  t = t || useTheme();
+  const [sent, setSent] = useState(false);
+
+  if (sent) return (
+    <Screen theme={t}>
+      <StatusBar theme={t} />
+      <TopBar theme={t} title="الدعم والمساعدة" />
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 32, gap: 14 }}>
+        <div style={{ width: 72, height: 72, borderRadius: 36, background: t.success + '18',
+          display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <SanadIcon name="checkCircle" size={36} color={t.success} />
+        </div>
+        <div style={{ fontSize: 18, fontWeight: 700 }}>تم إرسال رسالتك</div>
+        <div style={{ fontSize: 13, color: t.inkMuted, textAlign: 'center', lineHeight: 1.8 }}>
+          سيتواصل معك فريق الدعم خلال ٢٤ ساعة<br />عبر الرقم المسجّل في حسابك.
+        </div>
+        <Button full theme={t} variant="primary" size="lg" style={{ marginTop: 10 }}
+          onClick={() => setSent(false)}>العودة للدعم</Button>
+      </div>
+    </Screen>
+  );
+
+  return (
+    <Screen theme={t}>
+      <StatusBar theme={t} />
+      <TopBar theme={t} title="الدعم والمساعدة" />
+      <div style={{ flex: 1, overflowY: 'auto', padding: '16px 18px 32px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <SectionTitle theme={t}>تواصل معنا</SectionTitle>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+          {[
+            { i: 'phone', l: 'اتصل بنا',            d: '920 XXX XXX',         c: t.success },
+            { i: 'chat',  l: 'واتساب',               d: 'متاح ٨ص – ١٠م',      c: '#22C55E' },
+            { i: 'globe', l: 'البريد الإلكتروني',    d: 'support@sanad.sa',    c: t.primary },
+            { i: 'doc',   l: 'تقديم شكوى',           d: 'تتبّع حالة طلبك',     c: t.warn },
+          ].map((r, i) => (
+            <Card key={i} theme={t} padding={14} style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              <div style={{ width: 40, height: 40, borderRadius: 12, background: r.c + '15',
+                display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <SanadIcon name={r.i} size={20} color={r.c} />
+              </div>
+              <div style={{ fontSize: 13, fontWeight: 600 }}>{r.l}</div>
+              <div style={{ fontSize: 11, color: t.inkMuted, lineHeight: 1.5 }}>{r.d}</div>
+            </Card>
+          ))}
+        </div>
+
+        <SectionTitle theme={t}>أسئلة شائعة</SectionTitle>
+        <Card theme={t} padding={0} style={{ overflow: 'hidden' }}>
+          {[
+            'كيف أتتبّع طلبي الحالي؟',
+            'ما سياسة الإلغاء واسترداد المبلغ؟',
+            'كيف أُعيد جدولة موعد مع المرافق؟',
+            'كيف أُقيّم مقدّم الخدمة بعد الانتهاء؟',
+          ].map((q, i, a) => (
+            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '13px 16px',
+              borderBottom: i < a.length - 1 ? `1px solid ${t.border}` : 'none' }}>
+              <div style={{ flex: 1, fontSize: 13.5 }}>{q}</div>
+              <SanadIcon name={t.dir === 'rtl' ? 'chevL' : 'chevR'} size={16} color={t.inkSoft} />
+            </div>
+          ))}
+        </Card>
+
+        <SectionTitle theme={t}>أرسل رسالة</SectionTitle>
+        <Card theme={t} padding={16} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <Field theme={t} label="الموضوع" placeholder="مثال: مشكلة في حالة الطلب" />
+          <div>
+            <div style={{ fontSize: 12.5, color: t.inkMuted, marginBottom: 6, fontWeight: 500 }}>تفاصيل المشكلة</div>
+            <textarea placeholder="اكتب تفاصيل مشكلتك هنا..."
+              style={{ width: '100%', minHeight: 90, padding: '10px 12px', borderRadius: t.radius.field,
+                border: `1.5px solid ${t.border}`, background: t.bgMuted, resize: 'none',
+                fontSize: 13, fontFamily: 'inherit', color: t.ink, outline: 'none' }} />
+          </div>
+          <Button full theme={t} variant="primary" size="lg" onClick={() => setSent(true)}>إرسال الرسالة</Button>
+        </Card>
+      </div>
+    </Screen>
+  );
+}
+window.ScrSupport = ScrSupport;
+
 
 /* ===== src/screens-tracking.jsx ===== */
 // Sanad — tracking, notifications, chat, voice call
@@ -2292,6 +2373,7 @@ window.ScrComplaintStatus = ScrComplaintStatus;
 function ScrTrackingFazaa({ theme: t }) {
   t = t || useTheme();
   const s = window.SanadTokens.SERVICES.fazaa;
+  const [blockState, setBlockState] = useState(null);
   return (
     <Screen theme={t} bg={t.surface}>
       <StatusBar theme={t} />
@@ -2336,7 +2418,7 @@ function ScrTrackingFazaa({ theme: t }) {
             ))}
           </div>
 
-          {/* driver */}
+          {/* driver card */}
           <div style={{ background: t.surface2, border: `1px solid ${t.border}`, borderRadius: 18, padding: 12,
             display: 'flex', alignItems: 'center', gap: 12 }}>
             <Avatar name="أحمد م" size={44} color={s.color} theme={t} />
@@ -2344,7 +2426,7 @@ function ScrTrackingFazaa({ theme: t }) {
               <div style={{ fontSize: 14, fontWeight: 600 }}>أحمد العتيبي</div>
               <div style={{ fontSize: 11.5, color: t.inkMuted }}>تويوتا كامري · أ ب ج ١٢٣٤</div>
             </div>
-            <div style={{ width: 40, height: 40, borderRadius: 14, background: s.color, color: '#fff',
+            <div style={{ width: 40, height: 40, borderRadius: 14, background: s.color,
               display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <SanadIcon name="phone" size={18} color="#fff" />
             </div>
@@ -2352,8 +2434,57 @@ function ScrTrackingFazaa({ theme: t }) {
               display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <SanadIcon name="chat" size={18} color={t.ink} />
             </div>
+            <button onClick={(e) => { e.stopPropagation(); setBlockState('confirm'); }}
+              style={{ width: 40, height: 40, borderRadius: 14, background: t.danger + '12', border: `1.5px solid ${t.danger}30`,
+                display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0 }}>
+              <SanadIcon name="alert" size={18} color={t.danger} />
+            </button>
           </div>
         </div>
+
+        {/* success banner */}
+        {blockState === 'done' && (
+          <div style={{ position: 'absolute', top: 60, left: 16, right: 16, background: t.success + '15',
+            border: `1px solid ${t.success}`, borderRadius: 14, padding: '12px 16px',
+            display: 'flex', alignItems: 'center', gap: 10, zIndex: 99 }}>
+            <SanadIcon name="checkCircle" size={20} color={t.success} />
+            <div style={{ fontSize: 13, color: t.success, fontWeight: 500, flex: 1 }}>
+              تم استلام بلاغك. سيتواصل معك فريق سند قريبًا.
+            </div>
+            <button onClick={(e) => { e.stopPropagation(); setBlockState(null); }}
+              style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
+              <SanadIcon name="close" size={16} color={t.success} />
+            </button>
+          </div>
+        )}
+
+        {/* block confirmation modal */}
+        {blockState === 'confirm' && (
+          <div onClick={() => setBlockState(null)}
+            style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.45)',
+              display: 'flex', alignItems: 'flex-end', zIndex: 100 }}>
+            <div onClick={e => e.stopPropagation()}
+              style={{ width: '100%', background: t.surface, borderTopLeftRadius: 24, borderTopRightRadius: 24,
+                padding: '20px 22px 34px' }}>
+              <div style={{ width: 48, height: 4, borderRadius: 2, background: t.bgMuted, margin: '0 auto 20px' }} />
+              <div style={{ textAlign: 'center', marginBottom: 20 }}>
+                <div style={{ width: 64, height: 64, borderRadius: 32, background: t.danger + '15',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 14px' }}>
+                  <SanadIcon name="alert" size={28} color={t.danger} />
+                </div>
+                <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 8 }}>الإبلاغ عن مقدّم الخدمة</div>
+                <div style={{ fontSize: 13, color: t.inkMuted, lineHeight: 1.7 }}>
+                  سيتم مراجعة البلاغ من قِبَل فريق سند والتواصل معك خلال ٢٤ ساعة.
+                </div>
+              </div>
+              <Button full theme={t} variant="primary" size="lg"
+                style={{ background: t.danger, marginBottom: 10 }}
+                onClick={(e) => { e.stopPropagation(); setBlockState('done'); }}>تأكيد الإبلاغ</Button>
+              <Button full theme={t} variant="ghost" size="lg"
+                onClick={(e) => { e.stopPropagation(); setBlockState(null); }}>إلغاء</Button>
+            </div>
+          </div>
+        )}
       </div>
     </Screen>
   );
@@ -2362,6 +2493,7 @@ function ScrTrackingFazaa({ theme: t }) {
 function ScrTrackingMurafaqa({ theme: t }) {
   t = t || useTheme();
   const s = window.SanadTokens.SERVICES.murafaqa;
+  const [blockState, setBlockState] = useState(null);
   return (
     <Screen theme={t}>
       <StatusBar theme={t} />
@@ -2414,8 +2546,48 @@ function ScrTrackingMurafaqa({ theme: t }) {
           <div style={{ display: 'flex', gap: 8 }}>
             <Button theme={t} variant="surface" size="sm" icon="chat" full>محادثة</Button>
             <Button theme={t} variant="primary" size="sm" icon="phone" full style={{ background: s.color }}>اتصال</Button>
+            <button onClick={(e) => { e.stopPropagation(); setBlockState('confirm'); }}
+              style={{ padding: '0 12px', borderRadius: t.radius.btn || 12, background: t.danger + '12',
+                border: `1.5px solid ${t.danger}30`, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}>
+              <SanadIcon name="alert" size={15} color={t.danger} />
+              <span style={{ fontSize: 11.5, color: t.danger, fontWeight: 600 }}>إبلاغ</span>
+            </button>
           </div>
         </Card>
+
+        {blockState === 'confirm' && (
+          <div onClick={() => setBlockState(null)}
+            style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.45)',
+              display: 'flex', alignItems: 'flex-end', zIndex: 100 }}>
+            <div onClick={e => e.stopPropagation()}
+              style={{ width: '100%', background: t.surface, borderTopLeftRadius: 24, borderTopRightRadius: 24,
+                padding: '20px 22px 34px' }}>
+              <div style={{ width: 48, height: 4, borderRadius: 2, background: t.bgMuted, margin: '0 auto 20px' }} />
+              <div style={{ textAlign: 'center', marginBottom: 20 }}>
+                <div style={{ width: 64, height: 64, borderRadius: 32, background: t.danger + '15',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 14px' }}>
+                  <SanadIcon name="alert" size={28} color={t.danger} />
+                </div>
+                <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 8 }}>الإبلاغ عن مقدّم الخدمة</div>
+                <div style={{ fontSize: 13, color: t.inkMuted, lineHeight: 1.7 }}>
+                  سيتم مراجعة البلاغ من قِبَل فريق سند والتواصل معك خلال ٢٤ ساعة.
+                </div>
+              </div>
+              <Button full theme={t} variant="primary" size="lg"
+                style={{ background: t.danger, marginBottom: 10 }}
+                onClick={(e) => { e.stopPropagation(); setBlockState('done'); }}>تأكيد الإبلاغ</Button>
+              <Button full theme={t} variant="ghost" size="lg"
+                onClick={(e) => { e.stopPropagation(); setBlockState(null); }}>إلغاء</Button>
+            </div>
+          </div>
+        )}
+        {blockState === 'done' && (
+          <Card theme={t} padding={14} style={{ background: t.success + '12', borderColor: t.success,
+            display: 'flex', alignItems: 'center', gap: 10, marginTop: 14 }}>
+            <SanadIcon name="checkCircle" size={20} color={t.success} />
+            <div style={{ fontSize: 13, color: t.success, fontWeight: 500 }}>تم استلام بلاغك. سيتواصل معك فريق سند قريبًا.</div>
+          </Card>
+        )}
       </div>
     </Screen>
   );
@@ -2675,6 +2847,7 @@ function ScrProfileA({ theme: t }) {
               { i: 'heart', l: 'المفضّلون', d: '٣ مزوّدين', c: '#E0A823' },
               { i: 'pin', l: 'العناوين', d: 'البيت، العمل', c: t.primary },
               { i: 'doc', l: 'شكاواي', d: 'عرض حالة شكاواك', c: t.danger },
+              { i: 'phone', l: 'تواصل مع الدعم', d: 'مساعدة فورية', c: t.success },
             ].map((r, i, a) => (
               <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 16px',
                 borderBottom: i < a.length - 1 ? `1px solid ${t.border}` : 'none' }}>
@@ -4815,6 +4988,7 @@ function makeUserRoutes(theme) {
     favorites:     { render: () => <ScrFavorites theme={theme} />, next: 'home' },
     complaint:     { render: () => <ScrComplaint theme={theme} />, next: 'complaintStatus' },
     complaintStatus: { render: () => <ScrComplaintStatus theme={theme} />, next: 'home' },
+    support:       { render: () => <ScrSupport theme={theme} />, next: 'home' },
 
     loading:       { render: () => <ScrLoading theme={theme} />, next: 'success', auto: 2200 },
     success:       { render: () => <ScrSuccess theme={theme} />, next: 'tracking' },
@@ -4875,6 +5049,7 @@ const USER_ROUTE_GROUPS = [
     { k: 'favorites', l: 'المفضّلون' },
     { k: 'complaint', l: 'تقديم شكوى' },
     { k: 'complaintStatus', l: 'حالة الشكاوى' },
+    { k: 'support', l: 'تواصل مع الدعم' },
     { k: 'settings', l: 'الإعدادات' },
   ]},
 ];
@@ -5008,6 +5183,7 @@ const USER_SCREENS = [
   { sec: 'account', id: 'favorites', label: 'المفضّلون', render: t => <ScrFavorites theme={t} /> },
   { sec: 'account', id: 'complaint', label: 'تقديم شكوى', render: t => <ScrComplaint theme={t} /> },
   { sec: 'account', id: 'complaint-status', label: 'حالة الشكاوى', render: t => <ScrComplaintStatus theme={t} /> },
+  { sec: 'account', id: 'support', label: 'تواصل مع الدعم', render: t => <ScrSupport theme={t} /> },
   { sec: 'account', id: 'settings', label: 'Settings', render: t => <ScrSettings theme={t} /> },
   { sec: 'account', id: 'rate', label: 'Rate service', render: t => <ScrRateService theme={t} /> },
   { sec: 'account', id: 'reviews', label: 'My reviews', render: t => <ScrReviewsList theme={t} /> },
@@ -5072,6 +5248,7 @@ function NavigationHeader({ currentPage, theme }) {
     { key: 'user', label: 'Sanad User', file: 'Sanad User.html' },
     { key: 'manager', label: 'Sanad Manager', file: 'Sanad Manager.html' },
     { key: 'mvp', label: 'MVP', file: 'MVP.html' },
+    { key: 'website', label: 'Website', file: 'Sanad Website.html' },
   ];
 
   return (

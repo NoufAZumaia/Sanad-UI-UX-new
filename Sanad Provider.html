@@ -1925,9 +1925,10 @@ function ScrProvProfile({ theme: t }) {
               { l: 'أوقات التوفر', s: 'يوميًا ٧ص–١٠م', i: 'clock' },
               { l: 'الحساب البنكي', s: 'البنك الأهلي ••• ٤٢٧٨', i: 'card' },
               { l: 'الإشعارات', s: 'مفعّلة', i: 'bell' },
-              { l: 'الدعم والمساعدة', s: '', i: 'chat' },
+              { l: 'الدعم والمساعدة', s: 'تواصل مع الدعم', i: 'chat', tab: 'provSupport' },
             ].map((r, i, a) => (
-              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: 14,
+              <div key={i} data-tab={r.tab || undefined}
+                style={{ display: 'flex', alignItems: 'center', gap: 12, padding: 14,
                 borderBottom: i < a.length - 1 ? `1px solid ${t.border}` : 'none' }}>
                 <div style={{ width: 36, height: 36, borderRadius: 10, background: t.bgMuted, color: t.primary,
                   display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -1949,6 +1950,88 @@ function ScrProvProfile({ theme: t }) {
 }
 
 function ScrProvSettings({ theme: t }) { return ScrProvProfile({ theme: t }); }
+
+function ScrProvSupport({ theme: t }) {
+  t = t || useTheme();
+  const [sent, setSent] = useState(false);
+
+  if (sent) return (
+    <Screen theme={t}>
+      <StatusBar theme={t} />
+      <TopBar theme={t} title="الدعم والمساعدة" />
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 32, gap: 14 }}>
+        <div style={{ width: 72, height: 72, borderRadius: 36, background: t.success + '18',
+          display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <SanadIcon name="checkCircle" size={36} color={t.success} />
+        </div>
+        <div style={{ fontSize: 18, fontWeight: 700 }}>تم إرسال رسالتك</div>
+        <div style={{ fontSize: 13, color: t.inkMuted, textAlign: 'center', lineHeight: 1.8 }}>
+          سيتواصل معك فريق دعم مقدّمي الخدمة<br />خلال ٢٤ ساعة عبر الرقم المسجّل.
+        </div>
+        <Button full theme={t} variant="primary" size="lg" style={{ marginTop: 10 }}
+          onClick={() => setSent(false)}>العودة للدعم</Button>
+      </div>
+    </Screen>
+  );
+
+  return (
+    <Screen theme={t}>
+      <StatusBar theme={t} />
+      <TopBar theme={t} title="الدعم والمساعدة" />
+      <div style={{ flex: 1, overflowY: 'auto', padding: '16px 18px 32px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+
+        <SectionTitle theme={t}>تواصل مع الدعم</SectionTitle>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+          {[
+            { i: 'phone', l: 'اتصل بنا',         d: '920 XXX XXX',       c: t.success },
+            { i: 'chat',  l: 'واتساب',            d: 'متاح ٨ص – ١٠م',    c: '#22C55E' },
+            { i: 'globe', l: 'البريد',            d: 'prov@sanad.sa',     c: t.primary },
+            { i: 'doc',   l: 'فتح تذكرة دعم',    d: 'متابعة الطلبات',    c: t.warn },
+          ].map((r, i) => (
+            <Card key={i} theme={t} padding={14} style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              <div style={{ width: 40, height: 40, borderRadius: 12, background: r.c + '15',
+                display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <SanadIcon name={r.i} size={20} color={r.c} />
+              </div>
+              <div style={{ fontSize: 13, fontWeight: 600 }}>{r.l}</div>
+              <div style={{ fontSize: 11, color: t.inkMuted, lineHeight: 1.5 }}>{r.d}</div>
+            </Card>
+          ))}
+        </div>
+
+        <SectionTitle theme={t}>أسئلة شائعة</SectionTitle>
+        <Card theme={t} padding={0} style={{ overflow: 'hidden' }}>
+          {[
+            'كيف أُحدّث توفّري اليومي؟',
+            'كيف تُحسَب مدفوعاتي الأسبوعية؟',
+            'ماذا أفعل إذا اضطررت لإلغاء مهمة؟',
+            'كيف أُضيف أو أُعدّل منطقة عملي؟',
+          ].map((q, i, a) => (
+            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '13px 16px',
+              borderBottom: i < a.length - 1 ? `1px solid ${t.border}` : 'none' }}>
+              <div style={{ flex: 1, fontSize: 13.5 }}>{q}</div>
+              <SanadIcon name={t.dir === 'rtl' ? 'chevL' : 'chevR'} size={16} color={t.inkSoft} />
+            </div>
+          ))}
+        </Card>
+
+        <SectionTitle theme={t}>أرسل رسالة</SectionTitle>
+        <Card theme={t} padding={16} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <Field theme={t} label="الموضوع" placeholder="مثال: مشكلة في استلام المدفوعات" />
+          <div>
+            <div style={{ fontSize: 12.5, color: t.inkMuted, marginBottom: 6, fontWeight: 500 }}>تفاصيل المشكلة</div>
+            <textarea placeholder="اكتب تفاصيل مشكلتك هنا..."
+              style={{ width: '100%', minHeight: 90, padding: '10px 12px', borderRadius: t.radius.field,
+                border: `1.5px solid ${t.border}`, background: t.bgMuted, resize: 'none',
+                fontSize: 13, fontFamily: 'inherit', color: t.ink, outline: 'none' }} />
+          </div>
+          <Button full theme={t} variant="primary" size="lg" onClick={() => setSent(true)}>إرسال الرسالة</Button>
+        </Card>
+      </div>
+    </Screen>
+  );
+}
+window.ScrProvSupport = ScrProvSupport;
 
 function ScrProvTaskList({ theme: t }) {
   t = t || useTheme();
@@ -3528,7 +3611,8 @@ const PROV_SCREENS = {
   provRatings: { c: 'ScrProvRatings',     next: 'provHome',      label: '13 Ratings' },
   provProfile: { c: 'ScrProvProfile',     next: 'provSettings',  label: '14 Profile' },
   provSettings:{ c: 'ScrProvSettings',    next: 'provHome',      label: '15 Settings' },
-  provTask:    { c: 'ScrProvTaskList',    next: 'provInProgress',label: '16 Task list' },
+  provSupport: { c: 'ScrProvSupport',     next: 'provProfile',   label: '16 Support' },
+  provTask:    { c: 'ScrProvTaskList',    next: 'provInProgress',label: '17 Task list' },
 };
 
 const PROV_ORDER = Object.keys(PROV_SCREENS);
@@ -3644,7 +3728,7 @@ function SanadProviderCanvas({ theme }) {
     { id: 'home', title: 'الرئيسية والاتصال', screens: ['provHome', 'provOffline', 'provIncoming', 'provDecline'] },
     { id: 'task', title: 'تنفيذ المهمة', screens: ['provNavigation', 'provInProgress', 'provComplete'] },
     { id: 'wallet', title: 'التقييمات والتواصل', screens: ['provChat', 'provRatings', 'provTask'] },
-    { id: 'account', title: 'الحساب والإعدادات', screens: ['provProfile'] },
+    { id: 'account', title: 'الحساب والإعدادات', screens: ['provProfile', 'provSupport'] },
   ];
 
   return (
@@ -3691,6 +3775,7 @@ function NavigationHeader({ currentPage, theme }) {
     { key: 'user', label: 'Sanad User', file: 'Sanad User.html' },
     { key: 'manager', label: 'Sanad Manager', file: 'Sanad Manager.html' },
     { key: 'mvp', label: 'MVP', file: 'MVP.html' },
+    { key: 'website', label: 'Website', file: 'Sanad Website.html' },
   ];
 
   return (
