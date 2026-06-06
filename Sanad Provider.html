@@ -1057,28 +1057,71 @@ function ScrProvRegister({ theme: t }) {
     <Screen theme={t}>
       <StatusBar theme={t} />
       <TopBar theme={t} title="انضم كمقدّم خدمة" />
-      <div style={{ padding: '0 24px 8px' }}>
-        <StepBar theme={t} steps={4} active={1} />
-        <div style={{ fontSize: 12, color: t.inkSoft, marginTop: 8 }}>الخطوة ٢ من ٤ · المعلومات الشخصية</div>
+      <div style={{ padding: '0 20px 8px' }}>
+        <StepBar theme={t} steps={3} active={1} />
+        <div style={{ fontSize: 12, color: t.inkSoft, marginTop: 6 }}>الخطوة ١ من ٣ · المعلومات الأساسية</div>
       </div>
-      <div style={{ flex: 1, padding: '16px 24px', display: 'flex', flexDirection: 'column', gap: 14, overflowY: 'auto' }}>
+      <div style={{ flex: 1, padding: '12px 20px 24px', display: 'flex', flexDirection: 'column', gap: 12, overflowY: 'auto' }}>
+
         <Field theme={t} label="الاسم الكامل" placeholder="مثال: أحمد العتيبي" icon="user" />
-        <Field theme={t} label="رقم الهوية" placeholder="١XXXXXXXXX" icon="card" />
-        <Field theme={t} label="رقم الجوال" placeholder="5X XXX XXXX" icon="phone" />
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+          <Field theme={t} label="رقم الجوال" placeholder="05X XXX XXXX" icon="phone" />
+          <Field theme={t} label="رقم الهوية / الإقامة" placeholder="١XXXXXXXXX" icon="card" />
+        </div>
+
+        <Field theme={t} label="البريد الإلكتروني" placeholder="example@email.com" icon="globe" />
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+          <div>
+            <div style={{ fontSize: 12.5, color: t.inkMuted, marginBottom: 6, fontWeight: 500 }}>المدينة</div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
+              {['الرياض', 'جدة', 'مكة', 'الدمام'].map((c, i) => (
+                <div key={c} style={{ padding: '8px 10px', borderRadius: t.radius.field, textAlign: 'center',
+                  background: i === 0 ? t.primary : t.surface, color: i === 0 ? '#fff' : t.ink,
+                  border: `1.5px solid ${i === 0 ? t.primary : t.border}`, fontSize: 12, fontWeight: 500 }}>{c}</div>
+              ))}
+            </div>
+          </div>
+          <div>
+            <div style={{ fontSize: 12.5, color: t.inkMuted, marginBottom: 6, fontWeight: 500 }}>الجنس</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+              {['ذكر', 'أنثى'].map((g, i) => (
+                <div key={g} style={{ padding: '9px 12px', borderRadius: t.radius.field,
+                  background: i === 0 ? t.primary : t.surface, color: i === 0 ? '#fff' : t.ink,
+                  border: `1.5px solid ${i === 0 ? t.primary : t.border}`, fontSize: 13, fontWeight: 500,
+                  display: 'flex', alignItems: 'center', gap: 8 }}>
+                  {i === 0 && <SanadIcon name="check" size={14} color="#fff" strokeWidth={2.5} />}
+                  {g}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
         <div>
-          <div style={{ fontSize: 13, color: t.inkMuted, marginBottom: 8, fontWeight: 500 }}>الخدمات التي ستقدّمها</div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+          <div style={{ fontSize: 12.5, color: t.inkMuted, marginBottom: 6, fontWeight: 500 }}>نبذة مختصرة عن خبرتك</div>
+          <textarea placeholder="مثال: لديّ خبرة سنتين في مرافقة كبار السن ومساعدة ذوي الاحتياجات الخاصة..."
+            style={{ width: '100%', minHeight: 76, padding: '10px 12px', borderRadius: t.radius.field,
+              border: `1.5px solid ${t.border}`, background: t.bgMuted, resize: 'none',
+              fontSize: 13, fontFamily: 'inherit', color: t.ink, outline: 'none' }} />
+        </div>
+
+        <div>
+          <div style={{ fontSize: 12.5, color: t.inkMuted, marginBottom: 8, fontWeight: 500 }}>الخدمات التي ستقدّمها</div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
             {Object.values(window.SanadTokens.SERVICES).map((s, i) => (
-              <div key={s.key} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: 12,
+              <div key={s.key} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: 10,
                 background: i < 2 ? s.soft : t.surface, border: `1.5px solid ${i < 2 ? s.color : t.border}`,
                 borderRadius: t.radius.field }}>
-                <ServiceTile service={s} size={32} theme={t} />
-                <div style={{ fontSize: 12.5, fontWeight: 600, flex: 1 }}>{s.name}</div>
-                {i < 2 && <SanadIcon name="check" size={16} color={s.color} strokeWidth={2.5} />}
+                <ServiceTile service={s} size={28} theme={t} />
+                <div style={{ fontSize: 12, fontWeight: 600, flex: 1 }}>{s.name}</div>
+                {i < 2 && <SanadIcon name="check" size={14} color={s.color} strokeWidth={2.5} />}
               </div>
             ))}
           </div>
         </div>
+
         <Button full theme={t} variant="primary" size="lg" iconRight={t.dir === 'rtl' ? 'arrowL' : 'arrowR'}>متابعة</Button>
       </div>
     </Screen>
@@ -3775,7 +3818,6 @@ function NavigationHeader({ currentPage, theme }) {
     { key: 'user', label: 'Sanad User', file: 'Sanad User.html' },
     { key: 'manager', label: 'Sanad Manager', file: 'Sanad Manager.html' },
     { key: 'mvp', label: 'MVP', file: 'MVP.html' },
-    { key: 'website', label: 'Website', file: 'Sanad Website.html' },
   ];
 
   return (
