@@ -723,13 +723,29 @@ function TopBar({ title, back = true, action, dark, theme: t, style }) {
 }
 
 // Bottom tab bar
+function LucideTab({ name, size = 22, color = 'currentColor', active = false }) {
+  const sw = active ? 2.2 : 1.6;
+  const p = { stroke: color, strokeWidth: sw, strokeLinecap: 'round', strokeLinejoin: 'round', fill: 'none' };
+  const paths = {
+    home: (<g {...p}><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></g>),
+    orders: (<g {...p}><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="12" y2="16"/></g>),
+    chat: (<g {...p}><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></g>),
+    profile: (<g {...p}><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></g>),
+  };
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" style={{ display: 'block', flexShrink: 0 }}>
+      {paths[name]}
+    </svg>
+  );
+}
+
 function TabBar({ active = 'home', theme: t }) {
   t = t || useTheme();
   const items = [
     { k: 'home', l: 'الرئيسية', i: 'home' },
-    { k: 'orders', l: 'طلباتي', i: 'list' },
+    { k: 'orders', l: 'طلباتي', i: 'orders' },
     { k: 'chat', l: 'المحادثات', i: 'chat' },
-    { k: 'profile', l: 'حسابي', i: 'user' },
+    { k: 'profile', l: 'حسابي', i: 'profile' },
   ];
   return (
     <div style={{
@@ -737,8 +753,7 @@ function TabBar({ active = 'home', theme: t }) {
       paddingBottom: 22, paddingTop: 10,
       background: t.surface, borderTop: `1px solid ${t.border}`,
       display: 'flex', justifyContent: 'space-around',
-      borderTopLeftRadius: 24, borderTopRightRadius: 24,
-      zIndex: 5,
+      borderTopLeftRadius: 24, borderTopRightRadius: 24, zIndex: 5,
     }}>
       {items.map(it => {
         const on = it.k === active;
@@ -747,7 +762,7 @@ function TabBar({ active = 'home', theme: t }) {
             display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
             color: on ? t.primary : t.inkSoft, padding: '4px 12px',
           }}>
-            <SanadIcon name={it.i} size={22} strokeWidth={on ? 2 : 1.6} />
+            <LucideTab name={it.i} size={22} color={on ? t.primary : t.inkSoft} active={on} />
             <span style={{ fontSize: 11, fontWeight: on ? 600 : 500 }}>{it.l}</span>
           </div>
         );
@@ -1320,15 +1335,27 @@ function ScrHomeA({ theme: t }) {
         {/* services grid */}
         <div style={{ padding: '0 16px' }}>
           <SectionTitle theme={t} action="عرض الكل">خدمات سند</SectionTitle>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
             {services.map(s => (
-              <Card key={s.key} theme={t} padding={16} style={{ display: 'flex', flexDirection: 'column', gap: 12, minHeight: 140 }}>
-                <ServiceTile service={s} size={48} theme={t} />
-                <div style={{ marginTop: 'auto' }}>
-                  <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 4 }}>{s.name}</div>
-                  <div style={{ fontSize: 11.5, color: t.inkMuted, lineHeight: 1.5 }}>{s.sub}</div>
+              <div key={s.key} style={{
+                background: t.surface, border: `1.5px solid ${t.border}`, borderRadius: t.radius.card,
+                padding: 14, display: 'flex', flexDirection: 'column', gap: 10, cursor: 'pointer',
+                transition: 'border-color 0.15s',
+              }}>
+                <ServiceTile service={s} size={44} theme={t} />
+                <div>
+                  <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 3, color: t.ink }}>{s.name}</div>
+                  <div style={{ fontSize: 11, color: t.inkMuted, lineHeight: 1.5 }}>{s.sub}</div>
                 </div>
-              </Card>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 'auto' }}>
+                  <span style={{ fontSize: 11, fontWeight: 600, color: s.color, background: s.soft,
+                    padding: '3px 8px', borderRadius: 99 }}>متاح</span>
+                  <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke={t.inkSoft}
+                    strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                    {t.dir === 'rtl' ? <polyline points="15 18 9 12 15 6"/> : <polyline points="9 18 15 12 9 6"/>}
+                  </svg>
+                </div>
+              </div>
             ))}
           </div>
         </div>

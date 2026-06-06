@@ -1411,19 +1411,27 @@ function ScrProvHome({ theme: t, online = true }) {
           <SectionTitle theme={t}>وصول سريع</SectionTitle>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
             {[
-              { l: 'المهام', i: 'list', c: t.accent, k: 'provTask' },
-              { l: 'التقييمات', i: 'starFill', c: '#E0A823', k: 'provRatings' },
-              { l: 'حسابي', i: 'user', c: t.primary, k: 'provProfile' },
-              { l: 'الإعدادات', i: 'settings', c: t.inkMuted, k: 'provSettings' },
+              { l: 'المهام', c: t.accent, k: 'provTask',
+                svg: <g stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" fill="none"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="12" y2="16"/></g> },
+              { l: 'التقييمات', c: '#E0A823', k: 'provRatings',
+                svg: <g stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" fill="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></g> },
+              { l: 'حسابي', c: t.primary, k: 'provProfile',
+                svg: <g stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" fill="none"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></g> },
+              { l: 'الإعدادات', c: t.inkMuted, k: 'provSettings',
+                svg: <g stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" fill="none"><circle cx="12" cy="12" r="3"/><path d="M19 12c0 .6 0 1.1-.1 1.6l2 1.6-2 3.4-2.5-1a7 7 0 0 1-2.7 1.6l-.4 2.6h-4l-.4-2.6a7 7 0 0 1-2.7-1.6l-2.5 1-2-3.4 2-1.6c-.1-.5-.1-1-.1-1.6s0-1.1.1-1.6l-2-1.6 2-3.4 2.5 1a7 7 0 0 1 2.7-1.6l.4-2.6h4l.4 2.6a7 7 0 0 1 2.7 1.6l2.5-1 2 3.4-2 1.6c.1.5.1 1 .1 1.6z"/></g> },
             ].map(q => (
               <button key={q.l} data-tab={q.k} style={{ background: t.surface, border: `1px solid ${t.border}`,
-                borderRadius: 18, padding: 14, display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer',
-                textAlign: 'start', fontFamily: 'inherit' }}>
-                <div style={{ width: 36, height: 36, borderRadius: 10, background: q.c + '18', color: q.c,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <SanadIcon name={q.i} size={18} />
+                borderRadius: 16, padding: '14px 14px', display: 'flex', alignItems: 'center', gap: 10,
+                cursor: 'pointer', textAlign: 'start', fontFamily: 'inherit' }}>
+                <div style={{ width: 36, height: 36, borderRadius: 10, background: q.c + '15', color: q.c,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <svg width={18} height={18} viewBox="0 0 24 24" style={{ display: 'block' }}>{q.svg}</svg>
                 </div>
-                <div style={{ fontSize: 13, fontWeight: 500, color: t.ink }}>{q.l}</div>
+                <div style={{ flex: 1, fontSize: 13, fontWeight: 500, color: t.ink }}>{q.l}</div>
+                <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke={t.inkSoft}
+                  strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                  {t.dir === 'rtl' ? <polyline points="15 18 9 12 15 6"/> : <polyline points="9 18 15 12 9 6"/>}
+                </svg>
               </button>
             ))}
           </div>
@@ -1460,10 +1468,6 @@ function ScrProvIncoming({ theme: t }) {
             <div style={{ fontSize: 11.5, color: t.inkSoft, fontWeight: 500 }}>{s.name}</div>
             <div style={{ fontSize: 17, fontWeight: 700, marginTop: 2 }}>صيدلية الدواء</div>
             <div style={{ fontSize: 12, color: t.inkMuted, marginTop: 2 }}>حي الياسمين، الرياض</div>
-          </div>
-          <div style={{ textAlign: 'end' }}>
-            <div className="latin" style={{ fontSize: 18, fontWeight: 700, color: t.primary }}>٣٥ ر.س</div>
-            <div style={{ fontSize: 11, color: t.inkSoft }}>تقديري</div>
           </div>
         </div>
 
@@ -1516,13 +1520,29 @@ function ScrProvDecline({ theme: t }) {
 }
 
 // Bottom tab bar for provider app
+function ProvLucideTab({ name, size = 22, color = 'currentColor', active = false }) {
+  const sw = active ? 2.2 : 1.6;
+  const p = { stroke: color, strokeWidth: sw, strokeLinecap: 'round', strokeLinejoin: 'round', fill: 'none' };
+  const paths = {
+    home:    (<g {...p}><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></g>),
+    tasks:   (<g {...p}><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="12" y2="16"/></g>),
+    ratings: (<g {...p}><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></g>),
+    profile: (<g {...p}><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></g>),
+  };
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" style={{ display: 'block', flexShrink: 0 }}>
+      {paths[name]}
+    </svg>
+  );
+}
+
 function ProvTabBar({ active = 'home', theme: t }) {
   t = t || useTheme();
   const items = [
-    { k: 'provHome', l: 'الرئيسية', i: 'home', a: 'home' },
-    { k: 'provTask', l: 'المهام', i: 'list', a: 'tasks' },
-    { k: 'provRatings', l: 'التقييمات', i: 'starFill', a: 'ratings' },
-    { k: 'provProfile', l: 'حسابي', i: 'user', a: 'profile' },
+    { k: 'provHome', l: 'الرئيسية', i: 'home',    a: 'home' },
+    { k: 'provTask', l: 'المهام',   i: 'tasks',   a: 'tasks' },
+    { k: 'provRatings', l: 'التقييمات', i: 'ratings', a: 'ratings' },
+    { k: 'provProfile', l: 'حسابي', i: 'profile', a: 'profile' },
   ];
   return (
     <div style={{
@@ -1538,7 +1558,7 @@ function ProvTabBar({ active = 'home', theme: t }) {
           <button key={it.k} data-tab={it.k} style={{ background: 'transparent', border: 'none', cursor: 'pointer',
             display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
             color: on ? t.primary : t.inkSoft, padding: '4px 12px', fontFamily: 'inherit' }}>
-            <SanadIcon name={it.i} size={22} strokeWidth={on ? 2 : 1.6} />
+            <ProvLucideTab name={it.i} size={22} color={on ? t.primary : t.inkSoft} active={on} />
             <span style={{ fontSize: 11, fontWeight: on ? 600 : 500 }}>{it.l}</span>
           </button>
         );
@@ -1623,7 +1643,6 @@ function ScrProvInProgress({ theme: t }) {
               <div style={{ fontSize: 11, color: t.inkSoft }}>طلب #ST-4827</div>
               <div style={{ fontSize: 14, fontWeight: 600 }}>صيدلية الدواء — نورا</div>
             </div>
-            <div className="latin" style={{ fontSize: 16, fontWeight: 700, color: t.primary }}>٣٥ ر.س</div>
           </div>
         </Card>
 
@@ -2022,8 +2041,9 @@ function ScrProvProfile({ theme: t }) {
               { l: 'الإشعارات', s: 'مفعّلة', i: 'bell' },
               { l: 'الدعم والمساعدة', s: 'تواصل مع الدعم', i: 'chat', tab: 'provSupport' },
             ].map((r, i, a) => (
-              <div key={i} data-tab={r.tab || undefined}
+              <div key={i} {...(r.tab ? { 'data-tab': r.tab } : {})}
                 style={{ display: 'flex', alignItems: 'center', gap: 12, padding: 14,
+                cursor: r.tab ? 'pointer' : 'default',
                 borderBottom: i < a.length - 1 ? `1px solid ${t.border}` : 'none' }}>
                 <div style={{ width: 36, height: 36, borderRadius: 10, background: t.bgMuted, color: t.primary,
                   display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
