@@ -1128,101 +1128,153 @@ function ScrProvRegister({ theme: t }) {
   );
 }
 
+// Lucide-style SVG icons for the documents screen
+const DocIcon = {
+  fileText: (color, size = 20) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
+      stroke={color} strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+      <polyline points="14 2 14 8 20 8"/>
+      <line x1="16" y1="13" x2="8" y2="13"/>
+      <line x1="16" y1="17" x2="8" y2="17"/>
+    </svg>
+  ),
+  uploadCloud: (color, size = 16) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
+      stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="16 16 12 12 8 16"/>
+      <line x1="12" y1="12" x2="12" y2="21"/>
+      <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/>
+    </svg>
+  ),
+  checkCircle: (color, size = 16) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
+      stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+      <polyline points="22 4 12 14.01 9 11.01"/>
+    </svg>
+  ),
+  alertCircle: (color, size = 16) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
+      stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10"/>
+      <line x1="12" y1="8" x2="12" y2="12"/>
+      <line x1="12" y1="16" x2="12.01" y2="16"/>
+    </svg>
+  ),
+  circle: (color, size = 16) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
+      stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10"/>
+    </svg>
+  ),
+};
+
+function DocUploadCard({ doc: d, theme: t }) {
+  const [uploaded, setUploaded] = React.useState(d.st === 'done');
+
+  const stCfg = uploaded
+    ? { label: 'تم الرفع',        color: t.success, icon: DocIcon.checkCircle(t.success) }
+    : d.st === 'pending'
+    ? { label: 'بانتظار الرفع',   color: t.warn,    icon: DocIcon.alertCircle(t.warn)    }
+    : { label: 'اختياري',         color: t.inkSoft, icon: DocIcon.circle(t.inkSoft)      };
+
+  return (
+    <div style={{
+      display: 'flex', alignItems: 'center', gap: 12, padding: '12px 14px',
+      background: t.surface, border: `1.5px solid ${uploaded ? t.success + '40' : t.border}`,
+      borderRadius: 16,
+    }}>
+      {/* file icon */}
+      <div style={{ width: 40, height: 40, borderRadius: 11, flexShrink: 0,
+        background: (uploaded ? t.success : d.st === 'pending' ? t.warn : t.inkSoft) + '14',
+        display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        {DocIcon.fileText(uploaded ? t.success : d.st === 'pending' ? t.warn : t.inkSoft)}
+      </div>
+
+      {/* name */}
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ fontSize: 13, fontWeight: 600, lineHeight: 1.3, color: t.ink }}>{d.l}</div>
+        {!d.req && <div style={{ fontSize: 10.5, color: t.inkSoft, marginTop: 1 }}>اختياري</div>}
+      </div>
+
+      {/* status */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 4, flexShrink: 0 }}>
+        {stCfg.icon}
+        <span style={{ fontSize: 11, color: stCfg.color, fontWeight: 500, whiteSpace: 'nowrap' }}>
+          {stCfg.label}
+        </span>
+      </div>
+
+      {/* upload button */}
+      <button
+        onClick={() => setUploaded(true)}
+        style={{ width: 36, height: 36, borderRadius: 10, flexShrink: 0,
+          background: uploaded ? t.success + '12' : t.bgMuted,
+          border: `1.5px solid ${uploaded ? t.success + '50' : t.border}`,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          cursor: uploaded ? 'default' : 'pointer' }}>
+        {uploaded
+          ? DocIcon.checkCircle(t.success, 15)
+          : DocIcon.uploadCloud(t.primary, 15)}
+      </button>
+    </div>
+  );
+}
+
 function ScrProvDocuments({ theme: t }) {
   t = t || useTheme();
-  const docs = [
-    { l: 'صورة الهوية الوطنية', sub: 'الوجهان — صورة واضحة', req: true,  st: 'done',    c: t.success },
-    { l: 'رخصة القيادة',        sub: 'سارية المفعول',         req: true,  st: 'done',    c: t.success },
-    { l: 'رخصة العمل',          sub: 'صادرة من الجهة المختصة', req: true, st: 'pending', c: t.warn },
-    { l: 'السيرة الذاتية (CV)', sub: 'PDF · حتى ٥ م.ب',       req: true,  st: 'pending', c: t.warn },
-    { l: 'الشهادات والمؤهلات',  sub: 'دبلوم، بكالوريوس، أو دورات معتمدة', req: false, st: 'optional', c: t.inkSoft },
-    { l: 'وثائق داعمة',        sub: 'أي مستندات إضافية تدعم طلبك', req: false, st: 'optional', c: t.inkSoft },
-    { l: 'استمارة السيارة',    sub: 'للخدمات التي تتطلب تنقلاً',   req: false, st: 'optional', c: t.inkSoft },
+  const required = [
+    { l: 'صورة الهوية الوطنية', req: true, st: 'done'    },
+    { l: 'رخصة القيادة',        req: true, st: 'done'    },
+    { l: 'رخصة العمل',          req: true, st: 'pending' },
+    { l: 'السيرة الذاتية (CV)', req: true, st: 'pending' },
   ];
-  const stLabel = { done: 'تم الرفع', pending: 'بانتظار الرفع', optional: 'اختياري' };
+  const optional = [
+    { l: 'الشهادات والمؤهلات', req: false, st: 'optional' },
+    { l: 'وثائق داعمة',        req: false, st: 'optional' },
+    { l: 'استمارة السيارة',    req: false, st: 'optional' },
+  ];
+
   return (
     <Screen theme={t}>
       <StatusBar theme={t} />
       <TopBar theme={t} title="رفع الوثائق" />
-      <div style={{ padding: '0 24px 8px' }}>
-        <StepBar theme={t} steps={4} active={2} />
-        <div style={{ fontSize: 12, color: t.inkSoft, marginTop: 8 }}>الخطوة ٣ من ٤ · الوثائق المطلوبة</div>
+
+      <div style={{ padding: '0 20px 8px' }}>
+        <StepBar theme={t} steps={3} active={2} />
+        <div style={{ fontSize: 12, color: t.inkSoft, marginTop: 6 }}>الخطوة ٢ من ٣ · الوثائق المطلوبة</div>
       </div>
 
-      <div style={{ flex: 1, overflowY: 'auto', padding: '14px 20px 110px', display: 'flex', flexDirection: 'column', gap: 10 }}>
-        {/* progress bar */}
-        <Card theme={t} padding={14} style={{ marginBottom: 4 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
-            <div style={{ fontSize: 12.5, fontWeight: 500 }}>تقدّم رفع الوثائق</div>
-            <div style={{ fontSize: 12, color: t.primary, fontWeight: 600 }}>٢ / ٤ مطلوبة</div>
-          </div>
-          <div style={{ height: 6, background: t.bgMuted, borderRadius: 3 }}>
-            <div style={{ height: '100%', width: '50%', background: `linear-gradient(90deg, ${t.primary} 0%, ${t.success} 100%)`, borderRadius: 3 }} />
-          </div>
-        </Card>
+      {/* compact progress bar */}
+      <div style={{ padding: '6px 20px 0' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
+          <div style={{ fontSize: 12, color: t.inkMuted }}>اكتملت ٢ من ٤ وثائق مطلوبة</div>
+          <div style={{ fontSize: 12, color: t.primary, fontWeight: 600 }}>٥٠٪</div>
+        </div>
+        <div style={{ height: 4, background: t.bgMuted, borderRadius: 2 }}>
+          <div style={{ height: '100%', width: '50%',
+            background: `linear-gradient(90deg, ${t.primary}, ${t.success})`, borderRadius: 2 }} />
+        </div>
+      </div>
 
-        <div style={{ fontSize: 11.5, fontWeight: 600, color: t.inkSoft, paddingInlineStart: 4, marginTop: 4 }}>مطلوبة</div>
-        {docs.filter(d => d.req).map((d, i) => (
-          <DocUploadCard key={i} doc={d} theme={t} stLabel={stLabel} />
-        ))}
+      <div style={{ flex: 1, overflowY: 'auto', padding: '16px 20px 100px',
+        display: 'flex', flexDirection: 'column', gap: 8 }}>
 
-        <div style={{ fontSize: 11.5, fontWeight: 600, color: t.inkSoft, paddingInlineStart: 4, marginTop: 8 }}>اختيارية</div>
-        {docs.filter(d => !d.req).map((d, i) => (
-          <DocUploadCard key={i} doc={d} theme={t} stLabel={stLabel} />
-        ))}
+        <div style={{ fontSize: 11, fontWeight: 700, color: t.inkSoft, letterSpacing: '0.06em',
+          textTransform: 'uppercase', marginBottom: 2 }}>مطلوبة</div>
+        {required.map((d, i) => <DocUploadCard key={i} doc={d} theme={t} />)}
+
+        <div style={{ fontSize: 11, fontWeight: 700, color: t.inkSoft, letterSpacing: '0.06em',
+          textTransform: 'uppercase', marginTop: 10, marginBottom: 2 }}>اختيارية</div>
+        {optional.map((d, i) => <DocUploadCard key={i} doc={d} theme={t} />)}
       </div>
 
       <div style={{ position: 'absolute', bottom: 0, insetInlineStart: 0, insetInlineEnd: 0,
-        padding: '14px 20px 26px', background: t.surface, borderTop: `1px solid ${t.border}` }}>
+        padding: '12px 20px 24px', background: t.surface, borderTop: `1px solid ${t.border}` }}>
         <Button full theme={t} variant="primary" size="lg">إرسال للمراجعة</Button>
       </div>
     </Screen>
-  );
-}
-
-function DocUploadCard({ doc: d, theme: t, stLabel }) {
-  const [fileName, setFileName] = React.useState(d.st === 'done' ? 'ملف_مرفوع.pdf' : null);
-  return (
-    <Card theme={t} padding={0} style={{ overflow: 'hidden' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: 14 }}>
-        <div style={{ width: 42, height: 42, borderRadius: 12, background: d.c + '18', color: d.c,
-          display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-          <SanadIcon name="doc" size={22} />
-        </div>
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ fontSize: 13.5, fontWeight: 600 }}>{d.l}</div>
-          <div style={{ fontSize: 11.5, color: t.inkSoft, marginTop: 2 }}>{d.sub}</div>
-          {fileName && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 6,
-              padding: '4px 10px', background: t.success + '14', borderRadius: 8, width: 'fit-content' }}>
-              <SanadIcon name="check" size={12} color={t.success} strokeWidth={2.5} />
-              <span style={{ fontSize: 11, color: t.success, fontWeight: 500 }}>{fileName}</span>
-            </div>
-          )}
-        </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 6, alignItems: 'flex-end' }}>
-          <Tag theme={t} color={d.c} soft={d.c + '18'} style={{ fontSize: 10.5 }}>{stLabel[d.st]}</Tag>
-        </div>
-      </div>
-      <div style={{ borderTop: `1px solid ${t.border}`, padding: '10px 14px', display: 'flex', gap: 8 }}>
-        <button
-          onClick={() => setFileName(d.l.includes('CV') ? 'CV_محمد_العتيبي.pdf' : d.l.includes('رخصة العمل') ? 'work_license.pdf' : d.l.includes('شهادات') ? 'certificates.pdf' : 'document.pdf')}
-          style={{ flex: 1, padding: '9px 12px', border: `1.5px dashed ${t.border}`, borderRadius: 10,
-            background: 'transparent', fontFamily: 'inherit', cursor: 'pointer',
-            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-            color: t.primary, fontSize: 12.5, fontWeight: 500 }}>
-          <SanadIcon name="paperclip" size={14} color={t.primary} />
-          {fileName ? 'استبدال الملف' : 'اختر ملفًا أو صورة'}
-        </button>
-        <button style={{ padding: '9px 12px', border: `1px solid ${t.border}`, borderRadius: 10,
-          background: 'transparent', fontFamily: 'inherit', cursor: 'pointer',
-          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-          color: t.inkMuted, fontSize: 12.5 }}>
-          <SanadIcon name="camera" size={14} color={t.inkMuted} />
-          كاميرا
-        </button>
-      </div>
-    </Card>
   );
 }
 
