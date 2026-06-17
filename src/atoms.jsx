@@ -263,9 +263,9 @@ function MapPlaceholder({ height = 200, theme: t, route = true, style }) {
   const water = t.dark ? '#0F1A1A' : '#E5EFE9';
   return (
     <div style={{ position: 'relative', height, borderRadius: t.radius.tile, overflow: 'hidden',
-      background: t.dark ? '#101716' : '#EEF3EE', border: `1px solid ${t.border}`, ...style }}>
+      background: t.dark ? '#0C1430' : '#E9EDF6', border: `1px solid ${t.border}`, ...style }}>
       <svg width="100%" height="100%" viewBox="0 0 400 240" preserveAspectRatio="none" style={{ display: 'block' }}>
-        <rect width="400" height="240" fill={t.dark ? '#101716' : '#EEF3EE'}/>
+        <rect width="400" height="240" fill={t.dark ? '#0C1430' : '#E9EDF6'}/>
         <path d="M0 60 H 400" stroke={stroke} strokeWidth="20" opacity="0.9"/>
         <path d="M0 150 H 400" stroke={stroke} strokeWidth="14" opacity="0.7"/>
         <path d="M0 200 H 400" stroke={stroke} strokeWidth="10" opacity="0.6"/>
