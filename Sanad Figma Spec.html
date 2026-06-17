@@ -9,7 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; }
-  html, body { margin: 0; padding: 0; background: #E9E5DA; font-family: 'IBM Plex Sans Arabic', system-ui, sans-serif; color: #0F1414; line-height: 1.55; }
+  html, body { margin: 0; padding: 0; background: #E9E5DA; font-family: 'IBM Plex Sans Arabic', system-ui, sans-serif; color: #0E152B; line-height: 1.55; }
   .latin { font-family: 'IBM Plex Sans', 'IBM Plex Sans Arabic', system-ui; }
   .mono { font-family: 'IBM Plex Mono', ui-monospace, monospace; }
   ::-webkit-scrollbar { width: 10px; height: 10px; }
@@ -18,27 +18,27 @@
 
   .page { max-width: 1280px; margin: 0 auto; padding: 48px 32px 120px; }
   .nav { position: sticky; top: 0; z-index: 50; background: rgba(233,229,218,0.92); backdrop-filter: blur(12px);
-    border-bottom: 1px solid #D9D2BE; padding: 14px 32px; display: flex; align-items: center; justify-content: space-between; }
-  .nav-links { display: flex; gap: 4px; padding: 4px; background: #fff; border: 1px solid #D9D2BE; border-radius: 12px; }
-  .nav-links a { text-decoration: none; color: #0F1414; padding: 6px 12px; font-size: 12.5px; font-weight: 600; border-radius: 8px; }
-  .nav-links a:hover { background: #F5F3EE; }
+    border-bottom: 1px solid #CDD6EE; padding: 14px 32px; display: flex; align-items: center; justify-content: space-between; }
+  .nav-links { display: flex; gap: 4px; padding: 4px; background: #fff; border: 1px solid #CDD6EE; border-radius: 12px; }
+  .nav-links a { text-decoration: none; color: #0E152B; padding: 6px 12px; font-size: 12.5px; font-weight: 600; border-radius: 8px; }
+  .nav-links a:hover { background: #F4F6FC; }
   .top-actions { display: flex; gap: 8px; }
   .top-actions a, .top-actions button {
-    padding: 8px 14px; border-radius: 10px; border: 1px solid #D9D2BE; background: #fff;
-    color: #0F1414; text-decoration: none; cursor: pointer; font-family: inherit;
+    padding: 8px 14px; border-radius: 10px; border: 1px solid #CDD6EE; background: #fff;
+    color: #0E152B; text-decoration: none; cursor: pointer; font-family: inherit;
     font-size: 12.5px; font-weight: 600;
   }
-  .top-actions .primary { background: #0F766E; color: #fff; border-color: #0F766E; }
+  .top-actions .primary { background: #3D5CE0; color: #fff; border-color: #3D5CE0; }
 
   h1 { font-size: 56px; font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; margin: 0; }
   h2 { font-size: 28px; font-weight: 700; letter-spacing: -0.02em; margin: 0 0 8px; line-height: 1.2; }
   h3 { font-size: 18px; font-weight: 600; margin: 0 0 12px; }
-  p.lead { font-size: 17px; color: #5C625F; line-height: 1.7; max-width: 720px; margin: 16px 0 0; }
-  .kicker { font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #8A908C; margin-bottom: 10px; }
+  p.lead { font-size: 17px; color: #56607F; line-height: 1.7; max-width: 720px; margin: 16px 0 0; }
+  .kicker { font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #8A93AD; margin-bottom: 10px; }
 
   section { margin-top: 80px; }
-  .section-head { display: flex; align-items: flex-end; justify-content: space-between; border-bottom: 1px solid #D9D2BE; padding-bottom: 14px; margin-bottom: 28px; }
-  .section-head .num { font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #8A908C; letter-spacing: 0.1em; }
+  .section-head { display: flex; align-items: flex-end; justify-content: space-between; border-bottom: 1px solid #CDD6EE; padding-bottom: 14px; margin-bottom: 28px; }
+  .section-head .num { font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #8A93AD; letter-spacing: 0.1em; }
 
   /* Grids */
   .grid { display: grid; gap: 16px; }
@@ -47,55 +47,55 @@
   .g-2 { grid-template-columns: repeat(2, 1fr); }
   @media (max-width: 900px) { .g-3, .g-4 { grid-template-columns: repeat(2, 1fr); } .g-2 { grid-template-columns: 1fr; } }
 
-  .card { background: #fff; border: 1px solid #E5E0D2; border-radius: 18px; padding: 20px; }
-  .card-flat { background: #fff; border: 1px solid #E5E0D2; border-radius: 14px; overflow: hidden; }
+  .card { background: #fff; border: 1px solid #DDE3F2; border-radius: 18px; padding: 20px; }
+  .card-flat { background: #fff; border: 1px solid #DDE3F2; border-radius: 14px; overflow: hidden; }
 
   /* Color swatch */
-  .swatch { background: #fff; border: 1px solid #E5E0D2; border-radius: 14px; overflow: hidden; }
+  .swatch { background: #fff; border: 1px solid #DDE3F2; border-radius: 14px; overflow: hidden; }
   .swatch .chip { height: 84px; border-bottom: 1px solid rgba(0,0,0,0.06); }
   .swatch .meta { padding: 12px 14px; }
   .swatch .name { font-size: 13px; font-weight: 600; }
-  .swatch .hex { font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: #5C625F; margin-top: 2px; }
-  .swatch .token { font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; color: #8A908C; margin-top: 6px; padding-top: 6px; border-top: 1px dashed #E5E0D2; }
+  .swatch .hex { font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: #56607F; margin-top: 2px; }
+  .swatch .token { font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; color: #8A93AD; margin-top: 6px; padding-top: 6px; border-top: 1px dashed #DDE3F2; }
 
   /* Type spec */
-  .type-row { display: grid; grid-template-columns: 200px 1fr 220px; gap: 24px; align-items: center; padding: 18px 0; border-bottom: 1px solid #E5E0D2; }
+  .type-row { display: grid; grid-template-columns: 200px 1fr 220px; gap: 24px; align-items: center; padding: 18px 0; border-bottom: 1px solid #DDE3F2; }
   .type-row:last-child { border-bottom: none; }
   .type-sample { line-height: 1.2; }
-  .type-spec { font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: #5C625F; line-height: 1.6; }
-  .type-token { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #0F766E; font-weight: 600; }
+  .type-spec { font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: #56607F; line-height: 1.6; }
+  .type-token { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #3D5CE0; font-weight: 600; }
 
   /* Service brand */
   .brand-card { display: flex; gap: 14px; align-items: flex-start; padding: 18px; border-radius: 18px; }
   .brand-tile { width: 56px; height: 56px; border-radius: 16px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 22px; }
 
   /* Spacing & radius */
-  .spec-row { display: flex; align-items: center; gap: 16px; padding: 12px 0; border-bottom: 1px dashed #E5E0D2; }
+  .spec-row { display: flex; align-items: center; gap: 16px; padding: 12px 0; border-bottom: 1px dashed #DDE3F2; }
   .spec-row:last-child { border-bottom: none; }
-  .spec-row .lbl { width: 100px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #0F766E; font-weight: 600; }
-  .spec-row .val { flex: 1; font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: #5C625F; }
-  .spec-vis { background: #0F766E; height: 20px; border-radius: 4px; }
+  .spec-row .lbl { width: 100px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #3D5CE0; font-weight: 600; }
+  .spec-row .val { flex: 1; font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; color: #56607F; }
+  .spec-vis { background: #3D5CE0; height: 20px; border-radius: 4px; }
 
   /* Components grid */
-  .preview { background: #F5F3EE; padding: 24px; border-radius: 16px; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px; min-height: 140px; }
+  .preview { background: #F4F6FC; padding: 24px; border-radius: 16px; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px; min-height: 140px; }
   .btn { padding: 14px 24px; border-radius: 18px; font-size: 15px; font-weight: 600; border: none; cursor: pointer; font-family: inherit; }
-  .btn-primary { background: #0F766E; color: #fff; }
-  .btn-surface { background: #fff; color: #0F1414; border: 1px solid #E5E0D2; }
-  .btn-ghost { background: transparent; color: #0F766E; }
+  .btn-primary { background: #3D5CE0; color: #fff; }
+  .btn-surface { background: #fff; color: #0E152B; border: 1px solid #DDE3F2; }
+  .btn-ghost { background: transparent; color: #3D5CE0; }
   .chip-tag { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px; font-size: 12px; font-weight: 600; }
 
   /* Screen frame */
-  .frame { background: #F5F3EE; border: 1px solid #E5E0D2; border-radius: 18px; padding: 18px; }
+  .frame { background: #F4F6FC; border: 1px solid #DDE3F2; border-radius: 18px; padding: 18px; }
   .frame iframe { width: 340px; height: 720px; border: none; border-radius: 32px; background: #fff;
     box-shadow: 0 12px 32px rgba(0,0,0,0.08); display: block; margin: 0 auto; }
   .frame-meta { display: flex; justify-content: space-between; margin-top: 14px; align-items: baseline; }
   .frame-name { font-size: 14px; font-weight: 600; }
-  .frame-id { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #8A908C; }
+  .frame-id { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #8A93AD; }
 
   /* Token table */
   table.tokens { width: 100%; border-collapse: collapse; font-size: 12.5px; }
-  table.tokens th, table.tokens td { text-align: start; padding: 12px 14px; border-bottom: 1px solid #E5E0D2; }
-  table.tokens th { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: #8A908C; font-weight: 600; background: #FBF9F4; }
+  table.tokens th, table.tokens td { text-align: start; padding: 12px 14px; border-bottom: 1px solid #DDE3F2; }
+  table.tokens th { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: #8A93AD; font-weight: 600; background: #F7F9FE; }
   table.tokens td.mono, table.tokens .mono-cell { font-family: 'IBM Plex Mono', monospace; }
   table.tokens .swatch-cell { display: flex; align-items: center; gap: 10px; }
   table.tokens .sw { width: 22px; height: 22px; border-radius: 6px; border: 1px solid rgba(0,0,0,0.08); }
@@ -103,10 +103,10 @@
   /* Flow diagram */
   .flow { display: flex; flex-direction: column; gap: 4px; }
   .flow-row { display: grid; grid-template-columns: 80px 1fr 80px; gap: 14px; align-items: center; padding: 10px 0; }
-  .flow-num { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #8A908C; font-weight: 600; }
+  .flow-num { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #8A93AD; font-weight: 600; }
   .flow-name { font-size: 14px; font-weight: 500; }
   .flow-tag { font-size: 10.5px; padding: 4px 10px; border-radius: 999px; text-align: center; font-weight: 600; }
-  .flow-tag.user { background: #0F766E20; color: #0F766E; }
+  .flow-tag.user { background: #3D5CE020; color: #3D5CE0; }
   .flow-tag.prov { background: #04785720; color: #047857; }
 
   /* Print */
@@ -122,10 +122,10 @@
 
 <div class="nav">
   <div style="display:flex; align-items:center; gap:14px;">
-    <div style="width:36px; height:36px; border-radius:10px; background:#0F766E; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700;">س</div>
+    <div style="width:36px; height:36px; border-radius:10px; background:#3D5CE0; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700;">س</div>
     <div>
       <div style="font-size:13px; font-weight:600;">سَنَد · مواصفات التسليم</div>
-      <div class="latin" style="font-size:10.5px; color:#8A908C; letter-spacing:0.08em; text-transform:uppercase;">Figma Handoff · v2.0</div>
+      <div class="latin" style="font-size:10.5px; color:#8A93AD; letter-spacing:0.08em; text-transform:uppercase;">Figma Handoff · v2.0</div>
     </div>
   </div>
   <div class="nav-links">
@@ -159,26 +159,26 @@
     <div class="card">
       <div class="kicker">التطبيقات</div>
       <div style="font-size:32px; font-weight:700;" class="latin">2</div>
-      <div style="font-size:12.5px; color:#5C625F; margin-top:4px;">المستخدم · مقدّم الخدمة</div>
+      <div style="font-size:12.5px; color:#56607F; margin-top:4px;">المستخدم · مقدّم الخدمة</div>
     </div>
     <div class="card">
       <div class="kicker">إجمالي الشاشات</div>
       <div style="font-size:32px; font-weight:700;" class="latin">28+</div>
-      <div style="font-size:12.5px; color:#5C625F; margin-top:4px;">١٢ للمستخدم · ١٧ للمقدّم</div>
+      <div style="font-size:12.5px; color:#56607F; margin-top:4px;">١٢ للمستخدم · ١٧ للمقدّم</div>
     </div>
     <div class="card">
       <div class="kicker">الخدمات</div>
       <div style="font-size:32px; font-weight:700;" class="latin">4</div>
-      <div style="font-size:12.5px; color:#5C625F; margin-top:4px;">فزعة، جليس، أكاديمي، مرافقة</div>
+      <div style="font-size:12.5px; color:#56607F; margin-top:4px;">فزعة، جليس، أكاديمي، مرافقة</div>
     </div>
     <div class="card">
       <div class="kicker">الباليتات</div>
       <div style="font-size:32px; font-weight:700;" class="latin">3 × 2</div>
-      <div style="font-size:12.5px; color:#5C625F; margin-top:4px;">٣ ألوان × فاتح/داكن</div>
+      <div style="font-size:12.5px; color:#56607F; margin-top:4px;">٣ ألوان × فاتح/داكن</div>
     </div>
   </div>
 
-  <div class="card" style="margin-top:24px; background:#FBF9F4;">
+  <div class="card" style="margin-top:24px; background:#F7F9FE;">
     <div class="kicker">كيفية الاستيراد إلى Figma</div>
     <ol style="margin:8px 0 0; padding-inline-start:20px; font-size:14px; line-height:1.9; color:#3a3f3d;">
       <li>افتح Figma → File → Import → اختر هذا الملف بصيغة PDF (انقر "طباعة / PDF" أعلاه واحفظ).</li>
@@ -196,30 +196,30 @@
       <div class="num">01 · TOKENS</div>
       <h2>الألوان · Color</h2>
     </div>
-    <div style="font-size:12.5px; color:#5C625F;">٣ باليتات أساسية، كل واحدة تدعم وضع فاتح وداكن.</div>
+    <div style="font-size:12.5px; color:#56607F;">٣ باليتات أساسية، كل واحدة تدعم وضع فاتح وداكن.</div>
   </div>
 
   <h3>الباليت الأساسية — Teal (الافتراضية)</h3>
   <div class="grid g-4" style="margin-bottom:32px;">
-    <div class="swatch"><div class="chip" style="background:#0F766E;"></div><div class="meta"><div class="name">Primary</div><div class="hex">#0F766E</div><div class="token">color.primary</div></div></div>
-    <div class="swatch"><div class="chip" style="background:#0B5A55;"></div><div class="meta"><div class="name">Primary Deep</div><div class="hex">#0B5A55</div><div class="token">color.primary.deep</div></div></div>
-    <div class="swatch"><div class="chip" style="background:#CCFBF1;"></div><div class="meta"><div class="name">Primary Soft</div><div class="hex">#CCFBF1</div><div class="token">color.primary.soft</div></div></div>
-    <div class="swatch"><div class="chip" style="background:#C9B79C;"></div><div class="meta"><div class="name">Accent</div><div class="hex">#C9B79C</div><div class="token">color.accent</div></div></div>
+    <div class="swatch"><div class="chip" style="background:#3D5CE0;"></div><div class="meta"><div class="name">Primary</div><div class="hex">#3D5CE0</div><div class="token">color.primary</div></div></div>
+    <div class="swatch"><div class="chip" style="background:#14318F;"></div><div class="meta"><div class="name">Primary Deep</div><div class="hex">#14318F</div><div class="token">color.primary.deep</div></div></div>
+    <div class="swatch"><div class="chip" style="background:#DDE4FB;"></div><div class="meta"><div class="name">Primary Soft</div><div class="hex">#DDE4FB</div><div class="token">color.primary.soft</div></div></div>
+    <div class="swatch"><div class="chip" style="background:#8CA0E6;"></div><div class="meta"><div class="name">Accent</div><div class="hex">#8CA0E6</div><div class="token">color.accent</div></div></div>
   </div>
 
   <h3>الأسطح والخلفيات — Surfaces</h3>
   <div class="grid g-4" style="margin-bottom:32px;">
-    <div class="swatch"><div class="chip" style="background:#F5F3EE;"></div><div class="meta"><div class="name">Background</div><div class="hex">#F5F3EE</div><div class="token">color.bg</div></div></div>
-    <div class="swatch"><div class="chip" style="background:#EDE9DD;"></div><div class="meta"><div class="name">BG Muted</div><div class="hex">#EDE9DD</div><div class="token">color.bg.muted</div></div></div>
-    <div class="swatch"><div class="chip" style="background:#FFFFFF; border-bottom:1px solid #E5E0D2;"></div><div class="meta"><div class="name">Surface</div><div class="hex">#FFFFFF</div><div class="token">color.surface</div></div></div>
-    <div class="swatch"><div class="chip" style="background:#E5E0D2;"></div><div class="meta"><div class="name">Border</div><div class="hex">#E5E0D2</div><div class="token">color.border</div></div></div>
+    <div class="swatch"><div class="chip" style="background:#F4F6FC;"></div><div class="meta"><div class="name">Background</div><div class="hex">#F4F6FC</div><div class="token">color.bg</div></div></div>
+    <div class="swatch"><div class="chip" style="background:#E8ECF7;"></div><div class="meta"><div class="name">BG Muted</div><div class="hex">#E8ECF7</div><div class="token">color.bg.muted</div></div></div>
+    <div class="swatch"><div class="chip" style="background:#FFFFFF; border-bottom:1px solid #DDE3F2;"></div><div class="meta"><div class="name">Surface</div><div class="hex">#FFFFFF</div><div class="token">color.surface</div></div></div>
+    <div class="swatch"><div class="chip" style="background:#DDE3F2;"></div><div class="meta"><div class="name">Border</div><div class="hex">#DDE3F2</div><div class="token">color.border</div></div></div>
   </div>
 
   <h3>الحبر — Ink</h3>
   <div class="grid g-3" style="margin-bottom:32px;">
-    <div class="swatch"><div class="chip" style="background:#0F1414;"></div><div class="meta"><div class="name">Ink</div><div class="hex">#0F1414</div><div class="token">color.ink</div></div></div>
-    <div class="swatch"><div class="chip" style="background:#5C625F;"></div><div class="meta"><div class="name">Ink Muted</div><div class="hex">#5C625F</div><div class="token">color.ink.muted</div></div></div>
-    <div class="swatch"><div class="chip" style="background:#8A908C;"></div><div class="meta"><div class="name">Ink Soft</div><div class="hex">#8A908C</div><div class="token">color.ink.soft</div></div></div>
+    <div class="swatch"><div class="chip" style="background:#0E152B;"></div><div class="meta"><div class="name">Ink</div><div class="hex">#0E152B</div><div class="token">color.ink</div></div></div>
+    <div class="swatch"><div class="chip" style="background:#56607F;"></div><div class="meta"><div class="name">Ink Muted</div><div class="hex">#56607F</div><div class="token">color.ink.muted</div></div></div>
+    <div class="swatch"><div class="chip" style="background:#8A93AD;"></div><div class="meta"><div class="name">Ink Soft</div><div class="hex">#8A93AD</div><div class="token">color.ink.soft</div></div></div>
   </div>
 
   <h3>الحالات الدلالية — Semantic</h3>
@@ -227,7 +227,7 @@
     <div class="swatch"><div class="chip" style="background:#047857;"></div><div class="meta"><div class="name">Success</div><div class="hex">#047857</div><div class="token">color.success</div></div></div>
     <div class="swatch"><div class="chip" style="background:#B45309;"></div><div class="meta"><div class="name">Warn</div><div class="hex">#B45309</div><div class="token">color.warn</div></div></div>
     <div class="swatch"><div class="chip" style="background:#B91C1C;"></div><div class="meta"><div class="name">Danger</div><div class="hex">#B91C1C</div><div class="token">color.danger</div></div></div>
-    <div class="swatch"><div class="chip" style="background:#1E3A8A;"></div><div class="meta"><div class="name">Info</div><div class="hex">#1E3A8A</div><div class="token">color.info</div></div></div>
+    <div class="swatch"><div class="chip" style="background:#14318F;"></div><div class="meta"><div class="name">Info</div><div class="hex">#14318F</div><div class="token">color.info</div></div></div>
   </div>
 
   <h3 style="margin-top:32px;">الباليتات البديلة</h3>
@@ -237,17 +237,17 @@
       <div style="display:flex; gap:6px;">
         <div style="flex:2; height:48px; border-radius:8px; background:#047857;"></div>
         <div style="flex:1; height:48px; border-radius:8px; background:#D1FADF;"></div>
-        <div style="flex:1; height:48px; border-radius:8px; background:#A8856A;"></div>
-        <div style="flex:1; height:48px; border-radius:8px; background:#F4F2EC; border:1px solid #E5E0D2;"></div>
+        <div style="flex:1; height:48px; border-radius:8px; background:#7E8FD4;"></div>
+        <div style="flex:1; height:48px; border-radius:8px; background:#F3F5FC; border:1px solid #DDE3F2;"></div>
       </div>
     </div>
     <div class="card">
       <div style="font-size:14px; font-weight:600; margin-bottom:10px;">Beige — بيج دافئ</div>
       <div style="display:flex; gap:6px;">
-        <div style="flex:2; height:48px; border-radius:8px; background:#7A5A36;"></div>
-        <div style="flex:1; height:48px; border-radius:8px; background:#F0E5D2;"></div>
-        <div style="flex:1; height:48px; border-radius:8px; background:#0F766E;"></div>
-        <div style="flex:1; height:48px; border-radius:8px; background:#FAF6EC; border:1px solid #E5E0D2;"></div>
+        <div style="flex:2; height:48px; border-radius:8px; background:#6A53C8;"></div>
+        <div style="flex:1; height:48px; border-radius:8px; background:#E7E2FA;"></div>
+        <div style="flex:1; height:48px; border-radius:8px; background:#3D5CE0;"></div>
+        <div style="flex:1; height:48px; border-radius:8px; background:#F5F7FE; border:1px solid #DDE3F2;"></div>
       </div>
     </div>
   </div>
@@ -260,7 +260,7 @@
       <div class="num">02 · TYPE</div>
       <h2>النوع · Typography</h2>
     </div>
-    <div style="font-size:12.5px; color:#5C625F;" class="latin">IBM Plex Sans Arabic · Variable · 300–700</div>
+    <div style="font-size:12.5px; color:#56607F;" class="latin">IBM Plex Sans Arabic · Variable · 300–700</div>
   </div>
 
   <div class="card">
@@ -285,12 +285,12 @@
       <div><div class="type-token">type.body</div><div class="type-spec">15 / 24</div></div>
     </div>
     <div class="type-row">
-      <div class="type-sample" style="font-size:13px; color:#5C625F;">نص ثانوي وشرح إضافي تحت العناصر.</div>
+      <div class="type-sample" style="font-size:13px; color:#56607F;">نص ثانوي وشرح إضافي تحت العناصر.</div>
       <div class="type-spec">Caption<br>color: ink.muted</div>
       <div><div class="type-token">type.caption</div><div class="type-spec">13 / 20</div></div>
     </div>
     <div class="type-row">
-      <div class="type-sample mono" style="font-size:11px; color:#8A908C; letter-spacing:0.1em; text-transform:uppercase;">META · LABEL · KICKER</div>
+      <div class="type-sample mono" style="font-size:11px; color:#8A93AD; letter-spacing:0.1em; text-transform:uppercase;">META · LABEL · KICKER</div>
       <div class="type-spec">Mono / Label<br>IBM Plex Mono · 0.1em tracking</div>
       <div><div class="type-token">type.mono</div><div class="type-spec">11 / 16</div></div>
     </div>
@@ -361,8 +361,8 @@
     <div class="card">
       <h3>Chips & Tags</h3>
       <div class="preview">
-        <span class="chip-tag" style="background:#CCFBF1; color:#0F766E;">نشط</span>
-        <span class="chip-tag" style="background:#F0E5D2; color:#7A5A36;">قيد المراجعة</span>
+        <span class="chip-tag" style="background:#DDE4FB; color:#3D5CE0;">نشط</span>
+        <span class="chip-tag" style="background:#E7E2FA; color:#6A53C8;">قيد المراجعة</span>
         <span class="chip-tag" style="background:#FDE68A; color:#92400E;">معلّق</span>
         <span class="chip-tag" style="background:#FEE2E2; color:#B91C1C;">ملغي</span>
       </div>
@@ -371,23 +371,23 @@
 
     <div class="card">
       <h3>Card</h3>
-      <div class="preview" style="background:#FBF9F4;">
-        <div style="background:#fff; border:1px solid #E5E0D2; border-radius:18px; padding:16px; width:100%; max-width:280px;">
-          <div style="font-size:11px; color:#8A908C; letter-spacing:0.08em; text-transform:uppercase;" class="latin">CARD HEADER</div>
+      <div class="preview" style="background:#F7F9FE;">
+        <div style="background:#fff; border:1px solid #DDE3F2; border-radius:18px; padding:16px; width:100%; max-width:280px;">
+          <div style="font-size:11px; color:#8A93AD; letter-spacing:0.08em; text-transform:uppercase;" class="latin">CARD HEADER</div>
           <div style="font-size:16px; font-weight:600; margin-top:6px;">عنوان البطاقة</div>
-          <div style="font-size:12.5px; color:#5C625F; margin-top:4px;">وصف قصير يدعم محتوى البطاقة.</div>
+          <div style="font-size:12.5px; color:#56607F; margin-top:4px;">وصف قصير يدعم محتوى البطاقة.</div>
         </div>
       </div>
     </div>
 
     <div class="card">
       <h3>Input Field</h3>
-      <div class="preview" style="background:#FBF9F4;">
+      <div class="preview" style="background:#F7F9FE;">
         <div style="width:100%; max-width:280px;">
-          <div style="font-size:13px; color:#5C625F; margin-bottom:6px; font-weight:500;">رقم الجوال</div>
-          <div style="background:#fff; border:1.5px solid #0F766E; border-radius:16px; padding:14px 16px; display:flex; align-items:center; gap:10px;">
-            <span style="color:#8A908C; font-size:14px;">📞</span>
-            <span style="font-size:14px; color:#0F1414;">5X XXX XXXX</span>
+          <div style="font-size:13px; color:#56607F; margin-bottom:6px; font-weight:500;">رقم الجوال</div>
+          <div style="background:#fff; border:1.5px solid #3D5CE0; border-radius:16px; padding:14px 16px; display:flex; align-items:center; gap:10px;">
+            <span style="color:#8A93AD; font-size:14px;">📞</span>
+            <span style="font-size:14px; color:#0E152B;">5X XXX XXXX</span>
           </div>
         </div>
       </div>
@@ -396,10 +396,10 @@
     <div class="card">
       <h3>Phone Frame</h3>
       <div class="preview">
-        <div style="width:130px; height:260px; background:#0F1414; border-radius:24px; padding:6px;">
+        <div style="width:130px; height:260px; background:#0E152B; border-radius:24px; padding:6px;">
           <div style="width:100%; height:100%; background:#fff; border-radius:18px; position:relative;">
-            <div style="position:absolute; top:6px; left:50%; transform:translateX(-50%); width:32px; height:5px; background:#0F1414; border-radius:3px;"></div>
-            <div style="padding:18px 10px; font-size:9px; color:#5C625F; text-align:right;">المحتوى</div>
+            <div style="position:absolute; top:6px; left:50%; transform:translateX(-50%); width:32px; height:5px; background:#0E152B; border-radius:3px;"></div>
+            <div style="padding:18px 10px; font-size:9px; color:#56607F; text-align:right;">المحتوى</div>
           </div>
         </div>
       </div>
@@ -408,12 +408,12 @@
 
     <div class="card">
       <h3>Tab Bar</h3>
-      <div class="preview" style="background:#FBF9F4;">
-        <div style="background:#fff; border:1px solid #E5E0D2; border-radius:24px 24px 12px 12px; padding:10px 16px 14px; display:flex; gap:24px; width:100%; max-width:300px; justify-content:space-between;">
-          <div style="text-align:center;"><div style="width:20px; height:20px; margin:0 auto; background:#0F766E; border-radius:4px;"></div><div style="font-size:9px; color:#0F766E; font-weight:600; margin-top:4px;">الرئيسية</div></div>
-          <div style="text-align:center;"><div style="width:20px; height:20px; margin:0 auto; background:#8A908C; border-radius:4px;"></div><div style="font-size:9px; color:#8A908C; margin-top:4px;">المهام</div></div>
-          <div style="text-align:center;"><div style="width:20px; height:20px; margin:0 auto; background:#8A908C; border-radius:4px;"></div><div style="font-size:9px; color:#8A908C; margin-top:4px;">الأرباح</div></div>
-          <div style="text-align:center;"><div style="width:20px; height:20px; margin:0 auto; background:#8A908C; border-radius:4px;"></div><div style="font-size:9px; color:#8A908C; margin-top:4px;">حسابي</div></div>
+      <div class="preview" style="background:#F7F9FE;">
+        <div style="background:#fff; border:1px solid #DDE3F2; border-radius:24px 24px 12px 12px; padding:10px 16px 14px; display:flex; gap:24px; width:100%; max-width:300px; justify-content:space-between;">
+          <div style="text-align:center;"><div style="width:20px; height:20px; margin:0 auto; background:#3D5CE0; border-radius:4px;"></div><div style="font-size:9px; color:#3D5CE0; font-weight:600; margin-top:4px;">الرئيسية</div></div>
+          <div style="text-align:center;"><div style="width:20px; height:20px; margin:0 auto; background:#8A93AD; border-radius:4px;"></div><div style="font-size:9px; color:#8A93AD; margin-top:4px;">المهام</div></div>
+          <div style="text-align:center;"><div style="width:20px; height:20px; margin:0 auto; background:#8A93AD; border-radius:4px;"></div><div style="font-size:9px; color:#8A93AD; margin-top:4px;">الأرباح</div></div>
+          <div style="text-align:center;"><div style="width:20px; height:20px; margin:0 auto; background:#8A93AD; border-radius:4px;"></div><div style="font-size:9px; color:#8A93AD; margin-top:4px;">حسابي</div></div>
         </div>
       </div>
     </div>
@@ -427,40 +427,40 @@
       <div class="num">05 · SERVICES</div>
       <h2>الخدمات الأربع</h2>
     </div>
-    <div style="font-size:12.5px; color:#5C625F;">كل خدمة لها لون وأيقونة خاصة</div>
+    <div style="font-size:12.5px; color:#56607F;">كل خدمة لها لون وأيقونة خاصة</div>
   </div>
 
   <div class="grid g-2">
-    <div class="card brand-card" style="background:#FBF9F4;">
-      <div class="brand-tile" style="background:#0F766E;">فز</div>
+    <div class="card brand-card" style="background:#F7F9FE;">
+      <div class="brand-tile" style="background:#3D5CE0;">فز</div>
       <div style="flex:1;">
         <div style="font-size:17px; font-weight:700;">سند فزعة</div>
-        <div style="font-size:12.5px; color:#5C625F; margin:2px 0 8px;">مشاوير ومهام يومية · Errands & transport</div>
-        <div class="mono" style="font-size:10.5px; color:#0F766E;">color: #0F766E · soft: #CCFBF1 · icon: errand</div>
+        <div style="font-size:12.5px; color:#56607F; margin:2px 0 8px;">مشاوير ومهام يومية · Errands & transport</div>
+        <div class="mono" style="font-size:10.5px; color:#3D5CE0;">color: #3D5CE0 · soft: #DDE4FB · icon: errand</div>
       </div>
     </div>
-    <div class="card brand-card" style="background:#FBF9F4;">
-      <div class="brand-tile" style="background:#7A5A36;">جل</div>
+    <div class="card brand-card" style="background:#F7F9FE;">
+      <div class="brand-tile" style="background:#6A53C8;">جل</div>
       <div style="flex:1;">
         <div style="font-size:17px; font-weight:700;">سند جليس</div>
-        <div style="font-size:12.5px; color:#5C625F; margin:2px 0 8px;">مرافقة اجتماعية ودعم نفسي · Companionship</div>
-        <div class="mono" style="font-size:10.5px; color:#7A5A36;">color: #7A5A36 · soft: #F0E5D2 · icon: heart</div>
+        <div style="font-size:12.5px; color:#56607F; margin:2px 0 8px;">مرافقة اجتماعية ودعم نفسي · Companionship</div>
+        <div class="mono" style="font-size:10.5px; color:#6A53C8;">color: #6A53C8 · soft: #E7E2FA · icon: heart</div>
       </div>
     </div>
-    <div class="card brand-card" style="background:#FBF9F4;">
-      <div class="brand-tile" style="background:#1E3A8A;">أك</div>
+    <div class="card brand-card" style="background:#F7F9FE;">
+      <div class="brand-tile" style="background:#14318F;">أك</div>
       <div style="flex:1;">
         <div style="font-size:17px; font-weight:700;">سند أكاديمي</div>
-        <div style="font-size:12.5px; color:#5C625F; margin:2px 0 8px;">تدريب جامعي ميداني · Academic training</div>
-        <div class="mono" style="font-size:10.5px; color:#1E3A8A;">color: #1E3A8A · soft: #DBE4FF · icon: cap</div>
+        <div style="font-size:12.5px; color:#56607F; margin:2px 0 8px;">تدريب جامعي ميداني · Academic training</div>
+        <div class="mono" style="font-size:10.5px; color:#14318F;">color: #14318F · soft: #D7DEF6 · icon: cap</div>
       </div>
     </div>
-    <div class="card brand-card" style="background:#FBF9F4;">
-      <div class="brand-tile" style="background:#7A1E55;">مر</div>
+    <div class="card brand-card" style="background:#F7F9FE;">
+      <div class="brand-tile" style="background:#2E73C9;">مر</div>
       <div style="flex:1;">
         <div style="font-size:17px; font-weight:700;">سند مرافقة</div>
-        <div style="font-size:12.5px; color:#5C625F; margin:2px 0 8px;">مرافقة المواعيد · Appointment escort</div>
-        <div class="mono" style="font-size:10.5px; color:#7A1E55;">color: #7A1E55 · soft: #F4DCEB · icon: shield</div>
+        <div style="font-size:12.5px; color:#56607F; margin:2px 0 8px;">مرافقة المواعيد · Appointment escort</div>
+        <div class="mono" style="font-size:10.5px; color:#2E73C9;">color: #2E73C9 · soft: #DCE8F7 · icon: shield</div>
       </div>
     </div>
   </div>
@@ -521,20 +521,20 @@
       <div class="num">07 · FRAMES</div>
       <h2>الشاشات المرجعية</h2>
     </div>
-    <div style="font-size:12.5px; color:#5C625F;">انقر على البطاقات لفتح التطبيق الكامل</div>
+    <div style="font-size:12.5px; color:#56607F;">انقر على البطاقات لفتح التطبيق الكامل</div>
   </div>
 
   <div class="grid g-2" style="margin-bottom:32px;">
     <a href="Sanad User.html" style="text-decoration:none; color:inherit;">
       <div class="card" style="padding:0; overflow:hidden;">
-        <div style="padding:20px 24px; border-bottom:1px solid #E5E0D2; display:flex; justify-content:space-between; align-items:center;">
+        <div style="padding:20px 24px; border-bottom:1px solid #DDE3F2; display:flex; justify-content:space-between; align-items:center;">
           <div>
             <div class="kicker">USER APP · 12 SCREENS</div>
             <h3 style="margin:0;">سَنَد — المستخدم</h3>
           </div>
-          <div style="font-size:24px; color:#0F766E;">←</div>
+          <div style="font-size:24px; color:#3D5CE0;">←</div>
         </div>
-        <div style="padding:24px; background:#FBF9F4; min-height:300px; display:flex; align-items:center; justify-content:center;">
+        <div style="padding:24px; background:#F7F9FE; min-height:300px; display:flex; align-items:center; justify-content:center;">
           <iframe src="Sanad User.html" style="width:300px; height:600px; border:none; border-radius:28px; box-shadow:0 12px 32px rgba(0,0,0,0.1); background:#fff; pointer-events:none;" loading="lazy"></iframe>
         </div>
       </div>
@@ -542,14 +542,14 @@
 
     <a href="Sanad Provider.html" style="text-decoration:none; color:inherit;">
       <div class="card" style="padding:0; overflow:hidden;">
-        <div style="padding:20px 24px; border-bottom:1px solid #E5E0D2; display:flex; justify-content:space-between; align-items:center;">
+        <div style="padding:20px 24px; border-bottom:1px solid #DDE3F2; display:flex; justify-content:space-between; align-items:center;">
           <div>
             <div class="kicker">PROVIDER APP · 17 SCREENS</div>
             <h3 style="margin:0;">سَنَد — مقدّم الخدمة</h3>
           </div>
           <div style="font-size:24px; color:#047857;">←</div>
         </div>
-        <div style="padding:24px; background:#FBF9F4; min-height:300px; display:flex; align-items:center; justify-content:center;">
+        <div style="padding:24px; background:#F7F9FE; min-height:300px; display:flex; align-items:center; justify-content:center;">
           <iframe src="Sanad Provider.html" style="width:300px; height:600px; border:none; border-radius:28px; box-shadow:0 12px 32px rgba(0,0,0,0.1); background:#fff; pointer-events:none;" loading="lazy"></iframe>
         </div>
       </div>
@@ -564,7 +564,7 @@
       <div class="num">08 · VARIABLES</div>
       <h2>جدول الـ Variables الكامل</h2>
     </div>
-    <div style="font-size:12.5px; color:#5C625F;">انسخ هذا الجدول مباشرة إلى Figma Variables.</div>
+    <div style="font-size:12.5px; color:#56607F;">انسخ هذا الجدول مباشرة إلى Figma Variables.</div>
   </div>
 
   <div class="card-flat">
@@ -573,21 +573,21 @@
         <tr><th>Token</th><th>Type</th><th>Value</th><th>Preview</th></tr>
       </thead>
       <tbody>
-        <tr><td class="mono">color.primary</td><td>color</td><td class="mono">#0F766E</td><td><div class="swatch-cell"><div class="sw" style="background:#0F766E;"></div></div></td></tr>
-        <tr><td class="mono">color.primary.deep</td><td>color</td><td class="mono">#0B5A55</td><td><div class="swatch-cell"><div class="sw" style="background:#0B5A55;"></div></div></td></tr>
-        <tr><td class="mono">color.primary.soft</td><td>color</td><td class="mono">#CCFBF1</td><td><div class="swatch-cell"><div class="sw" style="background:#CCFBF1;"></div></div></td></tr>
-        <tr><td class="mono">color.accent</td><td>color</td><td class="mono">#C9B79C</td><td><div class="swatch-cell"><div class="sw" style="background:#C9B79C;"></div></div></td></tr>
-        <tr><td class="mono">color.bg</td><td>color</td><td class="mono">#F5F3EE</td><td><div class="swatch-cell"><div class="sw" style="background:#F5F3EE;"></div></div></td></tr>
-        <tr><td class="mono">color.surface</td><td>color</td><td class="mono">#FFFFFF</td><td><div class="swatch-cell"><div class="sw" style="background:#fff; border:1px solid #E5E0D2;"></div></div></td></tr>
-        <tr><td class="mono">color.border</td><td>color</td><td class="mono">#E5E0D2</td><td><div class="swatch-cell"><div class="sw" style="background:#E5E0D2;"></div></div></td></tr>
-        <tr><td class="mono">color.ink</td><td>color</td><td class="mono">#0F1414</td><td><div class="swatch-cell"><div class="sw" style="background:#0F1414;"></div></div></td></tr>
-        <tr><td class="mono">color.ink.muted</td><td>color</td><td class="mono">#5C625F</td><td><div class="swatch-cell"><div class="sw" style="background:#5C625F;"></div></div></td></tr>
+        <tr><td class="mono">color.primary</td><td>color</td><td class="mono">#3D5CE0</td><td><div class="swatch-cell"><div class="sw" style="background:#3D5CE0;"></div></div></td></tr>
+        <tr><td class="mono">color.primary.deep</td><td>color</td><td class="mono">#14318F</td><td><div class="swatch-cell"><div class="sw" style="background:#14318F;"></div></div></td></tr>
+        <tr><td class="mono">color.primary.soft</td><td>color</td><td class="mono">#DDE4FB</td><td><div class="swatch-cell"><div class="sw" style="background:#DDE4FB;"></div></div></td></tr>
+        <tr><td class="mono">color.accent</td><td>color</td><td class="mono">#8CA0E6</td><td><div class="swatch-cell"><div class="sw" style="background:#8CA0E6;"></div></div></td></tr>
+        <tr><td class="mono">color.bg</td><td>color</td><td class="mono">#F4F6FC</td><td><div class="swatch-cell"><div class="sw" style="background:#F4F6FC;"></div></div></td></tr>
+        <tr><td class="mono">color.surface</td><td>color</td><td class="mono">#FFFFFF</td><td><div class="swatch-cell"><div class="sw" style="background:#fff; border:1px solid #DDE3F2;"></div></div></td></tr>
+        <tr><td class="mono">color.border</td><td>color</td><td class="mono">#DDE3F2</td><td><div class="swatch-cell"><div class="sw" style="background:#DDE3F2;"></div></div></td></tr>
+        <tr><td class="mono">color.ink</td><td>color</td><td class="mono">#0E152B</td><td><div class="swatch-cell"><div class="sw" style="background:#0E152B;"></div></div></td></tr>
+        <tr><td class="mono">color.ink.muted</td><td>color</td><td class="mono">#56607F</td><td><div class="swatch-cell"><div class="sw" style="background:#56607F;"></div></div></td></tr>
         <tr><td class="mono">color.success</td><td>color</td><td class="mono">#047857</td><td><div class="swatch-cell"><div class="sw" style="background:#047857;"></div></div></td></tr>
         <tr><td class="mono">color.warn</td><td>color</td><td class="mono">#B45309</td><td><div class="swatch-cell"><div class="sw" style="background:#B45309;"></div></div></td></tr>
         <tr><td class="mono">color.danger</td><td>color</td><td class="mono">#B91C1C</td><td><div class="swatch-cell"><div class="sw" style="background:#B91C1C;"></div></div></td></tr>
-        <tr><td class="mono">radius.card</td><td>number</td><td class="mono">28</td><td><div style="width:30px; height:18px; border-radius:6px; background:#E5E0D2;"></div></td></tr>
-        <tr><td class="mono">radius.button</td><td>number</td><td class="mono">18</td><td><div style="width:30px; height:18px; border-radius:5px; background:#E5E0D2;"></div></td></tr>
-        <tr><td class="mono">radius.field</td><td>number</td><td class="mono">16</td><td><div style="width:30px; height:18px; border-radius:4px; background:#E5E0D2;"></div></td></tr>
+        <tr><td class="mono">radius.card</td><td>number</td><td class="mono">28</td><td><div style="width:30px; height:18px; border-radius:6px; background:#DDE3F2;"></div></td></tr>
+        <tr><td class="mono">radius.button</td><td>number</td><td class="mono">18</td><td><div style="width:30px; height:18px; border-radius:5px; background:#DDE3F2;"></div></td></tr>
+        <tr><td class="mono">radius.field</td><td>number</td><td class="mono">16</td><td><div style="width:30px; height:18px; border-radius:4px; background:#DDE3F2;"></div></td></tr>
         <tr><td class="mono">space.pad.card</td><td>number</td><td class="mono">20</td><td></td></tr>
         <tr><td class="mono">space.gap</td><td>number</td><td class="mono">14</td><td></td></tr>
         <tr><td class="mono">size.field.h</td><td>number</td><td class="mono">56</td><td></td></tr>
@@ -598,14 +598,14 @@
   </div>
 </section>
 
-<div style="margin-top:80px; padding-top:32px; border-top:1px solid #D9D2BE; display:flex; justify-content:space-between; align-items:center;">
+<div style="margin-top:80px; padding-top:32px; border-top:1px solid #CDD6EE; display:flex; justify-content:space-between; align-items:center;">
   <div>
     <div style="font-size:14px; font-weight:600;">سَنَد — مواصفات التسليم</div>
-    <div style="font-size:11.5px; color:#8A908C;" class="latin">Generated for Figma handoff · v2.0</div>
+    <div style="font-size:11.5px; color:#8A93AD;" class="latin">Generated for Figma handoff · v2.0</div>
   </div>
   <div style="display:flex; gap:8px;">
-    <a href="Sanad User.html" style="padding:10px 16px; border:1px solid #D9D2BE; border-radius:10px; background:#fff; color:#0F1414; text-decoration:none; font-size:12.5px; font-weight:600;">المستخدم →</a>
-    <a href="Sanad Provider.html" style="padding:10px 16px; border:1px solid #D9D2BE; border-radius:10px; background:#fff; color:#0F1414; text-decoration:none; font-size:12.5px; font-weight:600;">مقدّم الخدمة →</a>
+    <a href="Sanad User.html" style="padding:10px 16px; border:1px solid #CDD6EE; border-radius:10px; background:#fff; color:#0E152B; text-decoration:none; font-size:12.5px; font-weight:600;">المستخدم →</a>
+    <a href="Sanad Provider.html" style="padding:10px 16px; border:1px solid #CDD6EE; border-radius:10px; background:#fff; color:#0E152B; text-decoration:none; font-size:12.5px; font-weight:600;">مقدّم الخدمة →</a>
   </div>
 </div>
 

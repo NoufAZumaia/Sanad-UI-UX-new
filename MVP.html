@@ -14,33 +14,33 @@
 
 <style>
   :root {
-    --bg: #F5F3EE;
-    --bg-2: #EDE9DD;
+    --bg: #F4F6FC;
+    --bg-2: #E8ECF7;
     --surface: #FFFFFF;
-    --surface-2: #FBF9F4;
-    --border: #E5E0D2;
-    --border-strong: #D7D0BC;
-    --ink: #0F1414;
-    --ink-2: #5C625F;
-    --ink-3: #8A908C;
-    --primary: #0F766E;
-    --primary-deep: #0B5A55;
-    --primary-soft: #CCFBF1;
-    --primary-tint: #F0FDFA;
-    --accent: #C9B79C;
-    --accent-soft: #F0E9D9;
+    --surface-2: #F7F9FE;
+    --border: #DDE3F2;
+    --border-strong: #CDD6EE;
+    --ink: #0E152B;
+    --ink-2: #56607F;
+    --ink-3: #8A93AD;
+    --primary: #3D5CE0;
+    --primary-deep: #14318F;
+    --primary-soft: #DDE4FB;
+    --primary-tint: #EEF2FE;
+    --accent: #8CA0E6;
+    --accent-soft: #E8ECFB;
     --success: #047857;
     --success-soft: #D1FADF;
     --warn: #B45309;
     --warn-soft: #FEF3C7;
     --danger: #B91C1C;
     --danger-soft: #FECACA;
-    --info: #1E3A8A;
-    --info-soft: #DBE4FF;
-    --fazaa: #0F766E;
-    --jalees: #7A5A36;
-    --academic: #1E3A8A;
-    --murafaqa: #7A1E55;
+    --info: #14318F;
+    --info-soft: #D7DEF6;
+    --fazaa: #3D5CE0;
+    --jalees: #6A53C8;
+    --academic: #14318F;
+    --murafaqa: #2E73C9;
   }
 
   html, body { margin: 0; padding: 0; }
@@ -68,8 +68,8 @@
     position: sticky; top: 0; z-index: 200;
     display: flex; align-items: center; justify-content: center;
     gap: 20px; padding: 12px 24px;
-    background: linear-gradient(135deg, #0F766E 0%, #0B5A55 100%);
-    border-bottom: 2px solid #063D39;
+    background: linear-gradient(135deg, #3D5CE0 0%, #14318F 100%);
+    border-bottom: 2px solid #0E2370;
     box-shadow: 0 4px 12px rgba(15, 118, 110, 0.15);
   }
   .nav-link {
@@ -114,7 +114,7 @@
   .pill.reject  { background: #F5E6E5; color: var(--danger); }
   .pill.on      { background: var(--success-soft); color: var(--success); }
   .pill.post    { background: var(--bg-2); color: var(--ink-3); }
-  .pill.user-c  { background: #DBE4FF; color: #1E3A8A; }
+  .pill.user-c  { background: #D7DEF6; color: #14318F; }
   .pill.prov-c  { background: #FEF3C7; color: #92400E; }
   .pill.admin-c { background: var(--primary-soft); color: var(--primary-deep); }
 
@@ -161,7 +161,7 @@
   .postmvp-chip { display: inline-flex; align-items: center; gap: 7px; background: var(--bg-2); border: 1px solid var(--border); border-radius: 10px; padding: 8px 14px; font-size: 13px; color: var(--ink-2); }
 
   /* Hero banner */
-  .mvp-hero { background: linear-gradient(135deg, #0F766E 0%, #0B5A55 60%, #063D39 100%); border-radius: 22px; padding: 32px 36px; color: #fff; margin-bottom: 44px; position: relative; overflow: hidden; }
+  .mvp-hero { background: linear-gradient(135deg, #3D5CE0 0%, #14318F 60%, #0E2370 100%); border-radius: 22px; padding: 32px 36px; color: #fff; margin-bottom: 44px; position: relative; overflow: hidden; }
   .mvp-hero::before { content: ''; position: absolute; top: -40px; left: -40px; width: 220px; height: 220px; border-radius: 999px; background: rgba(255,255,255,0.05); }
   .mvp-hero::after  { content: ''; position: absolute; bottom: -60px; right: 60px; width: 160px; height: 160px; border-radius: 999px; background: rgba(255,255,255,0.04); }
   .mvp-hero h1 { font-size: 26px; font-weight: 700; margin: 0 0 10px; letter-spacing: -0.02em; position: relative; }
@@ -551,28 +551,28 @@ function App() {
                 {[
                   {
                     key: 'academic', ar: 'سند أكاديمي', en: 'Sanad Academic',
-                    color: 'var(--academic)', dot: '#1E3A8A',
+                    color: 'var(--academic)', dot: '#14318F',
                     desc: 'يُتيح لطلاب ذوي الاحتياجات الخاصة داخل نطاق الحرم الجامعي طلب مساعدة حضورية من طلاب آخرين في نفس الحرم. تركّز الخدمة على الدعم والمساعدة داخل الحرم ولا تُصدر أي شهادات.',
                     descEn: 'Allows students with special needs within the campus area to request assistance from other students within the same campus scope. The service focuses on support and assistance inside campus and does not provide certificates.',
                     removed: ['الجلسات الافتراضية أو عن بُعد', 'إصدار الشهادات أو المؤهلات'],
                   },
                   {
                     key: 'jalees', ar: 'سند جليس', en: 'Sanad Caregiver',
-                    color: 'var(--jalees)', dot: '#7A5A36',
+                    color: 'var(--jalees)', dot: '#6A53C8',
                     desc: 'خدمة دعم ومرافقة شخصية حضورية بناءً على احتياج المستخدم، في المنزل أو مقر الإقامة. لا تشمل جلسات فيديو أو دعمًا عن بُعد أو جلسات افتراضية بأي شكل.',
                     descEn: 'In-person support and companionship service based on the user\'s need, at home or the place of residence. Removes any mention of video, virtual sessions, remote support, or online sessions.',
                     removed: ['جلسات الفيديو', 'الدعم عن بُعد / الاتصال الافتراضي', 'الجلسات الإلكترونية'],
                   },
                   {
                     key: 'murafaqa', ar: 'سند مرافقة', en: 'Sanad Companion',
-                    color: 'var(--murafaqa)', dot: '#7A1E55',
+                    color: 'var(--murafaqa)', dot: '#2E73C9',
                     desc: 'خدمة مرافقة شخصية بناءً على التاريخ والوقت والموقع والملاحظات المحددة من المستخدم. يقدّم مرافق مدرّب ومتفاهم الدعم اللازم خلال التنقل والانتظار.',
                     descEn: 'Personal companionship service based on selected date, time, location, and notes. Removes the option "select number of companions".',
                     removed: ['تحديد عدد المرافقين'],
                   },
                   {
                     key: 'fazaa', ar: 'سند فزعة / سائق', en: 'Sanad Driver',
-                    color: 'var(--fazaa)', dot: '#0F766E',
+                    color: 'var(--fazaa)', dot: '#3D5CE0',
                     desc: 'خدمة مساعدة في التنقل أو المشاوير مع تفاصيل الطلب، والتواصل مع العميل، وتحديثات حالة الرحلة.',
                     descEn: 'Transportation or trip assistance service with request details, customer communication, and trip status updates.',
                     removed: [],
